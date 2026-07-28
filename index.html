@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dragon Rescue">
+<meta name="theme-color" content="#1b1148">
+<meta name="format-detection" content="telephone=no">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="icon" href="data:image/png;base64,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">
+<title>Dragon Rescue — Magic Words</title>
+<style>
+/* ============================================================
+   DRAGON RESCUE  v3
+   One file. Works offline. Nothing is sent anywhere.
+   v3: hand-drawn dragons, warmer voice with a voice picker,
+       and a 5-second window in the grown-up speed round.
+   ============================================================ */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;
+  -webkit-touch-callout:none;}
+html,body{margin:0;padding:0;height:100%;overflow:hidden;overscroll-behavior:none;
+  -webkit-user-select:none;user-select:none;touch-action:manipulation;
+  -webkit-text-size-adjust:100%;text-size-adjust:100%;}
+input,textarea,select{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;
+  font-size:19px;}
+/* Safari on iPadOS zooms the page if a focused field is under 16px. Never go below. */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;}
+}
+body{font-family:Arial,Helvetica,"Helvetica Neue",sans-serif;background:#1b1148;color:#fff;
+  display:flex;flex-direction:column;}
+body.roundfont{font-family:"Chalkboard SE","Comic Sans MS","Marker Felt",Verdana,sans-serif;}
+#sky{position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse at 50% 120%,#4b2a8f 0%,#2a1663 45%,#150d38 100%);}
+.star{position:absolute;background:#fff;border-radius:50%;opacity:.7;animation:tw 3s ease-in-out infinite;}
+@keyframes tw{0%,100%{opacity:.2;}50%{opacity:.9;}}
+#app{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);}
+.screen{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;
+  padding:16px;text-align:center;overflow-y:auto;overscroll-behavior:contain;min-height:0;}
+.screen.on{display:flex;animation:fade .35s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+h1{font-size:clamp(30px,7vw,58px);margin:0 0 4px;color:#ffd84d;text-shadow:0 4px 0 #a3720b;letter-spacing:1px;}
+.sub{font-size:clamp(15px,2.6vw,22px);opacity:.85;margin:0 0 8px;}
+.setname{font-size:clamp(12px,2.2vw,17px);opacity:.55;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.btn{border:none;border-radius:24px;padding:20px 38px;font-size:clamp(20px,3.4vw,30px);
+  font-weight:bold;font-family:inherit;background:#ffd84d;color:#4a2f00;cursor:pointer;
+  box-shadow:0 7px 0 #b8890a;margin:8px;min-height:72px;min-width:150px;transition:transform .08s,box-shadow .08s;}
+.btn:active{transform:translateY(5px);box-shadow:0 2px 0 #b8890a;}
+.btn.big{font-size:clamp(26px,5vw,42px);padding:26px 60px;min-height:96px;}
+.btn.ghost{background:rgba(255,255,255,.14);color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.28);}
+.btn.green{background:#5ee08a;color:#08341a;box-shadow:0 7px 0 #2b9a55;}
+.btn.amber{background:#ffb457;color:#4a2600;box-shadow:0 7px 0 #c07c1d;}
+.btn.small{font-size:16px;padding:12px 20px;min-height:52px;min-width:0;border-radius:16px;}
+#nestGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;width:100%;max-width:820px;margin:10px auto 16px;}
+@media (orientation:portrait){#nestGrid{grid-template-columns:repeat(4,1fr);}}
+.egg{background:rgba(255,255,255,.09);border-radius:18px;padding:8px 4px 6px;
+  display:flex;flex-direction:column;align-items:center;gap:2px;border:2px solid rgba(255,255,255,.12);
+  font-family:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appearance:none;
+  transition:transform .1s;min-height:74px;}
+.egg:active{transform:scale(.94);}
+.egg[disabled]{cursor:default;}
+.egg.tapped{animation:eggpop .45s ease;}
+@keyframes eggpop{0%{transform:scale(1);}35%{transform:scale(1.14) rotate(-5deg);}100%{transform:scale(1);}}
+.egg .pic{width:clamp(34px,6.4vw,54px);height:clamp(34px,6.4vw,54px);}
+.egg .pic svg{width:100%;height:100%;display:block;}
+.egg .lbl{font-size:clamp(12px,2.1vw,18px);font-weight:bold;word-break:break-all;}
+.egg.s1{border-color:#ffb457;background:rgba(255,180,87,.16);}
+.egg.s2{border-color:#5ee08a;background:rgba(94,224,138,.2);box-shadow:0 0 16px rgba(94,224,138,.35);}
+.egg.focus{border-color:#ffd84d;background:rgba(255,216,77,.22);box-shadow:0 0 18px rgba(255,216,77,.5);}
+@keyframes pop{0%{transform:scale(1);}40%{transform:scale(1.4) rotate(-8deg);}100%{transform:scale(1);}}
+.prompt{font-size:clamp(18px,3.2vw,28px);margin:0 0 14px;opacity:.92;min-height:34px;}
+.wordbig{font-size:clamp(70px,16vw,180px);font-weight:bold;color:#fff;line-height:1.05;
+  margin:6px 0 14px;letter-spacing:1px;text-shadow:0 6px 22px rgba(0,0,0,.45);word-break:break-word;}
+.tiles{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;width:100%;max-width:920px;}
+.tile{background:#fff;color:#231246;border:none;border-radius:22px;font-family:inherit;
+  font-size:clamp(34px,7vw,76px);font-weight:bold;padding:18px 10px;min-width:150px;min-height:120px;
+  flex:1 1 150px;max-width:290px;box-shadow:0 8px 0 #b7a9d6;cursor:pointer;transition:transform .1s;word-break:break-word;}
+.tile:active{transform:translateY(5px);box-shadow:0 3px 0 #b7a9d6;}
+.tile.wrong{animation:wob .5s ease;background:#ece7f6;color:#8c86a0;box-shadow:0 8px 0 #cdc5e0;}
+@keyframes wob{0%,100%{transform:translateX(0) rotate(0);}20%{transform:translateX(-11px) rotate(-4deg);}
+  40%{transform:translateX(11px) rotate(4deg);}60%{transform:translateX(-7px) rotate(-2deg);}80%{transform:translateX(7px) rotate(2deg);}}
+.tile.right{background:#5ee08a;color:#08341a;box-shadow:0 8px 0 #2b9a55;animation:pop .5s ease;}
+.tile.hint{animation:glow 1.1s ease-in-out infinite;background:#fff8e1;}
+@keyframes glow{0%,100%{transform:scale(1);background:#fff8e1;}
+  50%{transform:scale(1.05);background:#ffe07a;}}
+.sentwrap{background:rgba(255,255,255,.97);color:#231246;border-radius:24px;padding:22px 18px;
+  max-width:920px;width:100%;margin-bottom:16px;}
+.sentemoji{font-size:clamp(38px,7vw,68px);margin-bottom:6px;}
+.sentence{font-size:clamp(26px,5vw,48px);line-height:1.75;font-weight:bold;}
+.tok{display:inline-block;padding:2px 8px;margin:2px 1px;border-radius:10px;}
+.tok.tap{background:#f0ebff;cursor:pointer;box-shadow:0 3px 0 #cabff0;}
+.tok.right{background:#5ee08a;color:#08341a;}
+.tok.wrong{background:#ece7f6;color:#9a93ad;animation:wob .5s ease;}
+.tok.hint{animation:glowd 1s ease-in-out infinite;}
+@keyframes glowd{0%,100%{background:#f0ebff;}50%{background:#ffe89a;}}
+.gap{display:inline-block;min-width:130px;border-bottom:7px solid #ffb457;margin:0 6px;}
+#bar{display:flex;align-items:center;gap:10px;padding:8px 14px;min-height:52px;}
+#barEgg{width:40px;height:40px;flex:0 0 40px;}
+#barEgg svg{width:100%;height:100%;display:block;}
+#focusStrip{display:flex;align-items:center;justify-content:center;gap:12px;
+  background:rgba(255,216,77,.14);border:2px solid rgba(255,216,77,.45);border-radius:18px;
+  padding:8px 20px;margin:2px auto 10px;max-width:520px;}
+#focusStrip .fw{font-size:clamp(26px,4.5vh,44px);font-weight:bold;color:#ffd84d;}
+#focusStrip .fl{font-size:clamp(12px,2vh,16px);opacity:.7;letter-spacing:1px;text-transform:uppercase;}
+/* Feed the Dragon */
+.berries{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;align-items:center;
+  width:100%;max-width:900px;margin-bottom:6px;}
+.berry{border:none;border-radius:50%;font-family:inherit;font-weight:bold;cursor:pointer;
+  width:clamp(120px,20vh,190px);height:clamp(120px,20vh,190px);
+  font-size:clamp(32px,7vh,64px);color:#4a1b0c;background:#F5C4B3;
+  box-shadow:0 8px 0 #D85A30;transition:transform .12s;
+  display:flex;align-items:center;justify-content:center;word-break:break-word;padding:6px;}
+.berry:nth-child(2n){background:#C0DD97;box-shadow:0 8px 0 #639922;color:#173404;}
+.berry:nth-child(3n){background:#B5D4F4;box-shadow:0 8px 0 #378ADD;color:#042C53;}
+.berry:active{transform:translateY(5px);box-shadow:0 3px 0 rgba(0,0,0,.3);}
+.berry.eaten{animation:eat .5s ease forwards;}
+@keyframes eat{to{transform:translateY(120px) scale(.2) rotate(30deg);opacity:0;}}
+.berry.nope{animation:wob .5s ease;opacity:.55;}
+.berry.hint{animation:glow 1.1s ease-in-out infinite;}
+#feedDragon{width:clamp(90px,18vh,150px);height:clamp(90px,18vh,150px);}
+/* Odd One Out */
+#oddTiles .tile{position:relative;}
+/* Dragon colour swatches */
+.swatches{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:6px 0 10px;}
+.swatches button{width:74px;height:74px;border-radius:50%;border:4px solid rgba(255,255,255,.5);
+  cursor:pointer;padding:4px;background:rgba(255,255,255,.12);}
+.swatches button svg{width:100%;height:100%;display:block;}
+.swatches button.sel{border-color:#5ee08a;box-shadow:0 0 18px rgba(94,224,138,.6);}
+#progbar{flex:2;height:14px;background:rgba(255,255,255,.16);border-radius:8px;overflow:hidden;max-width:340px;}
+#progfill{height:100%;width:0;background:linear-gradient(90deg,#ffd84d,#5ee08a);transition:width .4s;}
+#gear{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.07);border:none;
+  color:rgba(255,255,255,.35);font-size:20px;cursor:pointer;}
+.dragon{width:clamp(110px,26vw,210px);height:clamp(110px,26vw,210px);animation:bob 2.4s ease-in-out infinite;}
+.dragon svg{width:100%;height:100%;display:block;}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-16px) rotate(3deg);}}
+.speech{background:#fff;color:#231246;border-radius:20px;padding:14px 22px;
+  font-size:clamp(18px,3.2vw,28px);font-weight:bold;max-width:660px;margin:10px auto;}
+.confetti{position:fixed;top:-40px;font-size:26px;z-index:50;pointer-events:none;animation:fall linear forwards;}
+@keyframes fall{to{transform:translateY(115vh) rotate(720deg);opacity:0;}}
+#panel{position:fixed;left:0;right:0;top:0;height:100%;z-index:100;background:#faf8ff;color:#231246;
+  display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;padding:18px;
+  padding-bottom:calc(18px + env(safe-area-inset-bottom));}
+#panel.on{display:flex;}
+#panel h2{margin:6px 0 2px;font-size:24px;color:#40248c;}
+#panel h3{margin:22px 0 6px;font-size:18px;color:#40248c;border-top:1px solid #e4dff3;padding-top:16px;}
+#panel p{font-size:15px;line-height:1.55;margin:6px 0;}
+table{width:100%;border-collapse:collapse;font-size:15px;margin-top:8px;}
+th,td{padding:9px 6px;text-align:left;border-bottom:1px solid #e2dcf2;}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:#6b5ca8;}
+td.w{font-weight:bold;font-size:20px;}
+.pill{display:inline-block;padding:3px 11px;border-radius:20px;font-size:12px;font-weight:bold;}
+.p0{background:#efeaff;color:#5a4a9e;} .p1{background:#ffe8c8;color:#8a5100;} .p2{background:#d3f7e0;color:#0d6b34;}
+.sw{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;}
+.sw button{border:2px solid #cfc4ef;background:#fff;color:#3a2a72;border-radius:14px;padding:11px 16px;
+  font-size:18px;font-weight:bold;font-family:inherit;min-width:74px;cursor:pointer;}
+.sw button.act{background:#5ee08a;border-color:#2b9a55;color:#07351a;}
+.note{background:#fff6dd;border-left:5px solid #ffc94d;padding:12px 14px;border-radius:0 12px 12px 0;
+  font-size:14px;line-height:1.55;margin:10px 0;}
+.warn{background:#ffe9e9;border-left:5px solid #e07070;padding:12px 14px;border-radius:0 12px 12px 0;
+  font-size:14px;line-height:1.55;margin:10px 0;}
+textarea,input[type=text],select{width:100%;font-family:inherit;font-size:19px;padding:12px;border-radius:12px;
+  border:2px solid #cfc4ef;background:#fff;color:#231246;margin:6px 0;}
+textarea{min-height:96px;line-height:1.6;resize:vertical;}
+.shelf{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+.trophy{background:#fff;border:2px solid #e2dcf2;border-radius:16px;padding:12px 14px;min-width:150px;flex:1 1 190px;}
+.trophy b{display:block;font-size:16px;color:#40248c;}
+.trophy .sm{font-size:13px;opacity:.75;margin-top:3px;}
+.trophy .row{display:flex;gap:6px;margin-top:8px;}
+.trophy .row button{flex:1;font-size:13px;padding:8px 6px;border-radius:10px;border:1px solid #cfc4ef;
+  background:#f4f0ff;color:#3a2a72;font-family:inherit;cursor:pointer;}
+.gatebox{position:fixed;inset:0;z-index:120;background:rgba(20,10,50,.96);display:none;
+  flex-direction:column;align-items:center;justify-content:center;padding:20px;}
+.gatebox.on{display:flex;}
+.gatenums{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
+.gatenums button{font-size:38px;font-weight:bold;font-family:inherit;padding:20px 30px;border-radius:18px;
+  border:none;background:#fff;color:#231246;min-width:110px;cursor:pointer;}
+.timerbar{height:16px;width:min(90%,520px);background:rgba(255,255,255,.16);border-radius:9px;overflow:hidden;margin:14px 0;}
+.timerfill{height:100%;width:100%;background:#5ee08a;transition:width .1s linear;}
+.judge{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:8px;}
+.judge button{font-size:clamp(20px,3.4vw,30px);min-width:200px;min-height:96px;}
+small.dim{opacity:.6;font-size:14px;display:block;margin-top:14px;}
+/* iPad landscape (1080x810) and any short window: shrink the giants, keep touch targets. */
+@media (max-height:860px){
+  h1{font-size:clamp(26px,5vw,44px);}
+  .wordbig{font-size:clamp(56px,12vh,120px);margin:2px 0 10px;}
+  .dragon{width:clamp(90px,20vh,150px);height:clamp(90px,20vh,150px);}
+  .sentence{font-size:clamp(24px,4vh,40px);line-height:1.6;}
+  .sentemoji{font-size:clamp(30px,5vh,52px);}
+  .sentwrap{padding:14px 16px;}
+  .tile{min-height:96px;padding:12px 10px;font-size:clamp(30px,5.5vh,60px);}
+  .btn.big{min-height:80px;padding:18px 44px;font-size:clamp(22px,4vw,34px);}
+  .judge button{min-height:80px;}
+  .screen{padding:10px 16px;}
+  .prompt{margin-bottom:8px;min-height:28px;}
+}
+@media (max-height:700px){
+  .wordbig{font-size:clamp(46px,11vh,90px);}
+  .tile{min-height:80px;font-size:clamp(26px,5vh,48px);}
+}
+/* ============================================================
+   PRIMARY ORIENTATION: LANDSCAPE
+   A landscape iPad is short but wide. The shrink tiers above are a safety net
+   for genuinely tiny windows; on a real iPad in landscape there is plenty of
+   height going spare, so size everything off the height and use it.
+   This block sits after those tiers deliberately - it overrides them.
+   ============================================================ */
+@media (orientation:landscape) and (min-height:620px){
+  h1{font-size:clamp(30px,6.5vh,52px);}
+  .prompt{font-size:clamp(19px,3.4vh,28px);margin-bottom:10px;min-height:30px;}
+  .wordbig{font-size:clamp(80px,22vh,190px);margin:4px 0 10px;}
+  .tile{min-height:clamp(110px,18vh,150px);font-size:clamp(38px,9vh,80px);padding:16px 12px;}
+  .btn.big{min-height:clamp(86px,15vh,110px);font-size:clamp(26px,4.8vh,42px);padding:20px 52px;}
+  .judge button{min-height:clamp(86px,15vh,110px);font-size:clamp(20px,3.6vh,30px);}
+  .egg .pic{width:clamp(44px,9vh,72px);height:clamp(44px,9vh,72px);}
+  .egg .lbl{font-size:clamp(15px,2.8vh,22px);}
+  .sentence{font-size:clamp(28px,6.4vh,48px);line-height:1.5;}
+  .sentemoji{font-size:clamp(40px,8vh,64px);}
+  .sentwrap{padding:16px 18px;}
+  .dragon{width:clamp(110px,26vh,200px);height:clamp(110px,26vh,200px);}
+  .timerbar{height:18px;}
+  .screen{padding:12px 16px;}
+  .berry{width:clamp(110px,22vh,180px);height:clamp(110px,22vh,180px);font-size:clamp(30px,8vh,60px);}
+  #feedDragon{width:clamp(80px,16vh,130px);height:clamp(80px,16vh,130px);}
+}
+
+/* Portrait still works well and keeps its own generous sizing. */
+@media (orientation:portrait) and (min-height:900px){
+  .wordbig{font-size:clamp(90px,20vw,200px);}
+  .tile{min-height:150px;font-size:clamp(40px,8vw,90px);padding:22px 12px;}
+  .btn.big{min-height:110px;font-size:clamp(30px,5.6vw,46px);}
+  .judge button{min-height:110px;}
+  .egg .pic{width:clamp(44px,8vw,72px);height:clamp(44px,8vw,72px);}
+  .egg .lbl{font-size:clamp(15px,2.6vw,22px);}
+  .sentence{font-size:clamp(30px,5.6vw,54px);}
+  .sentemoji{font-size:clamp(44px,8vw,76px);}
+  .prompt{font-size:clamp(20px,3.6vw,30px);}
+  .timerbar{height:20px;}
+}
+/* Apple's minimum comfortable touch target is 44px. Nothing tappable goes under it. */
+.trophy .row button{min-height:44px;}
+.sw button{min-height:48px;}
+select,input[type=text]{min-height:48px;}
+/* The range slider needs its own touch handling or iOS treats the drag as a page gesture. */
+input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;
+  touch-action:none;height:44px;padding:0;border:none;margin:0;width:100%;}
+input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:#cfc4ef;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+  width:32px;height:32px;border-radius:50%;background:#5ee08a;border:3px solid #2b9a55;
+  margin-top:-12px;}
+/* The dashboard table must never force sideways scrolling on a 810px-wide screen. */
+#tableWrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{table-layout:fixed;}
+td.w{word-break:break-word;}
+.dragrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.dragrow div{width:46px;height:46px;background:#efeaff;border-radius:10px;padding:2px;}
+.dragrow svg{width:100%;height:100%;display:block;}
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<div id="app">
+  <div id="bar">
+    <div id="barEgg" aria-hidden="true"></div>
+    <div id="progbar"><div id="progfill"></div></div>
+    <button id="gear" aria-label="Grown-ups">&#9881;</button>
+  </div>
+
+  <div class="screen on" id="scHome">
+    <h1>Dragon Rescue</h1>
+    <div class="setname" id="homeSet"></div>
+    <div class="sub" id="homeSub"></div>
+    <div id="focusStrip"></div>
+    <div id="nestGrid"></div>
+    <button class="btn big" id="btnPlay">&#9654; PLAY</button>
+  </div>
+
+  <div class="screen" id="scMeet">
+    <div class="prompt" id="meetPrompt">Today's magic word is</div>
+    <div class="wordbig" id="meetWord"></div>
+    <div class="dragon" id="meetDragon" style="width:clamp(70px,14vh,120px);height:clamp(70px,14vh,120px)"></div>
+    <button class="btn big green" id="btnMeetGo">Let's go!</button>
+  </div>
+
+  <div class="screen" id="scOdd">
+    <div class="prompt" id="oddPrompt"></div>
+    <div class="tiles" id="oddTiles"></div>
+  </div>
+
+  <div class="screen" id="scFeed">
+    <div class="prompt" id="feedPrompt"></div>
+    <div class="berries" id="feedBerries"></div>
+    <div class="dragon" id="feedDragon"></div>
+  </div>
+
+  <div class="screen" id="scEcho">
+    <div class="prompt" id="echoPrompt">Say it with me!</div>
+    <div class="wordbig" id="echoWord"></div>
+    <div class="dragon" id="echoDragon" style="width:clamp(80px,16vh,140px);height:clamp(80px,16vh,140px)"></div>
+    <button class="btn ghost" id="btnEchoAgain">&#128266; Again</button>
+  </div>
+
+  <div class="screen" id="scSent">
+    <div class="prompt" id="sentPrompt"></div>
+    <div class="sentwrap"><div class="sentemoji" id="sentEmoji"></div><div class="sentence" id="sentBody"></div></div>
+  </div>
+
+  <div class="screen" id="scCall">
+    <div class="dragon" id="callDragon"></div>
+    <h1>Grown-up time!</h1>
+    <div class="speech" id="callMsg">Go and find a grown-up.<br>It is time to show them your words!</div>
+    <button class="btn big green" id="btnGrownup">A grown-up is here</button>
+    <button class="btn ghost" id="btnAlone">Nobody is here &#8594; play alone</button>
+  </div>
+
+  <div class="screen" id="scSpeed">
+    <div class="prompt" id="speedPrompt">Say the word!</div>
+    <div class="wordbig" id="speedWord"></div>
+    <div class="timerbar"><div class="timerfill" id="speedTimer"></div></div>
+    <div class="judge">
+      <button class="btn green" id="btnSpeedYes">&#9989; Said it!</button>
+      <button class="btn amber" id="btnSpeedNo">&#128260; Not yet</button>
+    </div>
+    <small class="dim" id="speedCount"></small>
+  </div>
+
+  <div class="screen" id="scEnd">
+    <div class="dragon" id="endDragon"></div>
+    <h1 id="endTitle">Great work!</h1>
+    <div class="speech" id="endMsg"></div>
+    <div id="colourPick" style="display:none">
+      <div class="prompt" style="margin:6px 0 4px">Pick your dragon's colour!</div>
+      <div class="swatches" id="swatches"></div>
+    </div>
+    <button class="btn big" id="btnHome">Back to the nest</button>
+  </div>
+</div>
+
+<div class="gatebox" id="gate">
+  <div class="sub" style="font-size:22px">Grown-ups only</div>
+  <h1 style="font-size:34px" id="gateAsk">Tap 24</h1>
+  <div class="gatenums" id="gateNums"></div>
+  <button class="btn ghost small" id="gateCancel" style="margin-top:26px">Cancel</button>
+</div>
+
+<div id="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Grown-up dashboard</h2>
+    <button class="btn small" id="panelClose">Close</button>
+  </div>
+  <p id="panelSummary"></p>
+
+  <h3 style="border-top:none">Every word in this set</h3>
+  <div id="tableWrap"><table id="statTable"></table></div>
+  <p style="font-size:13px;opacity:.7;line-height:1.5">
+    <b>Hatched</b> = said aloud correctly, within 5 seconds, with a grown-up listening, on 3 different days.
+    <b>Cracking</b> = getting there. <b>Egg</b> = still new. "Speed" is his best confirmed time.
+  </p>
+
+  <h3>Practise only some of these words</h3>
+  <p style="font-size:14px;opacity:.8">Tap a word to switch it off if his teacher has not given it to him yet. Switched-off words vanish completely, including as wrong answers.</p>
+  <div class="sw" id="activeSwitches"></div>
+
+  <h3>&#128221; Change the words</h3>
+  <p style="font-size:14px;opacity:.85">Type or paste the new words below. Spaces, commas or new lines all work.</p>
+  <input type="text" id="setNameInput" placeholder="Name of this set, e.g. Red Words" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" enterkeyhint="done">
+  <textarea id="wordsInput" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="none" enterkeyhint="done"></textarea>
+  <div id="wordsPreview" style="font-size:14px;min-height:22px;margin-bottom:6px"></div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px">
+    <button class="btn small green" id="btnNewSet">&#127881; Start a NEW set</button>
+    <button class="btn small" id="btnSaveSet">Fix the words in THIS set</button>
+  </div>
+  <div class="note">
+    <b>Which button?</b><br>
+    <b>Start a NEW set</b> &mdash; use this when he passes the test and brings home fresh words.
+    The set he just finished is kept forever on the trophy shelf below, dragons and all, and he begins again on a clean nest.<br><br>
+    <b>Fix the words in THIS set</b> &mdash; use this only to correct a typo or add a word he was given late.
+    Progress on any word you keep is preserved; progress on a word you remove is deleted.
+  </div>
+  <p style="font-size:14px;opacity:.85;margin-top:12px">The twelve dragons, in the order they are handed out:</p>
+  <div class="dragrow" id="dragRow"></div>
+
+  <h3>&#127942; Trophy shelf</h3>
+  <div class="shelf" id="shelf"></div>
+
+  <h3>Sentences</h3>
+  <div id="sentCoverage"></div>
+  <p style="font-size:14px;opacity:.85">The game has built-in sentences and automatically picks ones containing the word being practised. If a new word has none, add your own below, one per line. You may start a line with a picture symbol.</p>
+  <textarea id="customSent" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="sentences" placeholder="&#128054; My dog can run fast."></textarea>
+  <button class="btn small" id="btnSaveSent">Save my sentences</button>
+
+  <h3>&#128266; Voice</h3>
+  <p style="font-size:14px;opacity:.85">Tablets come with different voices installed. Pick the warmest one, then tap Hear it. If none of them sound friendly, switch the voice off and read the words to him yourself.</p>
+  <select id="voiceSel"></select>
+  <div id="voiceNow" style="font-size:14px;color:#40248c;margin:2px 0 8px"></div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+    <button class="btn small" id="btnTestVoice">&#128266; Hear it</button>
+    <span style="font-size:14px;opacity:.75">Speed</span>
+    <input type="range" id="rateSlider" min="50" max="130" step="5" style="flex:1;min-width:150px">
+    <span id="rateOut" style="font-size:14px;font-weight:bold;min-width:44px"></span>
+  </div>
+
+  <h3>Settings</h3>
+  <div class="sw" id="settingSwitches"></div>
+
+  <h3>&#127942; Friday rehearsal</h3>
+  <p style="font-size:14px;opacity:.85">Daily play stays on one word at a time. This runs <b>every word the school has given him</b>, shuffled, exactly like the Friday test &mdash; no games around it. Two minutes, once a week.</p>
+  <button class="btn small green" id="btnFriday">&#9654; Start Friday rehearsal</button>
+  <div id="fridayNote" style="font-size:13px;opacity:.7;margin-top:6px"></div>
+
+  <h3>&#128190; Backup</h3>
+  <p style="font-size:14px;opacity:.85">iPadOS can clear a website's saved data if the game goes unused for a long stretch. Copy this text somewhere safe (Notes, or an email to yourself) now and again. Pasting it back restores every set and every dragon.</p>
+  <textarea id="backupBox" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="none" style="font-size:12px;min-height:80px"></textarea>
+  <div style="display:flex;flex-wrap:wrap;gap:10px">
+    <button class="btn small" id="btnCopyBackup">Copy backup</button>
+    <button class="btn small ghost" id="btnRestore" style="background:#e6f0ff;color:#123a6b;box-shadow:0 4px 0 #9dbde8">Restore from pasted text</button>
+  </div>
+
+  <h3>Start again</h3>
+  <button class="btn small ghost" id="btnReset" style="background:#ffdada;color:#7d1414;box-shadow:0 4px 0 #d99">Erase everything</button>
+  <p style="font-size:13px;opacity:.65;margin-top:18px">
+    No account, no name, no internet. Everything is stored only in this browser on this device.
+  </p>
+  <div style="height:50px"></div>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   THE TWELVE DRAGONS - hand drawn, no image files needed.
+   Handed out in this order: dragon 1 goes to the 1st word, and so on.
+   ============================================================ */
+var SVGO='<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">';
+var DRAGONS=[
+SVGO+'<path d="M46 44 Q59 43 57 30 Q56 25 51 27 Q55 37 46 38 Z" fill="#3B6D11"/><path d="M19 32 L3 19 L10 36 Z" fill="#3B6D11"/><path d="M45 32 L61 19 L54 36 Z" fill="#3B6D11"/><ellipse cx="32" cy="43" rx="15" ry="13" fill="#63C459"/><ellipse cx="32" cy="47" rx="9" ry="8" fill="#C0DD97"/><circle cx="32" cy="22" r="13" fill="#63C459"/><path d="M24 12 L21 3 L30 10 Z" fill="#3B6D11"/><path d="M40 12 L43 3 L34 10 Z" fill="#3B6D11"/><circle cx="27" cy="21" r="4.2" fill="#fff"/><circle cx="37" cy="21" r="4.2" fill="#fff"/><circle cx="28" cy="22" r="2.2" fill="#2C2C2A"/><circle cx="38" cy="22" r="2.2" fill="#2C2C2A"/><path d="M28 29 Q32 32.5 36 29" stroke="#3B6D11" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+SVGO+'<path d="M48 46 Q60 46 58 36 Q57 32 53 34 Q56 41 48 41 Z" fill="#993C1D"/><path d="M15 34 L5 27 L12 39 Z" fill="#993C1D"/><path d="M49 34 L59 27 L52 39 Z" fill="#993C1D"/><ellipse cx="32" cy="44" rx="17" ry="14" fill="#F0997B"/><ellipse cx="32" cy="48" rx="11" ry="9" fill="#F5C4B3"/><circle cx="32" cy="23" r="14" fill="#F0997B"/><circle cx="20" cy="14" r="5" fill="#F0997B"/><circle cx="44" cy="14" r="5" fill="#F0997B"/><circle cx="22" cy="30" r="3.5" fill="#D85A30" opacity="0.55"/><circle cx="42" cy="30" r="3.5" fill="#D85A30" opacity="0.55"/><circle cx="26" cy="22" r="4.5" fill="#fff"/><circle cx="38" cy="22" r="4.5" fill="#fff"/><circle cx="27" cy="23" r="2.4" fill="#2C2C2A"/><circle cx="39" cy="23" r="2.4" fill="#2C2C2A"/><path d="M27 29 Q32 33 37 29" stroke="#993C1D" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+SVGO+'<path d="M12 54 Q22 56 26 48 Q30 40 22 36 Q14 32 20 24" stroke="#5DCAA5" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M12 54 Q22 56 26 48" stroke="#9FE1CB" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M30 12 L26 3 L34 9 Z" fill="#0F6E56"/><path d="M42 12 L46 3 L38 9 Z" fill="#0F6E56"/><ellipse cx="36" cy="20" rx="14" ry="12" fill="#5DCAA5"/><ellipse cx="36" cy="25" rx="8" ry="6" fill="#9FE1CB"/><circle cx="31" cy="18" r="4.2" fill="#fff"/><circle cx="42" cy="18" r="4.2" fill="#fff"/><circle cx="32" cy="19" r="2.2" fill="#2C2C2A"/><circle cx="43" cy="19" r="2.2" fill="#2C2C2A"/><path d="M36 27 L36 33 M33 31 L36 34 L39 31" stroke="#0F6E56" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+SVGO+'<path d="M47 46 Q59 45 56 34 Q55 30 51 32 Q54 40 47 40 Z" fill="#854F0B"/><path d="M20 30 L14 20 L26 26 Z M32 26 L30 15 L40 23 Z M44 30 L50 20 L52 30 Z" fill="#854F0B"/><ellipse cx="32" cy="44" rx="15" ry="13" fill="#EF9F27"/><ellipse cx="32" cy="48" rx="9" ry="8" fill="#FAC775"/><circle cx="32" cy="24" r="13" fill="#EF9F27"/><ellipse cx="32" cy="31" rx="8" ry="5" fill="#FAC775"/><circle cx="29" cy="31" r="1.2" fill="#854F0B"/><circle cx="35" cy="31" r="1.2" fill="#854F0B"/><circle cx="26" cy="21" r="4.2" fill="#fff"/><circle cx="38" cy="21" r="4.2" fill="#fff"/><circle cx="27" cy="22" r="2.2" fill="#2C2C2A"/><circle cx="39" cy="22" r="2.2" fill="#2C2C2A"/></svg>',
+SVGO+'<path d="M8 56 L14 44 L20 52 L26 44 L30 54 Z" fill="#FAEEDA"/><path d="M56 56 L50 44 L44 52 L38 44 L34 54 Z" fill="#FAEEDA"/><ellipse cx="32" cy="45" rx="14" ry="12" fill="#ED93B1"/><ellipse cx="32" cy="49" rx="8" ry="7" fill="#F4C0D1"/><circle cx="32" cy="25" r="13" fill="#ED93B1"/><path d="M19 18 L24 10 L29 16 L34 9 L39 16 L44 10 L46 18 Z" fill="#FAEEDA"/><circle cx="27" cy="26" r="4.5" fill="#fff"/><circle cx="38" cy="26" r="4.5" fill="#fff"/><circle cx="28" cy="27" r="2.4" fill="#2C2C2A"/><circle cx="39" cy="27" r="2.4" fill="#2C2C2A"/><ellipse cx="32" cy="33" rx="3" ry="2.4" fill="#993556"/></svg>',
+SVGO+'<path d="M20 30 Q2 16 2 34 Q10 34 14 40 Z" fill="#378ADD"/><path d="M44 30 Q62 16 62 34 Q54 34 50 40 Z" fill="#378ADD"/><path d="M46 48 Q58 50 58 40" stroke="#185FA5" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="32" cy="44" rx="13" ry="12" fill="#85B7EB"/><ellipse cx="32" cy="48" rx="8" ry="7" fill="#B5D4F4"/><circle cx="32" cy="23" r="12" fill="#85B7EB"/><path d="M25 12 L23 4 L30 10 Z" fill="#185FA5"/><path d="M39 12 L41 4 L34 10 Z" fill="#185FA5"/><circle cx="27" cy="22" r="4" fill="#fff"/><circle cx="37" cy="22" r="4" fill="#fff"/><circle cx="28" cy="23" r="2.1" fill="#2C2C2A"/><circle cx="38" cy="23" r="2.1" fill="#2C2C2A"/><path d="M28 29 Q32 32 36 29" stroke="#185FA5" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+SVGO+'<path d="M46 48 Q58 48 56 38 Q55 34 51 36 Q54 43 46 43 Z" fill="#534AB7"/><path d="M18 34 L6 24 L12 39 Z" fill="#534AB7"/><ellipse cx="32" cy="45" rx="15" ry="12" fill="#AFA9EC"/><ellipse cx="32" cy="49" rx="9" ry="7" fill="#CECBF6"/><circle cx="32" cy="25" r="13" fill="#AFA9EC"/><path d="M24 14 L22 6 L29 12 Z" fill="#534AB7"/><path d="M40 14 L42 6 L35 12 Z" fill="#534AB7"/><path d="M23 25 Q27 29 31 25" stroke="#2C2C2A" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M34 25 Q38 29 42 25" stroke="#2C2C2A" stroke-width="2.2" fill="none" stroke-linecap="round"/><ellipse cx="32" cy="33" rx="3" ry="2.2" fill="#3C3489"/><text x="49" y="16" font-size="11" font-weight="bold" fill="#CECBF6">z</text><text x="55" y="9" font-size="8" font-weight="bold" fill="#CECBF6">z</text></svg>',
+SVGO+'<path d="M14 46 Q3 46 5 36 Q6 32 10 34 Q7 41 14 41 Z" fill="#A32D2D"/><path d="M46 32 L58 22 L54 38 Z" fill="#A32D2D"/><ellipse cx="30" cy="45" rx="14" ry="12" fill="#F09595"/><ellipse cx="30" cy="49" rx="8" ry="7" fill="#F7C1C1"/><circle cx="28" cy="24" r="13" fill="#F09595"/><path d="M20 13 L18 5 L25 11 Z" fill="#A32D2D"/><path d="M36 13 L38 5 L31 11 Z" fill="#A32D2D"/><circle cx="23" cy="22" r="4.2" fill="#fff"/><circle cx="34" cy="22" r="4.2" fill="#fff"/><circle cx="24" cy="23" r="2.2" fill="#2C2C2A"/><circle cx="35" cy="23" r="2.2" fill="#2C2C2A"/><ellipse cx="34" cy="31" rx="5" ry="3.5" fill="#501313"/><path d="M39 31 Q48 26 60 31 Q48 36 39 31 Z" fill="#EF9F27"/><path d="M42 31 Q49 28 55 31 Q49 34 42 31 Z" fill="#FAC775"/></svg>',
+SVGO+'<path d="M47 47 Q59 47 57 37 Q56 33 52 35 Q55 42 47 42 Z" fill="#5F5E5A"/><path d="M18 33 L6 23 L13 38 Z" fill="#5F5E5A"/><path d="M46 33 L58 23 L51 38 Z" fill="#5F5E5A"/><ellipse cx="32" cy="45" rx="15" ry="12" fill="#B4B2A9"/><ellipse cx="32" cy="49" rx="9" ry="7" fill="#D3D1C7"/><circle cx="32" cy="26" r="13" fill="#B4B2A9"/><path d="M21 18 Q10 14 12 4 Q20 8 23 15" fill="#5F5E5A"/><path d="M43 18 Q54 14 52 4 Q44 8 41 15" fill="#5F5E5A"/><circle cx="27" cy="24" r="4.2" fill="#fff"/><circle cx="38" cy="24" r="4.2" fill="#fff"/><circle cx="28" cy="25" r="2.2" fill="#2C2C2A"/><circle cx="39" cy="25" r="2.2" fill="#2C2C2A"/><path d="M28 32 Q32 35 36 32" stroke="#444441" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+SVGO+'<path d="M47 47 Q59 46 56 36 Q55 32 51 34 Q54 41 47 41 Z" fill="#3B6D11"/><path d="M32 24 m-19 0 a19 19 0 1 1 38 0 Z" fill="#639922"/><path d="M14 24 L18 12 M22 22 L24 8 M32 21 L32 6 M42 22 L40 8 M50 24 L46 12" stroke="#3B6D11" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="32" cy="45" rx="14" ry="12" fill="#97C459"/><ellipse cx="32" cy="49" rx="8" ry="7" fill="#C0DD97"/><circle cx="32" cy="26" r="12" fill="#97C459"/><circle cx="27" cy="24" r="4" fill="#fff"/><circle cx="37" cy="24" r="4" fill="#fff"/><circle cx="28" cy="25" r="2.1" fill="#2C2C2A"/><circle cx="38" cy="25" r="2.1" fill="#2C2C2A"/><path d="M32 31 L32 35 M29 33 L32 36 L35 33" stroke="#3B6D11" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+SVGO+'<path d="M46 46 Q58 45 56 34 Q55 30 51 32 Q54 40 46 40 Z" fill="#3C3489"/><path d="M19 31 L3 18 L10 36 Z" fill="#534AB7"/><path d="M45 31 L61 18 L54 36 Z" fill="#534AB7"/><path d="M8 26 l1.6 3.4 3.4 1.6 -3.4 1.6 -1.6 3.4 -1.6 -3.4 -3.4 -1.6 3.4 -1.6 Z" fill="#FAC775"/><path d="M56 26 l1.6 3.4 3.4 1.6 -3.4 1.6 -1.6 3.4 -1.6 -3.4 -3.4 -1.6 3.4 -1.6 Z" fill="#FAC775"/><ellipse cx="32" cy="44" rx="14" ry="12" fill="#7F77DD"/><ellipse cx="32" cy="48" rx="8" ry="7" fill="#AFA9EC"/><circle cx="32" cy="23" r="12" fill="#7F77DD"/><path d="M32 6 l2 4.6 5 .6 -3.7 3.4 1 5 -4.3 -2.5 -4.3 2.5 1 -5 -3.7 -3.4 5 -.6 Z" fill="#FAC775"/><circle cx="27" cy="23" r="4" fill="#fff"/><circle cx="37" cy="23" r="4" fill="#fff"/><circle cx="28" cy="24" r="2.1" fill="#2C2C2A"/><circle cx="38" cy="24" r="2.1" fill="#2C2C2A"/><path d="M28 29 Q32 32 36 29" stroke="#3C3489" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+SVGO+'<path d="M47 50 Q57 50 55 42" stroke="#854F0B" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M17 40 L8 33 L15 45 Z" fill="#854F0B"/><path d="M47 40 L56 33 L49 45 Z" fill="#854F0B"/><ellipse cx="32" cy="47" rx="12" ry="10" fill="#FAC775"/><ellipse cx="32" cy="50" rx="7" ry="6" fill="#FAEEDA"/><circle cx="32" cy="26" r="15" fill="#FAC775"/><path d="M25 13 L23 6 L30 11 Z" fill="#854F0B"/><path d="M39 13 L41 6 L34 11 Z" fill="#854F0B"/><circle cx="26" cy="25" r="6.5" fill="#fff"/><circle cx="39" cy="25" r="6.5" fill="#fff"/><circle cx="27" cy="26" r="3.6" fill="#2C2C2A"/><circle cx="40" cy="26" r="3.6" fill="#2C2C2A"/><circle cx="25.4" cy="24" r="1.4" fill="#fff"/><circle cx="38.4" cy="24" r="1.4" fill="#fff"/><path d="M29 34 Q32.5 37 36 34" stroke="#854F0B" stroke-width="2" fill="none" stroke-linecap="round"/></svg>'
+];
+
+/* Eggs, drawn to match */
+var EGG_PLAIN=SVGO+'<ellipse cx="32" cy="36" rx="19" ry="24" fill="#EFEAF8"/><ellipse cx="25" cy="28" rx="6" ry="9" fill="#fff" opacity="0.7"/><ellipse cx="32" cy="44" rx="12" ry="9" fill="#D8D0EC" opacity="0.5"/></svg>';
+var EGG_CRACK=SVGO+'<ellipse cx="32" cy="36" rx="19" ry="24" fill="#FDF0DA"/><ellipse cx="25" cy="28" rx="6" ry="9" fill="#fff" opacity="0.75"/><path d="M13 34 L21 30 L26 37 L33 30 L39 37 L45 30 L51 35" stroke="#EF9F27" stroke-width="3" fill="none" stroke-linejoin="round"/><path d="M32 14 l1.6 3.6 3.9 .5 -2.9 2.7 .8 3.9 -3.4-2 -3.4 2 .8-3.9 -2.9-2.7 3.9-.5 Z" fill="#FFD84D"/></svg>';
+var EGG_HAPPY=SVGO+'<ellipse cx="32" cy="38" rx="18" ry="22" fill="#FDF0DA"/><path d="M14 32 L22 27 L27 35 L34 27 L40 35 L46 27 L50 33" stroke="#EF9F27" stroke-width="3" fill="none" stroke-linejoin="round"/><circle cx="26" cy="42" r="3.4" fill="#fff"/><circle cx="38" cy="42" r="3.4" fill="#fff"/><circle cx="27" cy="43" r="1.8" fill="#2C2C2A"/><circle cx="39" cy="43" r="1.8" fill="#2C2C2A"/><path d="M28 49 Q32 52 36 49" stroke="#854F0B" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+
+function dragonFor(i){return DRAGONS[i%DRAGONS.length];}
+
+/* ============================================================
+   THE STARTING WORDS
+   Used only the very first time the game is ever opened.
+   After that, change the words from the grown-up dashboard.
+   ============================================================ */
+var DEFAULT_WORDS = ["a","is","and","be","in","it","of","that","to","was","I","the"];
+var DEFAULT_SET_NAME = "Golden Words";
+
+/* How long he gets to say a word in the grown-up speed round, in seconds. */
+var SPEED_SECONDS = 5;
+
+var CURATED = {
+  "a":["and","I","is"],      "is":["it","in","I"],      "and":["a","in","it"],
+  "be":["the","was","that"], "in":["it","is","I"],      "it":["in","is","I"],
+  "of":["to","I","be"],      "that":["the","was","be"], "to":["of","the","it"],
+  "was":["that","the","be"], "i":["is","in","it"],      "the":["that","was","be"]
+};
+
+var SENTENCES = [
+{t:"The dragon is in the box.",e:"🐉"},{t:"It was a big egg.",e:"🥚"},
+{t:"I can see the dragon.",e:"👀"},{t:"The dog and the cat ran.",e:"🐶"},
+{t:"I was in the tent.",e:"⛺"},{t:"That is my red hat.",e:"🎩"},
+{t:"I will be a big dragon.",e:"🐲"},{t:"It is a box of eggs.",e:"📦"},
+{t:"The sun was so hot.",e:"☀️"},{t:"Look at that big fish!",e:"🐟"},
+{t:"A dragon and a dog.",e:"🐉"},{t:"The star is in the sky.",e:"⭐"},
+{t:"Can I have a cake?",e:"🍰"},{t:"The frog is on that log.",e:"🐸"},
+{t:"My mum and dad are here.",e:"👪"},{t:"That was so much fun!",e:"🎉"},
+{t:"The egg is in the nest.",e:"🐣"},{t:"I like to run and jump.",e:"🏃"},
+{t:"Go to the den.",e:"🌿"},{t:"It is time to go.",e:"⏰"},
+{t:"A lot of fun for me.",e:"😄"},{t:"The top of the hill.",e:"⛰️"},
+{t:"It will be a fun day.",e:"🌈"},{t:"Can I be the dragon?",e:"🐲"},
+{t:"The cat sat on a mat.",e:"🐱"},{t:"That was my big jump!",e:"🤸"},
+{t:"He ran to the shop.",e:"🏪"},{t:"She has a new bike.",e:"🚲"},
+{t:"We went to the park.",e:"🌳"},{t:"You can play with me.",e:"🧸"},
+{t:"They are my best friends.",e:"👦"},{t:"He said hello to me.",e:"👋"},
+{t:"She is very happy today.",e:"😊"},{t:"Look at all the birds!",e:"🐦"},
+{t:"Come and see my room.",e:"🚪"},{t:"This is a good book.",e:"📖"},
+{t:"But where is my shoe?",e:"👟"},{t:"All of the cakes are gone.",e:"🍰"},
+{t:"Get up, it is morning!",e:"🌅"},{t:"He had a bad dream.",e:"😴"},
+{t:"She has two little cats.",e:"🐈"},{t:"I have a red ball.",e:"⚽"},
+{t:"Her hat is very big.",e:"🧢"},{t:"Give the ball to him.",e:"🏀"},
+{t:"His dog is called Max.",e:"🐕"},{t:"Do not go in there.",e:"🚫"},
+{t:"One more song, please!",e:"🎵"},{t:"Let us go out to play.",e:"🎈"},
+{t:"Would you like to play?",e:"🎲"},{t:"I can see some ducks.",e:"🦆"},
+{t:"Then we had our tea.",e:"🍵"},{t:"There is a cat up there.",e:"🐈"},
+{t:"They went home for tea.",e:"🏠"},{t:"We were very late.",e:"⏱️"},
+{t:"What is in the bag?",e:"🎒"},{t:"When can we go home?",e:"🏡"},
+{t:"I will help you.",e:"🤝"},{t:"Play with me on the swing.",e:"🎠"},
+{t:"No, that is not mine.",e:"🙅"},{t:"Yes, I would like some!",e:"👍"},
+{t:"Did you see the moon?",e:"🌙"},{t:"If you are good, we will go.",e:"🌟"},
+{t:"He went into the house.",e:"🏠"},{t:"I like my new shoes.",e:"👟"},
+{t:"A little bird sat down.",e:"🐦"},{t:"Mum made a big cake.",e:"🎂"},
+{t:"Can you make a boat?",e:"⛵"},{t:"The man has a hat.",e:"👨"},
+{t:"I want more juice.",e:"🧃"},{t:"My new book is red.",e:"📕"},
+{t:"Now it is my turn.",e:"🎯"},{t:"Take your shoes off.",e:"👞"},
+{t:"The old tree is big.",e:"🌳"},{t:"Our dog can run fast.",e:"🐕"},
+{t:"He is over there.",e:"👉"},{t:"Put it in the box.",e:"📦"},
+{t:"The dog ran away.",e:"🐕"},{t:"I saw a big spider!",e:"🕷️"},
+{t:"Give it to them.",e:"🎁"},{t:"That is too big for me.",e:"📏"},
+{t:"Come with us to the shop.",e:"🛒"},{t:"It is very cold today.",e:"❄️"},
+{t:"I want to go home.",e:"🏠"},{t:"This is the way in.",e:"🚪"},
+{t:"Well done, you did it!",e:"🏅"},{t:"Come back here!",e:"🔙"},
+{t:"Look at that big bus.",e:"🚌"},{t:"The boy has a kite.",e:"🪁"},
+{t:"A girl ran up the hill.",e:"👧"},{t:"She came to my party.",e:"🎉"},
+{t:"What a lovely day!",e:"🌤️"},{t:"Sit down on the mat.",e:"🪑"},
+{t:"Eat up all your peas.",e:"🥗"},{t:"It came from the sea.",e:"🌊"},
+{t:"That was a good day.",e:"😃"},{t:"I got a new toy.",e:"🧸"},
+{t:"Can you help me?",e:"🙋"},{t:"We are going home now.",e:"🏡"},
+{t:"How old are you?",e:"🎂"},{t:"Just one more go!",e:"🔁"},
+{t:"Keep the ball in here.",e:"⚽"},{t:"I know his name.",e:"📛"},
+{t:"Let me have a look.",e:"🔍"},{t:"We live in a big city.",e:"🏙️"},
+{t:"I love my mum and dad.",e:"❤️"},{t:"You must go to bed.",e:"🛏️"},
+{t:"What is your name?",e:"🏷️"},{t:"I need my other shoe.",e:"👟"},
+{t:"It is dark at night.",e:"🌃"},{t:"Only one cake is left.",e:"🧁"},
+{t:"Open the door, please.",e:"🚪"},{t:"My red car is fast.",e:"🚗"},
+{t:"You are right!",e:"✅"},{t:"Run to the big tree.",e:"🌲"},
+{t:"Say it to me again.",e:"🗣️"},{t:"We go to school.",e:"🏫"},
+{t:"Sit with me here.",e:"👬"},{t:"A small bug is on it.",e:"🐞"},
+{t:"Stop at the road.",e:"🛑"},{t:"Tell me all about it.",e:"💬"},
+{t:"What is that thing?",e:"❓"},{t:"I think it is a frog.",e:"🐸"},
+{t:"It is time for bed.",e:"🛏️"},{t:"The tree is very tall.",e:"🌲"},
+{t:"The cat is under the bed.",e:"🛏️"},{t:"We walk to school.",e:"🚶"},
+{t:"The water is cold.",e:"💧"},{t:"Where are my socks?",e:"🧦"},
+{t:"Who is at the door?",e:"🚪"},{t:"Why is the dog sad?",e:"🐶"},
+{t:"Dad is at work.",e:"💼"},{t:"Would you like a drink?",e:"🥤"},
+{t:"Here is your bag.",e:"🎒"},{t:"Give me your hand.",e:"🤚"},
+{t:"Are you coming with us?",e:"🚶"},{t:"Some of them are red.",e:"🔴"},
+{t:"He put his coat on.",e:"🧥"},{t:"She said no to me.",e:"🙅"},
+{t:"We had a good time.",e:"⏰"},{t:"Look up at the sky!",e:"🌌"},
+{t:"Can I be first?",e:"🥇"},{t:"It will be dark soon.",e:"🌆"},
+{t:"I want to be big.",e:"📏"},{t:"Who made this cake?",e:"🎂"},
+{t:"He will come after tea.",e:"🍵"},{t:"Off we go!",e:"🚀"},
+{t:"Every dog has a name.",e:"🐕"},{t:"Which one do you want?",e:"🤔"},
+{t:"Down the hill we go!",e:"🛷"}
+];
+
+var CHEER=["Lovely!","Well done, you!","You got it!","That is the one!","Super!","Clever you!","Yes, that is it!","Beautiful reading!","Brilliant!","Oh, nice one!"];
+var KIND=["So close! It is this one.","Good try. Here it is.","Nearly there. Look.","Not quite. This one.","Have a look at this one."];
+
+/* ---------- helpers ---------- */
+function $(id){return document.getElementById(id);}
+/* iPadOS 13+ reports itself as a Mac, so also look for a touch screen. */
+var IOS=(/iPad|iPhone|iPod/.test(navigator.userAgent)||
+        (navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1));
+var STANDALONE=!!(window.navigator.standalone)||
+  (window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches);
+
+/* Keep the iPad awake during a session - he can stare at one word for 5 seconds
+   without touching anything, which is long enough for auto-lock to dim it. */
+var wakeLock=null;
+function requestWakeLock(){
+  try{
+    if(!navigator.wakeLock||document.visibilityState!=="visible")return;
+    navigator.wakeLock.request("screen").then(function(w){
+      wakeLock=w;
+      w.addEventListener("release",function(){wakeLock=null;});
+    },function(){});
+  }catch(e){}
+}
+function releaseWakeLock(){try{if(wakeLock)wakeLock.release();}catch(e){}wakeLock=null;}
+function rnd(n){return Math.floor(Math.random()*n);}
+function pick(a){return a[rnd(a.length)];}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=rnd(i+1);var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function today(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
+function norm(s){return String(s).toLowerCase().replace(/[^a-z']/g,"");}
+
+/* ---------- storage ---------- */
+var KEY="dragonRescue.v2", OLDKEY="dragonRescue.v1", canStore=true;
+try{localStorage.setItem("__t","1");localStorage.removeItem("__t");}catch(e){canStore=false;}
+
+var S=null;
+function blankWord(){return {seen:0,tapOk:0,tapNo:0,spokenOk:0,spokenNo:0,
+  days:[],mixedDays:[],tapDays:[],best:0,status:0,active:true,lastRev:0,missStreak:0};}
+function newSet(name,words){
+  var s={name:name||"New set",words:words.slice(),w:{},sessions:0,created:today(),finished:null};
+  words.forEach(function(x){s.w[x]=blankWord();});
+  return s;
+}
+function CUR(){return S.sets[S.cur];}
+function WORDS(){return CUR().words;}
+function WD(w){return CUR().w[w];}
+
+function load(){
+  var raw=null,old=null;
+  if(canStore){try{raw=localStorage.getItem(KEY);old=localStorage.getItem(OLDKEY);}catch(e){}}
+  try{S=raw?JSON.parse(raw):null;}catch(e){S=null;}
+  if(!S||!S.sets){
+    var first=null;
+    if(old){
+      try{
+        var o=JSON.parse(old);
+        if(o&&o.w){
+          first=newSet(DEFAULT_SET_NAME,DEFAULT_WORDS);
+          DEFAULT_WORDS.forEach(function(x){if(o.w[x])first.w[x]=o.w[x];});
+          first.sessions=o.sessions||0;
+        }
+      }catch(e){}
+    }
+    if(!first)first=newSet(DEFAULT_SET_NAME,DEFAULT_WORDS);
+    S={v:2,sets:[first],cur:0,custom:[],settings:{}};
+  }
+  if(!S.settings)S.settings={};
+  if(typeof S.settings.voice!=="boolean")S.settings.voice=true;
+  if(typeof S.settings.roundFont!=="boolean")S.settings.roundFont=false;
+  if(typeof S.settings.rate!=="number")S.settings.rate=0.85;
+  if(typeof S.settings.voiceName!=="string")S.settings.voiceName="";
+  if(!S.custom)S.custom=[];
+  if(!S.sets.length)S.sets=[newSet(DEFAULT_SET_NAME,DEFAULT_WORDS)];
+  if(S.cur>=S.sets.length||S.cur<0)S.cur=0;
+  S.sets.forEach(function(st){
+    if(!st.w)st.w={};
+    if(!st.colour)st.colour={};
+    st.words.forEach(function(x){
+      if(!st.w[x])st.w[x]=blankWord();
+      var q=st.w[x];                       /* bring older saves up to date */
+      if(!q.days)q.days=[];
+      if(!q.mixedDays)q.mixedDays=[];
+      if(!q.tapDays)q.tapDays=[];
+      if(typeof q.lastRev!=="number")q.lastRev=0;
+      if(typeof q.missStreak!=="number")q.missStreak=0;
+    });
+  });
+  document.body.classList.toggle("roundfont",!!S.settings.roundFont);
+}
+function save(){if(canStore){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}}
+
+/* ---------- sound ---------- */
+var AC=null;
+function tone(freq,dur,type,vol){
+  try{
+    if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();
+    var o=AC.createOscillator(),g=AC.createGain();
+    o.type=type||"sine";o.frequency.value=freq;
+    g.gain.setValueAtTime(vol||0.16,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+dur);
+    o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+dur);
+  }catch(e){}
+}
+function sndGood(){tone(660,.14);setTimeout(function(){tone(880,.22);},110);}
+function sndOops(){tone(392,.22,"sine",.11);}
+function sndHatch(){[523,659,784,1046].forEach(function(f,i){setTimeout(function(){tone(f,.3);},i*120);});}
+
+/* ============================================================
+   VOICE - warm by default, and fully changeable in the dashboard
+   ============================================================ */
+/* Names of the friendlier, more natural voices found on common devices.
+   Earlier in the list wins. */
+var NICE_VOICES=["samantha","karen","moira","fiona","tessa","serena","allison","ava","susan","nicky",
+  "google uk english female","google us english","microsoft sonia","microsoft libby","microsoft aria",
+  "microsoft natasha","microsoft clara","catherine","zoe","daniel","arthur","matilda","kate"];
+/* Thin, buzzy or novelty voices to avoid. */
+var BAD_VOICES=["eloquence","compact","zarvox","albert","bad news","good news","bells","boing","bubbles",
+  "cellos","deranged","hysterical","pipe organ","trinoids","whisper","wobble","superstar","jester","organ",
+  "novelty","grandma","grandpa","rocko","shelley","sandy","flo","eddy","reed","junior","ralph","fred","bahh"];
+
+var VOICES=[];
+function isBad(n){n=String(n).toLowerCase();return BAD_VOICES.some(function(b){return n.indexOf(b)>=0;});}
+function loadVoices(){
+  try{
+    if(!("speechSynthesis" in window))return;
+    VOICES=(speechSynthesis.getVoices()||[]).filter(function(v){return /^en/i.test(v.lang);});
+  }catch(e){VOICES=[];}
+}
+function chooseVoice(){
+  if(!VOICES.length)return null;
+  var i,j,v;
+  if(S.settings.voiceName){
+    for(i=0;i<VOICES.length;i++)if(VOICES[i].name===S.settings.voiceName)return VOICES[i];
+  }
+  var good=VOICES.filter(function(x){return !isBad(x.name);});
+  for(i=0;i<NICE_VOICES.length;i++){
+    for(j=0;j<good.length;j++){
+      if(good[j].name.toLowerCase().indexOf(NICE_VOICES[i])>=0)return good[j];
+    }
+  }
+  var order=[/en-GB/i,/en-AU/i,/en-IE/i,/en-US/i];
+  for(i=0;i<order.length;i++){
+    for(v=0;v<good.length;v++)if(order[i].test(good[v].lang))return good[v];
+  }
+  return good[0]||VOICES[0];
+}
+function makeUtt(txt,opts){
+  opts=opts||{};
+  var u=new SpeechSynthesisUtterance(txt);
+  var base=S.settings.rate||0.85;
+  u.rate=Math.max(0.4,Math.min(1.6,base*(opts.rateMul||1)));
+  u.pitch=opts.pitch||1.12;
+  u.volume=1;
+  u.lang="en-GB";
+  var v=chooseVoice();
+  if(v){u.voice=v;u.lang=v.lang;}
+  return u;
+}
+/* iPadOS drops an utterance if speak() follows cancel() in the same tick, so we
+   always let the engine breathe for a frame first. */
+var speakTimer=null;
+function speak(txt,opts){
+  opts=opts||{};
+  if(!S.settings.voice&&!opts.force)return;
+  try{
+    if(!("speechSynthesis" in window))return;
+    speechSynthesis.cancel();
+    clearTimeout(speakTimer);
+    if(IOS){
+      speakTimer=setTimeout(function(){
+        try{speechSynthesis.speak(makeUtt(txt,opts));}catch(e){}
+      },60);
+    }else{
+      speechSynthesis.speak(makeUtt(txt,opts));   /* desktop is unchanged */
+    }
+  }catch(e){}
+}
+/* How long to wait after the voice stops before anything new appears. */
+var PAUSE_AFTER_VOICE=900;
+/* Say something, then call back only once the voice has actually finished.
+   Falls back to a timed guess if the device never fires onend, which some
+   tablets do not. Never calls back twice. */
+function speakThen(txt,opts,cb){
+  var done=false;
+  function finish(){if(done)return;done=true;if(cb)cb();}
+  var guess=900+String(txt).length*120;
+  if(!S.settings.voice||!("speechSynthesis" in window)){
+    setTimeout(finish,1200);   /* voice off: still hold, so a grown-up can say it */
+    return;
+  }
+  try{
+    speechSynthesis.cancel();
+    var u=makeUtt(txt,opts);
+    u.onend=finish;
+    u.onerror=finish;
+    if(IOS){
+      setTimeout(function(){
+        try{speechSynthesis.speak(u);}catch(e){finish();}
+      },60);
+    }else{
+      speechSynthesis.speak(u);                   /* desktop is unchanged */
+    }
+    setTimeout(finish,guess);  /* safety net: iPadOS does not always fire onend */
+  }catch(e){setTimeout(finish,1400);}
+}
+/* Say a word the warm way: a gentle lead-in, a beat, then the word twice. */
+function speakWord(w,lead){
+  if(lead)speak(lead+" "+w+"... "+w);
+  else speak(w);
+}
+/* Safari on iPadOS will not speak or play a sound until the page has had a real
+   tap. Every entry point into audio calls this from inside the tap handler. */
+var voiceReady=false;
+function unlockVoice(){
+  try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();
+    if(AC&&AC.state==="suspended")AC.resume();}catch(e){}
+  if(voiceReady)return;
+  voiceReady=true;
+  try{
+    if("speechSynthesis" in window){
+      loadVoices();
+      var u=new SpeechSynthesisUtterance("");
+      u.volume=0;u.rate=1;
+      speechSynthesis.speak(u);
+      speechSynthesis.resume();
+    }
+  }catch(e){}
+}
+/* iPadOS suspends the speech engine when the app is backgrounded or the screen
+   locks, and does not always restart it. Nudge it whenever we come back. */
+document.addEventListener("visibilitychange",function(){
+  if(document.visibilityState==="visible"){
+    try{if("speechSynthesis" in window)speechSynthesis.resume();}catch(e){}
+    try{if(AC&&AC.state==="suspended")AC.resume();}catch(e){}
+    requestWakeLock();
+  }
+});
+
+/* ---------- screens ---------- */
+var SCREENS=["scHome","scMeet","scOdd","scFeed","scSent","scEcho","scCall","scSpeed","scEnd"];
+function show(id){for(var i=0;i<SCREENS.length;i++)$(SCREENS[i]).classList.toggle("on",SCREENS[i]===id);}
+
+/* ---------- status ---------- */
+/* Hatched needs three grown-up-confirmed days AND at least two of those
+   confirmations from a round containing other words - otherwise "saying the
+   only word on screen" would count as knowing it. */
+function statusOf(w){
+  var d=WD(w); if(!d)return 0;
+  if(!d.days)d.days=[];
+  if(!d.mixedDays)d.mixedDays=[];
+  if(!d.tapDays)d.tapDays=[];
+  if(d.days.length>=3&&d.mixedDays.length>=2)return 2;
+  if(d.tapOk>=6&&d.tapDays.length>=2)return 1;
+  return 0;
+}
+function refreshStatuses(){WORDS().forEach(function(w){WD(w).status=statusOf(w);});}
+function activeWords(){return WORDS().filter(function(w){return WD(w).active;});}
+
+/* ============================================================
+   AUTOMATIC LOOK-ALIKES - works for any word, in any future set
+   ============================================================ */
+function lev(a,b){
+  var m=a.length,n=b.length,prev=[],cur=[],i,j;
+  for(j=0;j<=n;j++)prev[j]=j;
+  for(i=1;i<=m;i++){
+    cur[0]=i;
+    for(j=1;j<=n;j++)
+      cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a.charAt(i-1)===b.charAt(j-1)?0:1));
+    for(j=0;j<=n;j++)prev[j]=cur[j];
+  }
+  return prev[n];
+}
+function similarity(a,b){
+  a=norm(a);b=norm(b);
+  if(!a||!b||a===b)return -1;
+  var s=0,d=lev(a,b);
+  s+=Math.max(0,6-d*2);
+  if(a.charAt(0)===b.charAt(0))s+=3;
+  if(a.charAt(a.length-1)===b.charAt(b.length-1))s+=2;
+  if(a.length===b.length)s+=2;
+  var shared=0,used={};
+  for(var i=0;i<a.length;i++){
+    var c=a.charAt(i),count=used[c]||0,inB=b.split(c).length-1;
+    if(count<inB){shared++;used[c]=count+1;}
+  }
+  s+=3*shared/Math.max(a.length,b.length);
+  if(a.length<=3&&b.length<=3)s+=1;
+  var cur=CURATED[a];
+  if(cur&&cur.map(norm).indexOf(b)>=0)s+=8;
+  return s;
+}
+var simCache={};
+function rankedLookalikes(target){
+  var act=activeWords(),key=norm(target)+"|"+act.join(",");
+  if(simCache[key])return simCache[key];
+  var out=act.filter(function(w){return w!==target;})
+    .map(function(w){return {w:w,s:similarity(target,w)};})
+    .sort(function(x,y){return y.s-x.s;})
+    .map(function(o){return o.w;});
+  simCache[key]=out;
+  return out;
+}
+function distractors(target,howMany){
+  var ranked=rankedLookalikes(target);
+  var top=Math.max(howMany,Math.min(ranked.length,Math.max(3,Math.ceil(ranked.length/2))));
+  var out=shuffle(ranked.slice(0,top)).slice(0,howMany);
+  if(out.length<howMany){
+    var rest=shuffle(ranked.filter(function(w){return out.indexOf(w)<0;}));
+    while(out.length<howMany&&rest.length)out.push(rest.shift());
+  }
+  return out;
+}
+
+/* ---------- sentences ---------- */
+function allSentences(){return SENTENCES.concat(S.custom||[]);}
+function sentencesWith(w){
+  var t=norm(w);
+  return allSentences().filter(function(s){
+    return s.t.split(/\s+/).some(function(tok){return norm(tok)===t;});
+  });
+}
+
+/* ---------- nest ---------- */
+function drawNest(){
+  refreshStatuses();
+  var W=WORDS(),g=$("nestGrid"),foc=focusWord();
+  g.innerHTML="";
+  for(var i=0;i<W.length;i++){
+    var w=W[i],st=WD(w).status;
+    var el=document.createElement("button");
+    el.className="egg s"+st+(w===foc?" focus":"");
+    el.setAttribute("aria-label","Hear the word "+w);
+    el.innerHTML='<div class="pic">'+art(w,i)+'</div><div class="lbl">'+(WD(w).active?w:"&mdash;")+'</div>';
+    if(!WD(w).active){el.style.opacity=".3";el.disabled=true;}
+    else el.onclick=(function(word,node){return function(){sayEgg(word,node);};})(w,el);
+    g.appendChild(el);
+  }
+  var done=W.filter(function(w){return WD(w).status===2;}).length;
+  $("homeSet").textContent=CUR().name;
+  var nActive=activeWords().length;
+  $("focusStrip").innerHTML = !nActive
+    ? '<span class="fl">No words switched on</span>'
+    : (foc ? '<span class="fl">Learning now</span><span class="fw">'+foc+'</span>'
+           : '<span class="fl">All done &mdash; revising</span>');
+  if(!nActive){
+    $("homeSub").innerHTML='<b>No words are switched on.</b>';
+    return;
+  }
+  $("homeSub").innerHTML=(done===W.length
+      ? "&#127942; All "+W.length+" dragons are free! Ask for the next set of words."
+      : (done===0 ? "One word at a time. Let's hatch a dragon!"
+                  : "<b>"+done+"</b> of "+W.length+" dragons free"))+
+    '<div style="font-size:.72em;opacity:.6;margin-top:4px">Tap an egg to hear its word</div>';
+}
+/* The eggs look tappable, so they are. Tapping one says its word - free
+   practice, and it doubles as a way for you to point at a word and ask him.
+   Nothing here is ever scored. */
+function sayEgg(w,node){
+  unlockVoice();                     /* may well be the first tap of the session */
+  node.classList.remove("tapped");
+  void node.offsetWidth;             /* restart the animation */
+  node.classList.add("tapped");
+  setTimeout(function(){node.classList.remove("tapped");},500);
+  WD(w).seen++;save();
+  tone(660,.12);
+  speakWord(w,"");
+}
+
+function confetti(n){
+  var bits=["⭐","🌟","✨","🎉","💛"];
+  for(var i=0;i<(n||24);i++){
+    var s=document.createElement("div");
+    s.className="confetti";s.textContent=pick(bits);
+    s.style.left=rnd(100)+"vw";
+    s.style.animationDuration=(1.5+Math.random()*1.6)+"s";
+    s.style.animationDelay=(Math.random()*.5)+"s";
+    document.body.appendChild(s);
+    (function(el){setTimeout(function(){el.remove();},3800);})(s);
+  }
+}
+
+/* ============================================================
+   ONE WORD AT A TIME
+   The focus word is the first word he has not yet hatched. A new word
+   only appears once the current one is properly known, so he is never
+   juggling more than one new thing.
+   ============================================================ */
+function focusWord(){
+  var act=activeWords();
+  for(var i=0;i<act.length;i++) if(WD(act[i]).status<2) return act[i];
+  return null;                      /* every word hatched */
+}
+/* Words he already knows, oldest-reviewed first, so revision spaces itself. */
+function reviewPool(){
+  return activeWords().filter(function(w){return WD(w).status===2;})
+    .sort(function(a,b){return (WD(a).lastRev||0)-(WD(b).lastRev||0);});
+}
+/* How many known words join him in Grown-Up Time. Capped so the round
+   stays about 40 seconds however many he has mastered. */
+function reviewSample(){
+  var pool=reviewPool();
+  if(pool.length<=2)return pool;
+  return pool.slice(0,pool.length<=5?3:4);
+}
+/* Wrong answers come from the whole word set, nearest look-alikes first. */
+function foil(target){
+  var others=activeWords().filter(function(w){return w!==target;});
+  if(!others.length)return null;
+  return rankedLookalikes(target)[0]||others[0];
+}
+
+/* ---------- dragon colours he picks himself ---------- */
+var HUES=[0,150,265];
+function hueOf(w){
+  var c=CUR().colour||{};
+  return HUES[c[w]||0]||0;
+}
+function art(w,i){
+  var st=WD(w).status;
+  if(st!==2)return st===1?EGG_CRACK:EGG_PLAIN;
+  var h=hueOf(w);
+  return h?'<span style="display:block;width:100%;height:100%;filter:hue-rotate('+h+'deg)">'+dragonFor(i)+'</span>'
+          :dragonFor(i);
+}
+
+/* ============================================================
+   SESSION
+   ============================================================ */
+var Q=[],qi=0,grownup=false,startStatuses={},fridayMode=false,speedMixed=false;
+
+/* Every round bumps this. Anything scheduled by an earlier round checks it and
+   quietly gives up, so a fast tapper never hears the last screen's voice over
+   the new one, and no stale timer can advance the game twice. */
+var runToken=0,paused=false;
+function live(tk){return tk===runToken&&!paused;}
+function sessionRunning(){return Q.length>0&&qi<Q.length;}
+function hushVoice(){
+  try{if("speechSynthesis" in window)speechSynthesis.cancel();}catch(e){}
+  try{clearTimeout(speakTimer);}catch(e){}
+}
+/* Speech is not always available - the grown-up may have switched it off, or
+   the browser may not have it at all. Rounds that depend on hearing a word
+   must know, and show it instead. */
+function voiceOn(){
+  if(!S||!S.settings||!S.settings.voice)return false;
+  try{return ("speechSynthesis" in window)&&VOICES.length>=0;}catch(e){return false;}
+}
+function pauseSession(){
+  if(paused)return;
+  paused=true;runToken++;
+  hushVoice();
+  try{clearInterval(speedTick);}catch(e){}
+  try{clearTimeout(echoTimer);}catch(e){}
+}
+function resumeSession(){
+  if(!paused)return;
+  paused=false;
+  if(sessionRunning())next();          /* re-draws the current round cleanly */
+}
+/* Used whenever the word list itself changes underneath a running session. */
+function abortSession(){
+  Q=[];qi=0;runToken++;paused=false;advancing=false;
+  hushVoice();
+  try{clearInterval(speedTick);}catch(e){}
+  try{clearTimeout(echoTimer);}catch(e){}
+  releaseWakeLock();
+  drawNest();show("scHome");
+  $("progfill").style.width="0";$("barEgg").innerHTML="";
+}
+
+function buildSession(){
+  simCache={};fridayMode=false;
+  var f=focusWord(),act=activeWords();
+  Q=[];
+  if(!f){                            /* nothing left to learn - pure revision */
+    f=act[0]||WORDS()[0];
+    Q.push({t:"meet",w:f,allDone:true});
+    shuffle(act).slice(0,3).forEach(function(w){Q.push({t:"feed",w:w,n:3});});
+  }else{
+    var st=WD(f).status;
+    Q.push({t:"meet",w:f});
+    Q.push({t:"odd",w:f,n:st===0?3:4});
+    Q.push({t:"feed",w:f,n:2});
+    Q.push({t:"odd",w:f,n:st===0?3:4});
+    Q.push({t:"feed",w:f,n:st===0?2:3});
+    Q.push({t:"feed",w:f,n:st===0?3:4});
+    var pool=sentencesWith(f);
+    if(pool.length)Q.push({t:"listen",w:f,s:pick(pool)});
+    Q.push({t:"echo",w:f});
+  }
+  Q.push({t:"call"});
+  var speedWords=[f].concat(reviewSample().filter(function(w){return w!==f;}));
+  speedMixed=speedWords.length>1;
+  shuffle(speedWords).forEach(function(w){Q.push({t:"speed",w:w});});
+  startSession();
+}
+
+/* Friday: every word the school has given him, nothing else. */
+function buildFriday(){
+  simCache={};fridayMode=true;grownup=true;
+  var act=shuffle(activeWords());
+  Q=[];
+  speedMixed=act.length>1;
+  act.forEach(function(w){Q.push({t:"speed",w:w});});
+  startSession();
+}
+
+function startSession(){
+  qi=0;paused=false;advancing=false;startStatuses={};
+  WORDS().forEach(function(w){startStatuses[w]=statusOf(w);});
+  drawProgress();next();
+}
+
+/* The old star meter was abstract. Progress is now the egg cracking open. */
+function drawProgress(){
+  var p=Q.length?qi/Q.length:0;
+  $("progfill").style.width=Math.round(p*100)+"%";
+  $("barEgg").innerHTML = p>=0.66?EGG_HAPPY:(p>=0.33?EGG_CRACK:EGG_PLAIN);
+}
+var advancing=false;
+function advance(){
+  if(advancing||paused)return;
+  advancing=true;
+  qi++;
+  var tk=runToken;
+  setTimeout(function(){
+    advancing=false;
+    /* If the session was abandoned or superseded while this was in flight,
+       drop it - otherwise it would fall through to the end-of-session screen. */
+    if(paused||tk!==runToken)return;
+    next();
+  },520);
+}
+/* Say something, then move on only once it has finished. Stops the "well done"
+   being chopped off by the next round's prompt. */
+function sayThenAdvance(txt){
+  var tk=runToken;
+  if(!voiceOn()){
+    setTimeout(function(){if(live(tk))advance();},650);
+    return;
+  }
+  speakThen(txt,{},function(){
+    if(!live(tk))return;
+    setTimeout(function(){if(live(tk))advance();},200);
+  });
+}
+/* A five-year-old taps things twice. Any second tap on the same control inside
+   450ms is thrown away, everywhere, including the dashboard. */
+var lastTapEl=null,lastTapAt=0;
+document.addEventListener("click",function(e){
+  var el=e.target;
+  while(el&&el!==document.body&&!(el.tagName==="BUTTON"||(el.classList&&el.classList.contains("tok"))))
+    el=el.parentNode;
+  if(!el||el===document.body)return;
+  var now=Date.now();
+  if(el===lastTapEl&&now-lastTapAt<450){
+    e.stopPropagation();e.preventDefault();return;
+  }
+  lastTapEl=el;lastTapAt=now;
+},true);
+function next(){
+  if(paused)return;
+  runToken++;                    /* anything the previous round scheduled dies here */
+  hushVoice();
+  drawProgress();
+  if(qi>=Q.length){endSession();return;}
+  var it=Q[qi];
+  if(!it||(it.w&&!WD(it.w))){    /* the word list changed underneath us */
+    abortSession();return;
+  }
+  if(it.t==="meet")doMeet(it);
+  else if(it.t==="odd")doOdd(it);
+  else if(it.t==="feed")doFeed(it);
+  else if(it.t==="listen")doListen(it);
+  else if(it.t==="echo")doEcho(it);
+  else if(it.t==="call")doCall();
+  else if(it.t==="speed")doSpeed(it);
+}
+function lockSpeed(on){
+  var a=$("btnSpeedYes"),b=$("btnSpeedNo");
+  a.disabled=on;b.disabled=on;
+  a.style.opacity=on?"0.4":"";b.style.opacity=on?"0.4":"";
+}
+/* Every correct tap is logged with its date, so "across two sessions" is real. */
+function creditTap(w){
+  var d=WD(w);
+  d.seen++;d.tapOk++;
+  if(!d.tapDays)d.tapDays=[];
+  var t=today();
+  if(d.tapDays.indexOf(t)<0)d.tapDays.push(t);
+  save();
+}
+
+/* ---------- 1. MEET THE WORD ---------- */
+var meetLock=false;
+function doMeet(it){
+  var tk=runToken;
+  meetLock=false;show("scMeet");
+  $("meetWord").textContent=it.w;
+  $("meetDragon").innerHTML=dragonFor(WORDS().indexOf(it.w));
+  $("meetPrompt").textContent=it.allDone?"Let's practise your words!":"Your magic word is";
+  WD(it.w).seen++;save();
+  setTimeout(function(){
+    if(!live(tk))return;
+    speak(it.allDone?"Let us practise your words!":("Your magic word is... "+it.w+"... "+it.w));
+  },250);
+}
+$("btnMeetGo").onclick=function(){
+  if(meetLock)return;meetLock=true;
+  advance();
+};
+
+/* ---------- 2. ODD ONE OUT ---------- */
+var oddLock=false;
+function doOdd(it){
+  var tk=runToken;
+  oddLock=false;show("scOdd");
+  $("oddPrompt").textContent="Which one is different?";
+  var other=foil(it.w);
+  var box=$("oddTiles");box.innerHTML="";
+  if(!other){advance();return;}          /* only one word switched on */
+  var slots=[],n=Math.max(2,Math.min(it.n||3,4));
+  for(var i=0;i<n-1;i++)slots.push(other);
+  slots.push(it.w);
+  shuffle(slots).forEach(function(w,idx){
+    var b=document.createElement("button");
+    b.className="tile";b.textContent=w;b.dataset.w=w;b.dataset.i=idx;
+    b.onclick=function(){onOdd(b,w,it);};
+    box.appendChild(b);
+  });
+  setTimeout(function(){
+    if(!live(tk))return;
+    /* say how many are actually the same, rather than always "three" */
+    speak((n-1===2?"Two are the same.":"Three are the same.")+" Which one is different?");
+  },280);
+}
+function onOdd(btn,w,it){
+  if(oddLock)return;
+  if(w===it.w){
+    oddLock=true;btn.classList.add("right");
+    creditTap(it.w);sndGood();
+    $("oddPrompt").textContent=pick(CHEER);
+    sayThenAdvance("Yes! That one says "+it.w);
+  }else{
+    btn.classList.add("wrong");btn.disabled=true;
+    WD(it.w).tapNo++;sndOops();save();
+    $("oddPrompt").innerHTML=pick(KIND)+' <b>'+it.w+'</b>';
+    var t=$("oddTiles").children;
+    for(var i=0;i<t.length;i++)if(t[i].dataset.w===it.w)t[i].classList.add("hint");
+    speakWord(it.w,"Look for the one that says");
+  }
+}
+
+/* ---------- 3. FEED THE DRAGON ---------- */
+var feedLock=false,curFeed=null;
+function doFeed(it){
+  var tk=runToken;
+  feedLock=false;curFeed=it;show("scFeed");
+  /* Without a voice this round is unplayable, because the target is only ever
+     announced aloud. If there is no voice, show it instead. */
+  $("feedPrompt").innerHTML=voiceOn()?"Feed the dragon!"
+                                     :'Feed the dragon: <b>'+it.w+'</b>';
+  $("feedDragon").innerHTML=dragonFor(WORDS().indexOf(it.w));
+  /* Tapping the dragon asks again - a five-year-old forgets. */
+  $("feedDragon").onclick=function(){
+    if(feedLock)return;
+    if(voiceOn())speakWord(it.w,"The dragon wants");
+    else $("feedPrompt").innerHTML='Feed the dragon: <b>'+it.w+'</b>';
+  };
+  var opts=shuffle([it.w].concat(distractors(it.w,Math.max(1,(it.n||2)-1))));
+  var box=$("feedBerries");box.innerHTML="";
+  opts.forEach(function(w){
+    var b=document.createElement("button");
+    b.className="berry";b.textContent=w;b.dataset.w=w;
+    b.onclick=function(){onFeed(b,w,it);};
+    box.appendChild(b);
+  });
+  setTimeout(function(){
+    if(!live(tk))return;
+    speakWord(it.w,"The dragon wants");
+  },300);
+}
+function onFeed(btn,w,it){
+  if(feedLock)return;
+  if(w===it.w){
+    feedLock=true;btn.classList.add("eaten");
+    creditTap(it.w);sndGood();
+    $("feedPrompt").textContent=pick(CHEER);
+    sayThenAdvance("Yum! "+it.w);
+  }else{
+    btn.classList.add("nope");btn.disabled=true;
+    WD(it.w).tapNo++;sndOops();save();
+    $("feedPrompt").innerHTML=pick(KIND)+' <b>'+it.w+'</b>';
+    var t=$("feedBerries").children;
+    for(var i=0;i<t.length;i++)if(t[i].dataset.w===it.w)t[i].classList.add("hint");
+    speakWord(it.w,"He wants");
+  }
+}
+
+/* ---------- 4. LISTEN AND POINT ----------
+   The voice reads the whole sentence, so he never has to decode it.
+   Then he only has to spot his one word inside it. */
+var listenLock=false;
+function doListen(it){
+  var tk=runToken;
+  listenLock=false;show("scSent");
+  $("sentEmoji").textContent=it.s.e||"⭐";
+  var body=$("sentBody");body.innerHTML="";
+  it.s.t.split(/\s+/).forEach(function(tok){
+    var sp=document.createElement("span");
+    sp.textContent=tok;sp.className="tok";
+    if(norm(tok)===norm(it.w)){
+      sp.classList.add("target");
+      sp.onclick=function(){onListen(sp,true,it,body);};
+    }else{
+      sp.onclick=function(){onListen(sp,false,it,body);};
+    }
+    body.appendChild(sp);
+    body.appendChild(document.createTextNode(" "));
+  });
+  function askForWord(){
+    if(!live(tk)||listenLock)return;
+    $("sentPrompt").innerHTML='Tap <b style="font-size:1.4em">'+it.w+'</b>';
+    var t=body.querySelectorAll(".tok");
+    for(var i=0;i<t.length;i++)t[i].classList.add("tap");
+    if(voiceOn())speak("Can you tap the word "+it.w+"?");
+  }
+  if(!voiceOn()){
+    /* He cannot read the sentence himself. With no voice, ask the grown-up. */
+    $("sentPrompt").innerHTML='<span style="font-size:.8em;opacity:.85">Grown-up: read this out loud</span>';
+    setTimeout(askForWord,1600);
+    return;
+  }
+  $("sentPrompt").textContent="Listen to the story...";
+  setTimeout(function(){
+    if(!live(tk))return;
+    speakThen(it.s.t,{rateMul:0.95},function(){
+      if(!live(tk))return;
+      setTimeout(askForWord,400);
+    });
+  },250);
+}
+function onListen(sp,isTarget,it,body){
+  if(listenLock)return;
+  if(!sp.classList.contains("tap")){
+    /* Tapping while the story is still being read used to do nothing at all,
+       which reads as broken. Say so instead. */
+    $("sentPrompt").textContent="Listen first...";
+    return;
+  }
+  if(isTarget){
+    listenLock=true;sp.classList.add("right");
+    creditTap(it.w);sndGood();
+    $("sentPrompt").textContent=pick(CHEER);
+    sayThenAdvance("Yes! "+it.w);
+  }else{
+    sp.classList.add("wrong");sndOops();
+    $("sentPrompt").innerHTML="It is glowing! Tap <b>"+it.w+"</b>";
+    var t=body.querySelectorAll(".target");
+    for(var i=0;i<t.length;i++)t[i].classList.add("hint");
+  }
+}
+
+/* ---------- 5. DRAGON ECHO ----------
+   He says the word back. Nothing is judged, by him or anyone. It exists
+   purely to get his mouth moving, and always ends happily. */
+var echoTimer=null,echoLock=false;
+var echoArm=null;
+function doEcho(it){
+  var tk=runToken;
+  echoLock=false;show("scEcho");
+  $("echoWord").textContent=it.w;
+  $("echoDragon").innerHTML=dragonFor(WORDS().indexOf(it.w));
+  WD(it.w).seen++;save();
+  clearTimeout(echoTimer);
+  /* His turn to speak. Re-armed every time he asks to hear it again, so the
+     dragon never nods off while he is still listening. */
+  function arm(){
+    clearTimeout(echoTimer);
+    echoTimer=setTimeout(function(){
+      if(!live(tk)||echoLock)return;
+      echoLock=true;
+      $("echoPrompt").textContent=pick(["Lovely saying!","Good voice!","Well said!"]);
+      sndGood();advance();
+    },2200);
+  }
+  echoArm=arm;
+  if(!voiceOn()){
+    $("echoPrompt").innerHTML='Grown-up: say <b>'+it.w+'</b> together!';
+    arm();
+    return;
+  }
+  $("echoPrompt").textContent="Say it with me!";
+  setTimeout(function(){
+    if(!live(tk))return;
+    speakThen(it.w+"... "+it.w,{},function(){
+      if(!live(tk))return;
+      arm();
+    });
+  },250);
+}
+$("btnEchoAgain").onclick=function(){
+  if(echoLock)return;
+  var w=$("echoWord").textContent,tk=runToken;
+  clearTimeout(echoTimer);            /* do not nod off while he listens again */
+  if(!voiceOn()){if(echoArm)echoArm();return;}
+  speakThen(w+"... "+w,{},function(){
+    if(!live(tk))return;
+    if(echoArm)echoArm();
+  });
+};
+
+/* ---------- 6. GROWN-UP TIME ---------- */
+function doCall(){
+  show("scCall");
+  $("callDragon").innerHTML=dragonFor(rnd(DRAGONS.length));
+  var n=0;for(var i=qi;i<Q.length;i++)if(Q[i].t==="speed")n++;
+  $("callMsg").innerHTML="Go and find a grown-up.<br>Time to show them <b>"+
+    (n===1?"your word":n+" words")+"</b>!";
+  tone(880,.2);setTimeout(function(){tone(660,.3);},220);
+  speak("It is grown up time! Go and find a grown up.");
+}
+$("btnGrownup").onclick=function(){askGate(function(ok){grownup=ok;advance();});};
+/* Playing alone simply ends the session. Nothing spoken is ever scored
+   without an adult listening. */
+$("btnAlone").onclick=function(){
+  grownup=false;
+  Q=Q.filter(function(x){return x.t!=="speed";});
+  qi=Q.length;
+  advance();
+};
+
+var speedT0=0,speedTick=null,curSpeed=null,speedLock=false;
+function doSpeed(it){
+  curSpeed=it;speedLock=false;show("scSpeed");lockSpeed(false);
+  $("speedWord").textContent=it.w;
+  $("speedPrompt").textContent=grownup?"Say the word to your grown-up!":"Say the word out loud!";
+  var left=0;for(var i=qi;i<Q.length;i++)if(Q[i].t==="speed")left++;
+  $("speedCount").textContent=left>1?(left+" to go"):"last one!";
+  speedT0=Date.now();$("speedTimer").style.width="100%";
+  clearInterval(speedTick);
+  speedTick=setInterval(function(){
+    var p=Math.max(0,1-(Date.now()-speedT0)/(SPEED_SECONDS*1000));
+    var f=$("speedTimer");f.style.width=(p*100)+"%";
+    f.style.background=p>0?"#5ee08a":"#ffb457";
+    if(p<=0)clearInterval(speedTick);
+  },80);
+}
+function judgeSpeed(ok){
+  if(speedLock)return;
+  speedLock=true;
+  clearInterval(speedTick);
+  var ms=Date.now()-speedT0,w=curSpeed.w,d=WD(w);
+  d.seen++;d.lastRev=Date.now();
+  if(!d.days)d.days=[];
+  if(!d.mixedDays)d.mixedDays=[];
+  if(ok){
+    d.spokenOk++;d.missStreak=0;
+    if(!d.best||ms<d.best)d.best=ms;
+    if(grownup&&ms<=SPEED_SECONDS*1000){
+      var t=today();
+      if(d.days.indexOf(t)<0)d.days.push(t);
+      /* Saying a word he knew was coming proves little. Only confirmations
+         from a round holding other words count toward hatching. */
+      if(speedMixed&&d.mixedDays.indexOf(t)<0)d.mixedDays.push(t);
+    }
+    sndGood();save();advance();
+  }else{
+    d.spokenNo++;
+    d.missStreak=(d.missStreak||0)+1;
+    if(statusOf(w)===2&&d.missStreak>=2){        /* the dragon has a nap */
+      d.days=d.days.slice(0,2);
+      d.mixedDays=d.mixedDays.slice(0,1);
+    }
+    save();
+    lockSpeed(true);
+    $("speedTimer").style.width="0%";
+    $("speedPrompt").textContent="Listen...";
+    sndOops();
+    var tk=runToken;
+    setTimeout(function(){
+      if(!live(tk)){lockSpeed(false);return;}
+      $("speedPrompt").textContent="This one says:";
+      speakThen("This one says "+w+"... "+w,{},function(){
+        if(!live(tk)){lockSpeed(false);return;}
+        setTimeout(function(){
+          if(!live(tk)){lockSpeed(false);return;}
+          lockSpeed(false);advance();
+        },PAUSE_AFTER_VOICE);
+      });
+    },420);
+  }
+}
+$("btnSpeedYes").onclick=function(){judgeSpeed(true);};
+$("btnSpeedNo").onclick=function(){judgeSpeed(false);};
+
+/* ---------- END ---------- */
+function endSession(){
+  if(!Q.length)return;          /* the session was abandoned, not finished */
+  refreshStatuses();
+  if(!fridayMode)CUR().sessions++;
+  save();
+  var W=WORDS();
+  var hatched=W.filter(function(w){return startStatuses[w]<2&&WD(w).status===2;});
+  show("scEnd");
+  $("colourPick").style.display="none";
+  if(hatched.length){
+    var w0=hatched[0],idx=W.indexOf(w0);
+    $("endDragon").innerHTML=art(w0,idx);
+    $("endTitle").textContent="A dragon hatched!";
+    $("endMsg").innerHTML="You set the <b>"+hatched.join("</b> and <b>")+"</b> dragon free!";
+    sndHatch();confetti(50);
+    speak("You did it! You set a dragon free!");
+    offerColour(w0,idx);
+  }else{
+    var done=W.filter(function(w){return WD(w).status===2;}).length;
+    $("endDragon").innerHTML=EGG_HAPPY;
+    $("endTitle").textContent=pick(["Great work!","Super reading!","Well done, you!"]);
+    $("endMsg").innerHTML=fridayMode
+      ? "Friday rehearsal finished.<br><b>"+done+" of "+W.length+"</b> dragons are free."
+      : "Your egg is getting warmer.<br><b>"+done+" of "+W.length+"</b> dragons are free.";
+    confetti(18);tone(660,.2);setTimeout(function(){tone(880,.3);},160);
+    speak(fridayMode?"All finished. Well done.":"Lovely work. Your egg is getting warmer.");
+  }
+  releaseWakeLock();
+}
+/* A small piece of choice, which buys a lot of willingness to come back. */
+function offerColour(w,idx){
+  var box=$("swatches");box.innerHTML="";
+  $("colourPick").style.display="";
+  HUES.forEach(function(h,ci){
+    var b=document.createElement("button");
+    b.innerHTML='<span style="display:block;width:100%;height:100%;filter:hue-rotate('+h+'deg)">'+dragonFor(idx)+'</span>';
+    b.onclick=function(){
+      if(!CUR().colour)CUR().colour={};
+      CUR().colour[w]=ci;save();
+      var all=box.children;
+      for(var i=0;i<all.length;i++)all[i].classList.remove("sel");
+      b.classList.add("sel");
+      $("endDragon").innerHTML=art(w,idx);
+      sndGood();
+    };
+    if((CUR().colour&&CUR().colour[w]||0)===ci)b.classList.add("sel");
+    box.appendChild(b);
+  });
+}
+$("btnHome").onclick=function(){
+  drawNest();show("scHome");
+  $("progfill").style.width="0";$("barEgg").innerHTML="";
+};
+var playLock=false;
+$("btnPlay").onclick=function(){
+  if(playLock)return;playLock=true;
+  setTimeout(function(){playLock=false;},900);
+  unlockVoice();
+  if(!activeWords().length){          /* every word switched off in the dashboard */
+    $("homeSub").innerHTML='<b>No words are switched on.</b><div style="font-size:.72em;opacity:.7;margin-top:4px">A grown-up can turn them back on with the &#9881; button.</div>';
+    sndOops();return;
+  }
+  requestWakeLock();buildSession();
+};
+
+/* ============================================================
+   GROWN-UP GATE + DASHBOARD
+   ============================================================ */
+var gateCb=null;
+function askGate(cb){
+  gateCb=cb;
+  var right=17+rnd(70),nums=[right];
+  while(nums.length<4){var n=17+rnd(70);if(nums.indexOf(n)<0)nums.push(n);}
+  nums=shuffle(nums);
+  $("gateAsk").textContent="Tap "+right;
+  var box=$("gateNums");box.innerHTML="";
+  nums.forEach(function(n){
+    var b=document.createElement("button");b.textContent=n;
+    b.onclick=function(){$("gate").classList.remove("on");if(gateCb)gateCb(n===right);gateCb=null;};
+    box.appendChild(b);
+  });
+  $("gate").classList.add("on");
+}
+$("gateCancel").onclick=function(){$("gate").classList.remove("on");if(gateCb)gateCb(false);gateCb=null;};
+$("gear").onclick=function(){unlockVoice();askGate(function(ok){if(ok)openPanel();});};
+
+function fmtMs(ms){return ms?(ms/1000).toFixed(1)+"s":"—";}
+
+function parseWords(txt){
+  var raw=String(txt||"").split(/[\s,;\n\r\t]+/),out=[],seen={};
+  for(var i=0;i<raw.length;i++){
+    var w=raw[i].replace(/^["'(\[]+/,"").replace(/["')\].,!?;:]+$/,"").trim();
+    if(!w)continue;
+    var k=w.toLowerCase();
+    if(seen[k])continue;
+    seen[k]=1;out.push(w);
+    if(out.length>=40)break;
+  }
+  return out;
+}
+function previewWords(){
+  var ws=parseWords($("wordsInput").value),p=$("wordsPreview");
+  if(!ws.length){p.innerHTML='<span style="color:#a33">No words typed yet.</span>';return null;}
+  var noSent=ws.filter(function(w){return sentencesWith(w).length===0;});
+  p.innerHTML='<b>'+ws.length+' words:</b> '+ws.join(" &middot; ")+
+    (noSent.length
+      ? '<br><span style="color:#a35">No built-in sentence contains: <b>'+noSent.join(", ")+
+        '</b>. Those words will skip the story round until you add a sentence below.</span>'
+      : '<br><span style="color:#2a7a45">Every word has sentences available. &#10003;</span>');
+  return ws;
+}
+
+var voiceListSig="";
+function voiceLabel(v){return v.name+" ("+v.lang+")"+(isBad(v.name)?" \u2014 robotic":"");}
+function sortedVoices(){
+  return VOICES.slice().sort(function(a,b){
+    var ae=/^en/i.test(a.lang)?0:1,be=/^en/i.test(b.lang)?0:1;
+    if(ae!==be)return ae-be;
+    var ab=isBad(a.name)?1:0,bb=isBad(b.name)?1:0;
+    if(ab!==bb)return ab-bb;
+    return a.name.localeCompare(b.name);
+  });
+}
+/* Build the list ONLY when it has actually changed. Never rebuild it from
+   inside the select's own change handler - that is what made it snap back. */
+function buildVoiceList(force){
+  loadVoices();
+  var sel=$("voiceSel"),list=sortedVoices();
+  var sig=list.map(function(v){return v.name+"|"+v.lang;}).join(",");
+  if(!force&&sig===voiceListSig){syncVoiceUI();return;}
+  voiceListSig=sig;
+  sel.innerHTML="";
+  var auto=document.createElement("option");
+  auto.value="";auto.textContent="Chosen for you (recommended)";
+  sel.appendChild(auto);
+  list.forEach(function(v){
+    var o=document.createElement("option");
+    o.value=v.name;o.textContent=voiceLabel(v);
+    sel.appendChild(o);
+  });
+  /* Keep a saved voice selectable even if this device no longer reports it. */
+  var want=S.settings.voiceName||"";
+  if(want&&!list.some(function(v){return v.name===want;})){
+    var o2=document.createElement("option");
+    o2.value=want;o2.textContent=want+" (not found right now)";
+    sel.appendChild(o2);
+  }
+  if(!list.length&&!want){
+    sel.innerHTML='<option value="">No voices installed on this device</option>';
+  }
+  syncVoiceUI();
+}
+/* Updates the labels and the slider position. Touches the option list never. */
+function syncVoiceUI(){
+  var sel=$("voiceSel"),want=S.settings.voiceName||"";
+  if(sel.value!==want)sel.value=want;
+  var v=chooseVoice(),r=S.settings.rate||0.85;
+  $("voiceNow").innerHTML = v
+    ? "Now using <b>"+v.name+"</b> at <b>"+r.toFixed(2)+"&times;</b> speed"+
+      (S.settings.voice?"":" &mdash; <b>but the voice is switched off below</b>")
+    : "No voice available on this device.";
+  var sl=$("rateSlider"),pct=Math.round(r*100);
+  if(parseInt(sl.value,10)!==pct)sl.value=pct;
+  $("rateOut").textContent=r.toFixed(2)+"x";
+}
+function sampleVoice(txt){
+  unlockVoice();
+  try{if("speechSynthesis" in window)speechSynthesis.cancel();}catch(e){}
+  setTimeout(function(){
+    speak(txt||"Hello! Can you find the word... the... the?",{force:true});
+  },90);
+}
+$("voiceSel").addEventListener("change",function(){
+  S.settings.voiceName=this.value;      /* "" means let the game choose */
+  save();
+  syncVoiceUI();                        /* labels only - the list is left alone */
+  sampleVoice("This is my voice. Can you find the word... the?");
+});
+function applyRate(){
+  var pct=parseInt($("rateSlider").value,10);
+  if(isNaN(pct))return;
+  S.settings.rate=Math.max(0.4,Math.min(1.6,pct/100));
+  $("rateOut").textContent=S.settings.rate.toFixed(2)+"x";
+  save();
+  syncVoiceUI();
+}
+$("rateSlider").addEventListener("input",applyRate);
+$("rateSlider").addEventListener("change",function(){
+  applyRate();
+  sampleVoice("The cat sat on the mat.");
+});
+$("btnTestVoice").onclick=function(){sampleVoice();};
+
+function openPanel(){
+  refreshStatuses();
+  var W=WORDS(),names=["Egg","Cracking","Hatched"];
+  var rows='<tr><th>Word</th><th>Status</th><th>Seen</th><th>Taps</th><th>Said aloud</th><th>Speed</th><th>Days</th><th>Mixed</th></tr>';
+  W.forEach(function(w){
+    var d=WD(w),tot=d.tapOk+d.tapNo;
+    rows+='<tr><td class="w">'+w+'</td>'+
+      '<td><span class="pill p'+d.status+'">'+names[d.status]+'</span></td>'+
+      '<td>'+d.seen+'</td>'+
+      '<td>'+(tot?Math.round(d.tapOk/tot*100)+"%":"—")+'</td>'+
+      '<td>'+d.spokenOk+' &#10003; / '+d.spokenNo+' &#8634;</td>'+
+      '<td>'+fmtMs(d.best)+'</td>'+
+      '<td>'+(d.days||[]).length+'/3</td>'+
+      '<td>'+(d.mixedDays||[]).length+'/2</td></tr>';
+  });
+  $("statTable").innerHTML=rows;
+
+  var m=W.filter(function(w){return WD(w).status===2;});
+  var need=W.filter(function(w){return WD(w).active&&WD(w).status<2;})
+    .sort(function(a,b){return WD(a).spokenOk-WD(b).spokenOk;});
+  var foc=focusWord();
+  $("panelSummary").innerHTML=
+    "Set: <b>"+CUR().name+"</b> &mdash; <b>"+m.length+" of "+W.length+"</b> hatched after <b>"+
+    CUR().sessions+"</b> sessions."+
+    (foc?"<br>Working on: <b style='font-size:20px'>"+foc+"</b> &mdash; a new word appears only once this one is hatched."
+        :"<br>Every word hatched. Sessions are pure revision now.")+
+    (need.length>1?"<br>Coming up next: <b>"+need.slice(1,4).join(", ")+"</b>.":"")+
+    (canStore?"":"<br><span style='color:#a33'><b>Warning:</b> this browser is not saving progress between sessions. See section 2 of the guide.</span>")+
+    "<br><span style='font-size:12px;opacity:.6'>"+deviceReport()+"</span>";
+
+  var sw=$("activeSwitches");sw.innerHTML="";
+  W.forEach(function(w){
+    var b=document.createElement("button");
+    b.textContent=w;b.className=WD(w).active?"act":"";
+    b.onclick=function(){abortSession();WD(w).active=!WD(w).active;simCache={};save();openPanel();drawNest();};
+    sw.appendChild(b);
+  });
+
+  $("setNameInput").value=CUR().name;
+  $("wordsInput").value=W.join(" ");
+  previewWords();
+
+  var dr=$("dragRow");dr.innerHTML="";
+  for(var i=0;i<DRAGONS.length;i++){
+    var box=document.createElement("div");
+    box.innerHTML=DRAGONS[i];
+    box.title="Dragon "+(i+1);
+    dr.appendChild(box);
+  }
+
+  var shelf=$("shelf");shelf.innerHTML="";
+  S.sets.forEach(function(st,idx){
+    var hatched=st.words.filter(function(w){
+      return st.w[w]&&st.w[w].days&&st.w[w].days.length>=3;}).length;
+    var d=document.createElement("div");d.className="trophy";
+    d.innerHTML='<b>'+(idx===S.cur?"&#9654; ":"")+st.name+'</b>'+
+      '<div class="sm">'+hatched+' of '+st.words.length+' hatched &middot; '+(st.sessions||0)+' sessions</div>'+
+      '<div class="sm" style="margin-top:4px;opacity:.6">'+st.words.slice(0,8).join(" ")+
+        (st.words.length>8?" &hellip;":"")+'</div>'+
+      '<div class="row"></div>';
+    var row=d.querySelector(".row");
+    if(idx!==S.cur){
+      var b1=document.createElement("button");b1.textContent="Play this set";
+      b1.onclick=function(){abortSession();S.cur=idx;simCache={};save();openPanel();drawNest();};
+      row.appendChild(b1);
+      var b2=document.createElement("button");b2.textContent="Delete";
+      b2.onclick=function(){
+        if(confirm('Delete "'+st.name+'" and all of its progress?')){
+          S.sets.splice(idx,1);
+          if(S.cur>idx)S.cur--;
+          if(!S.sets.length)S.sets=[newSet(DEFAULT_SET_NAME,DEFAULT_WORDS)];
+          if(S.cur>=S.sets.length)S.cur=S.sets.length-1;
+          save();openPanel();drawNest();
+        }
+      };
+      row.appendChild(b2);
+    }else{
+      row.innerHTML='<div style="font-size:13px;color:#2a7a45;padding:6px 0">Playing now</div>';
+    }
+    shelf.appendChild(d);
+  });
+
+  var missing=W.filter(function(w){return sentencesWith(w).length===0;});
+  $("sentCoverage").innerHTML = missing.length
+    ? '<div class="warn">No sentence contains <b>'+missing.join(", ")+
+      '</b>. The game will skip the story round for '+(missing.length===1?"that word":"those words")+
+      ' until you add a sentence below.</div>'
+    : '<div class="note">Every word in this set has sentences available. &#10003;</div>';
+  $("customSent").value=(S.custom||[]).map(function(s){return (s.e?s.e+" ":"")+s.t;}).join("\n");
+  $("backupBox").value="";
+  var na=activeWords().length;
+  $("fridayNote").innerHTML="Will test <b>"+na+"</b> word"+(na===1?"":"s")+
+    (S.lastFriday?" &middot; last run "+S.lastFriday:" &middot; not run yet");
+
+  buildVoiceList(false);
+
+  var ss=$("settingSwitches");ss.innerHTML="";
+  [["voice","Game reads words aloud"],["roundFont","Rounded school-style letters"]].forEach(function(p){
+    var b=document.createElement("button");
+    b.textContent=p[1];b.style.minWidth="0";
+    b.className=S.settings[p[0]]?"act":"";
+    b.onclick=function(){
+      S.settings[p[0]]=!S.settings[p[0]];
+      document.body.classList.toggle("roundfont",!!S.settings.roundFont);
+      save();openPanel();
+    };
+    ss.appendChild(b);
+  });
+
+  $("panel").classList.add("on");
+  pauseSession();          /* stop the game talking over the dashboard */
+  fitPanel();
+}
+
+$("wordsInput").oninput=previewWords;
+
+$("btnNewSet").onclick=function(){
+  abortSession();
+  var ws=parseWords($("wordsInput").value);
+  if(ws.length<2){alert("Please type at least 2 words.");return;}
+  var name=($("setNameInput").value||"").trim();
+  if(!name||name===CUR().name)name="Set "+(S.sets.length+1);
+  if(!confirm('Start a new set called "'+name+'" with '+ws.length+' words?\n\n'+ws.join("  ")+
+     '\n\nThe set he is on now is kept safely on the trophy shelf.'))return;
+  CUR().finished=today();
+  S.sets.push(newSet(name,ws));
+  S.cur=S.sets.length-1;
+  simCache={};save();openPanel();drawNest();
+  alert("Done. A fresh nest of "+ws.length+" eggs is ready.");
+};
+
+$("btnSaveSet").onclick=function(){
+  abortSession();
+  var ws=parseWords($("wordsInput").value);
+  if(ws.length<2){alert("Please type at least 2 words.");return;}
+  var st=CUR(),dropped=st.words.filter(function(w){return ws.indexOf(w)<0;});
+  if(dropped.length&&!confirm("This will delete all progress on: "+dropped.join(", ")+
+     "\n\nIf you meant to move on to a whole new set of words, press Cancel and use the green button instead."))return;
+  var kept={};
+  ws.forEach(function(w){kept[w]=st.w[w]||blankWord();});
+  st.words=ws;st.w=kept;
+  var nm=($("setNameInput").value||"").trim();
+  if(nm)st.name=nm;
+  simCache={};save();openPanel();drawNest();
+};
+
+$("btnSaveSent").onclick=function(){
+  var lines=String($("customSent").value||"").split(/\n+/),out=[];
+  lines.forEach(function(L){
+    L=L.trim();if(!L)return;
+    var parts=L.split(/\s+/),emo="⭐";
+    if(parts.length>1&&!/[a-zA-Z]/.test(parts[0]))emo=parts.shift();
+    var txt=parts.join(" ");
+    if(txt)out.push({t:txt,e:emo});
+  });
+  S.custom=out;save();openPanel();
+  alert(out.length+" of your own sentences saved.");
+};
+
+$("panelClose").onclick=function(){
+  var a=document.activeElement;
+  if(a&&a.blur)a.blur();
+  $("panel").classList.remove("on");
+  fitPanel();
+  drawNest();
+  resumeSession();         /* pick the session back up exactly where it was */
+};
+$("btnFriday").onclick=function(){
+  if(!activeWords().length){alert("No words are switched on.");return;}
+  S.lastFriday=today();save();
+  $("panel").classList.remove("on");fitPanel();
+  paused=false;
+  unlockVoice();requestWakeLock();
+  buildFriday();
+};
+$("btnCopyBackup").onclick=function(){
+  var t=$("backupBox");
+  t.value=JSON.stringify(S);
+  try{
+    t.focus();t.setSelectionRange(0,t.value.length);
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t.value).then(
+        function(){alert("Backup copied. Paste it somewhere safe.");},
+        function(){alert("Select the text in the box and copy it by hand.");});
+    }else{
+      document.execCommand("copy");
+      alert("Backup copied. Paste it somewhere safe.");
+    }
+  }catch(e){alert("Select the text in the box and copy it by hand.");}
+};
+$("btnRestore").onclick=function(){
+  var raw=($("backupBox").value||"").trim();
+  if(!raw){alert("Paste a backup into the box first.");return;}
+  var obj=null;
+  try{obj=JSON.parse(raw);}catch(e){}
+  if(!obj||!obj.sets||!obj.sets.length){alert("That does not look like a Dragon Rescue backup.");return;}
+  if(!confirm("Replace everything currently saved with this backup?"))return;
+  abortSession();
+  S=obj;
+  if(!S.settings)S.settings={};
+  if(typeof S.settings.voice!=="boolean")S.settings.voice=true;
+  if(typeof S.settings.rate!=="number")S.settings.rate=0.85;
+  if(!S.custom)S.custom=[];
+  if(S.cur>=S.sets.length||S.cur<0)S.cur=0;
+  simCache={};save();openPanel();drawNest();
+  alert("Restored.");
+};
+$("btnReset").onclick=function(){
+  if(confirm("Erase EVERY set, every dragon and all progress, and start completely fresh?")){
+    abortSession();
+    S={v:2,sets:[newSet(DEFAULT_SET_NAME,DEFAULT_WORDS)],cur:0,custom:[],settings:S.settings};
+    simCache={};save();openPanel();drawNest();
+  }
+};
+
+/* ---------- stars in the sky ---------- */
+(function(){
+  var sky=$("sky");
+  for(var i=0;i<60;i++){
+    var s=document.createElement("div");s.className="star";
+    var sz=1+Math.random()*2.6;
+    s.style.width=sz+"px";s.style.height=sz+"px";
+    s.style.left=Math.random()*100+"vw";s.style.top=Math.random()*100+"vh";
+    s.style.animationDelay=(Math.random()*3)+"s";
+    sky.appendChild(s);
+  }
+})();
+
+load();drawNest();loadVoices();
+if("speechSynthesis" in window){
+  try{speechSynthesis.onvoiceschanged=function(){
+    loadVoices();
+    if($("panel").classList.contains("on"))buildVoiceList(true);
+  };}catch(e){}
+}
+/* ============================================================
+   iPadOS SAFARI HOUSEKEEPING
+   ============================================================ */
+
+/* Safari ignores user-scalable=no, so block the pinch gestures directly. */
+["gesturestart","gesturechange","gestureend"].forEach(function(ev){
+  document.addEventListener(ev,function(e){e.preventDefault();},{passive:false});
+});
+/* Block double-tap-to-zoom that slips past touch-action on older WebKit. */
+var lastTouchEnd=0;
+document.addEventListener("touchend",function(e){
+  var now=Date.now();
+  if(now-lastTouchEnd<=350&&e.cancelable)e.preventDefault();
+  lastTouchEnd=now;
+},{passive:false});
+
+/* Stop the whole page rubber-banding while he plays, but let the dashboard and
+   the speed slider move normally. */
+document.addEventListener("touchmove",function(e){
+  var el=e.target;
+  while(el&&el!==document.body){
+    if(el.id==="panel"||el.id==="rateSlider"||el.tagName==="TEXTAREA"||
+       el.tagName==="INPUT"||el.tagName==="SELECT"||el.id==="tableWrap")return;
+    el=el.parentNode;
+  }
+  if(e.cancelable)e.preventDefault();
+},{passive:false});
+
+/* When the on-screen keyboard opens, iPadOS shrinks the visual viewport but
+   leaves fixed elements at full height, hiding the field behind the keys.
+   Resize the dashboard to whatever is actually visible. */
+function fitPanel(){
+  var vv=window.visualViewport,el=$("panel");
+  if(!el)return;
+  if(vv&&el.classList.contains("on")){
+    el.style.height=Math.round(vv.height)+"px";
+    el.style.transform="translateY("+Math.round(vv.offsetTop)+"px)";
+  }else{
+    el.style.height="100%";
+    el.style.transform="";
+  }
+}
+if(window.visualViewport){
+  window.visualViewport.addEventListener("resize",fitPanel);
+  window.visualViewport.addEventListener("scroll",fitPanel);
+}
+window.addEventListener("orientationchange",function(){setTimeout(fitPanel,250);});
+window.addEventListener("resize",fitPanel);
+
+/* Bring a focused field above the keyboard, and dismiss the keyboard on Done. */
+["setNameInput","wordsInput","customSent","backupBox"].forEach(function(id){
+  var el=$(id); if(!el)return;
+  el.addEventListener("focus",function(){
+    setTimeout(function(){
+      try{el.scrollIntoView({block:"center",behavior:"smooth"});}catch(e){}
+      fitPanel();
+    },320);
+  });
+  el.addEventListener("blur",function(){setTimeout(fitPanel,250);});
+  el.addEventListener("keydown",function(e){
+    if(e.key==="Enter"&&id==="setNameInput")el.blur();
+  });
+});
+/* Tapping empty space in the dashboard closes the keyboard. */
+$("panel").addEventListener("click",function(e){
+  if(e.target===$("panel")){
+    var a=document.activeElement;
+    if(a&&(a.tagName==="INPUT"||a.tagName==="TEXTAREA"))a.blur();
+  }
+});
+
+/* Wake lock is only wanted while the app is in front. */
+document.addEventListener("visibilitychange",function(){
+  if(document.visibilityState!=="visible")releaseWakeLock();
+});
+
+/* One line in the dashboard stating exactly how this device is running the
+   game, so there is nothing to guess about after deployment. */
+function deviceReport(){
+  var bits=[];
+  bits.push(IOS?"iPad or iPhone":"Desktop or other browser");
+  bits.push(STANDALONE?"added to the Home Screen":"running in the browser");
+  bits.push(location.protocol==="file:"?"opened as a local file":"opened from a web address");
+  bits.push(canStore?"saving progress":"NOT saving progress");
+  bits.push(("speechSynthesis" in window)?"speech available":"no speech on this device");
+  bits.push(navigator.wakeLock?"screen stays awake":"screen may dim");
+  bits.push(Math.round(window.innerWidth)+"x"+Math.round(window.innerHeight));
+  return bits.join(" &middot; ");
+}
+</script>
+</body>
+</html>
