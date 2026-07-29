@@ -72,11 +72,51 @@ h1{font-size:clamp(30px,7vw,58px);margin:0 0 4px;color:#ffd84d;text-shadow:0 4px
 .egg.s1{border-color:#ffb457;background:rgba(255,180,87,.16);}
 .egg.s2{border-color:#5ee08a;background:rgba(94,224,138,.2);box-shadow:0 0 16px rgba(94,224,138,.35);}
 .egg.focus{border-color:#ffd84d;background:rgba(255,216,77,.22);box-shadow:0 0 18px rgba(255,216,77,.5);}
-/* Stage 1 of hatching: something inside is moving. */
-.egg.shake .pic{animation:eggshake 2.6s ease-in-out infinite;transform-origin:50% 85%;}
-@keyframes eggshake{0%,64%,100%{transform:rotate(0);}
+/* THE NEST IS ALIVE.
+   Every egg that has not hatched moves, so the nest invites him in - but each
+   one moves a little more than the last, so the movement itself tells him
+   which egg is closest, and his very first correct tap still visibly changes
+   something. Each egg is given a negative delay in drawNest so they ripple
+   rather than all twitching on the same beat. */
+.egg .pic{transform-origin:50% 88%;}
+/* 0 - a quiet egg, but something in there just moved */
+.egg.m0 .pic{animation:nudge0 4.2s ease-in-out infinite;}
+@keyframes nudge0{0%,88%,100%{transform:rotate(0);}
+  91%{transform:rotate(-4deg);}94%{transform:rotate(3deg);}97%{transform:rotate(-1.5deg);}}
+/* 1 - he has started work on it */
+.egg.m1 .pic{animation:nudge1 2.6s ease-in-out infinite;}
+@keyframes nudge1{0%,64%,100%{transform:rotate(0);}
   70%{transform:rotate(-9deg);}76%{transform:rotate(8deg);}
   82%{transform:rotate(-6deg);}88%{transform:rotate(4deg);}94%{transform:rotate(-2deg);}}
+/* 2 and 3 - cracking, with a small hop */
+.egg.m2 .pic{animation:nudge2 2.2s ease-in-out infinite;}
+@keyframes nudge2{0%,56%,100%{transform:rotate(0) translateY(0);}
+  62%{transform:rotate(-10deg) translateY(-2px);}
+  70%{transform:rotate(9deg) translateY(-3px);}
+  78%{transform:rotate(-7deg) translateY(0);}
+  86%{transform:rotate(5deg);}92%{transform:rotate(-2deg);}}
+.egg.m3 .pic{animation:nudge3 1.9s ease-in-out infinite;}
+@keyframes nudge3{0%,44%,100%{transform:rotate(0) translateY(0);}
+  50%{transform:rotate(-12deg) translateY(-4px);}
+  58%{transform:rotate(11deg) translateY(-5px);}
+  66%{transform:rotate(-9deg) translateY(-1px);}
+  74%{transform:rotate(7deg) translateY(-2px);}
+  84%{transform:rotate(-4deg);}92%{transform:rotate(2deg);}}
+/* 4 - he is looking out and wants to be let go */
+.egg.m4 .pic{animation:nudge4 1.25s ease-in-out infinite;}
+@keyframes nudge4{0%,100%{transform:rotate(-7deg) translateY(0);}
+  25%{transform:rotate(8deg) translateY(-4px);}
+  50%{transform:rotate(-6deg) translateY(0);}
+  75%{transform:rotate(7deg) translateY(-3px);}}
+/* 5 - free, and simply breathing */
+.egg.m5 .pic{animation:breathe 3.4s ease-in-out infinite;}
+@keyframes breathe{0%,100%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-4px) scale(1.045);}}
+/* If a grown-up has switched on Reduce Motion, the nest sits perfectly still. */
+@media (prefers-reduced-motion:reduce){
+  .egg .pic{animation:none !important;}
+  .dragon{animation:none !important;}
+}
 /* How close this egg is to hatching, always visible. */
 .egg .meter{height:6px;border-radius:5px;background:rgba(255,255,255,.16);
   margin:6px 5px 0;overflow:hidden;}
@@ -411,8 +451,12 @@ td.w{word-break:break-word;}
   <h3 style="border-top:none">Every word in this set</h3>
   <div id="tableWrap"><table id="statTable"></table></div>
   <p style="font-size:13px;opacity:.7;line-height:1.5">
-    <b>Hatched</b> = said aloud correctly, within 5 seconds, with a grown-up listening, on 3 different days.
-    <b>Cracking</b> = getting there. <b>Egg</b> = still new. "Speed" is his best confirmed time.
+    <b>Hatched</b> = said aloud correctly within 5 seconds, with you listening, in a round holding other
+    words, <b>3 times</b> &mdash; falling on <b>at least 2 different days</b>. Several in one day all count;
+    the night in between does not get skipped.<br>
+    <b>Cracking</b> = one finished session or more. <b>Egg</b> = still new.
+    <b>Sessions</b> is what moves the egg along; <b>Confirmed</b> and <b>Days</b> are what hatch it.
+    "Speed" is his best confirmed time.
   </p>
 
   <h3>Practise only some of these words</h3>
@@ -682,7 +726,8 @@ try{localStorage.setItem("__t","1");localStorage.removeItem("__t");}catch(e){can
 
 var S=null;
 function blankWord(){return {seen:0,tapOk:0,tapNo:0,spokenOk:0,spokenNo:0,
-  days:[],mixedDays:[],tapDays:[],best:0,status:0,active:true,lastRev:0,missStreak:0};}
+  days:[],mixedDays:[],tapDays:[],best:0,status:0,active:true,lastRev:0,missStreak:0,
+  runs:0,conf:0,peak:0};}
 function newSet(name,words){
   var s={name:name||"New set",words:words.slice(),w:{},sessions:0,created:today(),finished:null};
   words.forEach(function(x){s.w[x]=blankWord();});
@@ -735,6 +780,16 @@ function load(){
       if(!q.tapDays)q.tapDays=[];
       if(typeof q.lastRev!=="number")q.lastRev=0;
       if(typeof q.missStreak!=="number")q.missStreak=0;
+      /* Sessions finished with this word as the focus - drives the egg. */
+      if(typeof q.runs!=="number")q.runs=0;
+      /* Confirmations from a grown-up in a round holding other words.
+         Older saves stored only which DAYS those fell on, so a word that was
+         already hatched under the old rule is credited with a full three and
+         stays hatched. Anything part-way is credited with what we can prove. */
+      if(typeof q.conf!=="number"){
+        q.conf=(q.days.length>=3&&q.mixedDays.length>=2)?3:q.mixedDays.length;
+      }
+      if(typeof q.peak!=="number")q.peak=0;
     });
   });
   document.body.classList.toggle("roundfont",!!S.settings.roundFont);
@@ -946,11 +1001,24 @@ function statusOf(w){
   if(!d.days)d.days=[];
   if(!d.mixedDays)d.mixedDays=[];
   if(!d.tapDays)d.tapDays=[];
-  if(d.days.length>=3&&d.mixedDays.length>=2)return 2;
-  if(d.tapOk>=6&&d.tapDays.length>=2)return 1;
+  /* Three grown-up confirmations, from rounds holding other words, falling on
+     at least two different days. Several in one day all count - what may not
+     be skipped is the night in between. Sight words are held or lost across a
+     sleep, and Friday's test is never on the day he practised. */
+  if((d.conf||0)>=3&&d.days.length>=2)return 2;
+  if((d.runs||0)>=1||(d.tapOk||0)>=6)return 1;
   return 0;
 }
-function refreshStatuses(){WORDS().forEach(function(w){WD(w).status=statusOf(w);});}
+function refreshStatuses(){
+  WORDS().forEach(function(w){
+    var d=WD(w);
+    d.status=statusOf(w);
+    /* High-water mark of the egg, so it can never be made to start again. */
+    var s=rawStage(w);
+    if(typeof d.peak!=="number")d.peak=0;
+    if(s>d.peak)d.peak=s;
+  });
+}
 function activeWords(){return WORDS().filter(function(w){return WD(w).active;});}
 
 /* ============================================================
@@ -1025,9 +1093,13 @@ function drawNest(){
   for(var i=0;i<W.length;i++){
     var w=W[i],st=WD(w).status,sg=stageOf(w),on=WD(w).active;
     var el=document.createElement("button");
-    el.className="egg s"+st+(w===foc?" focus":"")+((on&&sg===1)?" shake":"");
+    /* m0..m5 is how much this egg moves. A negative delay drops each one at a
+       different point in its cycle, so twelve eggs ripple instead of twitching
+       in unison - which would be noise, and would fight the gold glow on the
+       word he is actually learning. */
+    el.className="egg s"+st+(w===foc?" focus":"")+(on?" m"+sg:"");
     el.setAttribute("aria-label",on?("Hear the word "+w+". "+STAGE_WORDS[sg]):"Switched off");
-    el.innerHTML='<div class="pic">'+art(w,i)+'</div>'+
+    el.innerHTML='<div class="pic" style="animation-delay:'+(-(i*0.37).toFixed(2))+'s">'+art(w,i)+'</div>'+
       '<div class="lbl">'+(on?w:"&mdash;")+'</div>'+
       (on?'<div class="meter"><i style="width:'+Math.round(learnScore(w)*100)+'%"></i></div>':'');
     if(!on){el.style.opacity=".3";el.disabled=true;}
@@ -1045,10 +1117,12 @@ function drawNest(){
     $("homeSub").innerHTML='<b>No words are switched on.</b>';
     return;
   }
+  var goal=foc?nextGoal(foc):"";
   $("homeSub").innerHTML=(done===W.length
       ? "&#127942; All "+W.length+" dragons are free! Ask for the next set of words."
       : (done===0 ? "One word at a time. Let's hatch a dragon!"
                   : "<b>"+done+"</b> of "+W.length+" dragons free"))+
+    (goal?'<div style="font-size:.78em;opacity:.9;margin-top:4px">'+goal+'</div>':"")+
     '<div style="font-size:.72em;opacity:.6;margin-top:4px">Tap an egg to hear its word</div>';
 }
 /* The eggs look tappable, so they are. Tapping one says its word - free
@@ -1122,26 +1196,59 @@ function hueOf(w){
    bar under each egg, so he can always see he is getting closer.
    Nothing here changes what counts as mastered - it only shows the journey.
    ============================================================ */
-function learnScore(w){
+/* Driven by SESSIONS FINISHED, not by the calendar. The first version counted
+   correct taps and distinct days, and both ran out inside the first session -
+   so a child who played three times in a morning saw one crack and then
+   nothing at all, however well he did. Every session he completes now moves
+   the egg on, and the last quarter is earned by saying it to a grown-up. */
+function rawScore(w){
   var d=WD(w); if(!d)return 0;
   if(!d.days)d.days=[];
   if(!d.mixedDays)d.mixedDays=[];
   if(!d.tapDays)d.tapDays=[];
   if(statusOf(w)===2)return 1;
-  /* Tapping it correctly in the games - worth less, because it is easier. */
-  var taps=Math.min(1,(d.tapOk||0)/6)*0.55+Math.min(1,d.tapDays.length/2)*0.45;
-  /* Saying it aloud to a grown-up - the thing the school actually tests. */
-  var said=Math.min(1,d.days.length/3)*0.6+Math.min(1,d.mixedDays.length/2)*0.4;
-  return Math.max(0,Math.min(0.97,taps*0.45+said*0.55));
+  var runs=d.runs||0;
+  var p=Math.min(3,runs)/4;                       /* 0, .25, .50, .75 */
+  /* The very first correct tap of the very first session, so something visible
+     happens within about thirty seconds of him starting. */
+  if(runs===0&&(d.tapOk||0)>0)p=0.12;
+  p+=Math.min(1,(d.conf||0)/3)*0.22;              /* the grown-up's part */
+  return Math.max(0,Math.min(0.97,p));
 }
-function stageOf(w){
+var STAGE_FLOOR=[0,0.05,0.25,0.50,0.75,1];
+function rawStage(w){
   if(statusOf(w)===2)return 5;
-  var p=learnScore(w);
+  var p=rawScore(w);
   if(p<0.05)return 0;
-  if(p<0.30)return 1;
-  if(p<0.55)return 2;
-  if(p<0.80)return 3;
+  if(p<0.25)return 1;
+  if(p<0.50)return 2;
+  if(p<0.75)return 3;
   return 4;
+}
+/* Whatever happens, the egg never falls more than one stage below the best it
+   has ever reached. A dragon having a nap should look like a small step back,
+   not like the shell knitting itself together again - that would read as
+   punishment, and punishment is not in this game. */
+function stageOf(w){
+  var d=WD(w); if(!d)return 0;
+  var s=rawStage(w);
+  return Math.max(s,Math.min((d.peak||0)-1,4));
+}
+function learnScore(w){
+  if(statusOf(w)===2)return 1;
+  return Math.min(0.97,Math.max(rawScore(w),STAGE_FLOOR[stageOf(w)]));
+}
+/* What is actually still missing, in plain words, for the end-of-session
+   screen. Vague encouragement is not motivating; a named next step is. */
+function nextGoal(w){
+  var d=WD(w); if(!d)return "";
+  if(statusOf(w)===2)return "";
+  var need=3-(d.conf||0),sleep=d.days.length<2;
+  if(need<=0)return sleep?"Come back tomorrow and he will hatch!":"";
+  if(need===1)return sleep?"One more sleep, then one more Grown-Up Time!"
+                          :"One more Grown-Up Time and he is out!";
+  return sleep?(need+" more Grown-Up Times, and one more sleep!")
+              :(need+" more Grown-Up Times and he is out!");
 }
 /* Read out by a screen reader, and used in the dashboard. */
 var STAGE_WORDS=["A quiet egg","The egg is wobbling","A first crack",
@@ -1157,6 +1264,8 @@ function art(w,i){
    SESSION
    ============================================================ */
 var Q=[],qi=0,grownup=false,startStatuses={},startStages={},fridayMode=false,speedMixed=false;
+/* The word this session is teaching. Its egg advances when the session ends. */
+var sessionFocus=null;
 
 /* Every round bumps this. Anything scheduled by an earlier round checks it and
    quietly gives up, so a fast tapper never hears the last screen's voice over
@@ -1190,7 +1299,7 @@ function resumeSession(){
 }
 /* Used whenever the word list itself changes underneath a running session. */
 function abortSession(){
-  Q=[];qi=0;runToken++;paused=false;advancing=false;
+  Q=[];qi=0;runToken++;paused=false;advancing=false;sessionFocus=null;
   hushVoice();
   try{clearInterval(speedTick);}catch(e){}
   releaseWakeLock();
@@ -1239,15 +1348,34 @@ function buildSession(){
     if(sp[2])Q.push({t:"pick",w:f,s:sp[2],n:3});
   }
   Q.push({t:"call"});
-  var speedWords=[f].concat(reviewSample().filter(function(w){return w!==f;}));
-  speedMixed=speedWords.length>1;
-  shuffle(speedWords).forEach(function(w){Q.push({t:"speed",w:w});});
+  sessionFocus=f;
+  /* Grown-Up Time never shows a single card again.
+     A confirmation only counts if the word turned up among others - otherwise
+     he is reciting the only thing on screen rather than reading it. But the
+     round used to hold his focus word plus words he had ALREADY mastered, and
+     on word one there are none of those, so the very first word of a set could
+     never satisfy the rule and never hatch. It is padded with words he has not
+     met yet: decoys, not tests. "Not yet" on one of those records nothing. */
+  var scored=[f].concat(reviewSample().filter(function(w){return w!==f;}));
+  var extras=[];
+  if(scored.length<3){
+    extras=shuffle(activeWords().filter(function(w){return scored.indexOf(w)<0;}))
+             .slice(0,3-scored.length);
+  }
+  var all=scored.concat(extras);
+  /* Either it is a genuine crowd, or the set has nothing else in it to build a
+     crowd from - in which case insisting on one would deadlock exactly the way
+     word one used to. */
+  speedMixed=all.length>1||activeWords().length<2;
+  shuffle(all).forEach(function(w){
+    Q.push({t:"speed",w:w,bonus:extras.indexOf(w)>=0});
+  });
   startSession();
 }
 
 /* Friday: every word the school has given him, nothing else. */
 function buildFriday(){
-  simCache={};fridayMode=true;grownup=true;
+  simCache={};fridayMode=true;grownup=true;sessionFocus=null;
   var act=shuffle(activeWords());
   Q=[];
   speedMixed=act.length>1;
@@ -1736,7 +1864,11 @@ function doSpeed(it){
   $("speedWord").textContent=it.w;
   $("speedPrompt").textContent=grownup?"Say the word to your grown-up!":"Say the word out loud!";
   var left=0;for(var i=qi;i<Q.length;i++)if(Q[i].t==="speed")left++;
-  $("speedCount").textContent=left>1?(left+" to go"):"last one!";
+  /* The small grey line is for you, not for him - he cannot read it yet. It is
+     where you are quietly told that this card is a preview he is not expected
+     to know, so a run of "Not yet" taps never looks like bad news. */
+  $("speedCount").textContent=(left>1?(left+" to go"):"last one!")+
+    (it.bonus?"  ·  a peek at a new word — \"Not yet\" is fine":"");
   speedT0=Date.now();$("speedTimer").style.width="100%";
   clearInterval(speedTick);
   speedTick=setInterval(function(){
@@ -1750,27 +1882,39 @@ function judgeSpeed(ok){
   if(speedLock)return;
   speedLock=true;
   clearInterval(speedTick);
-  var ms=Date.now()-speedT0,w=curSpeed.w,d=WD(w);
-  d.seen++;d.lastRev=Date.now();
+  var ms=Date.now()-speedT0,w=curSpeed.w,d=WD(w),bonus=!!curSpeed.bonus;
+  d.seen++;
+  if(!bonus)d.lastRev=Date.now();
   if(!d.days)d.days=[];
   if(!d.mixedDays)d.mixedDays=[];
   if(ok){
-    d.spokenOk++;d.missStreak=0;
-    if(!d.best||ms<d.best)d.best=ms;
-    if(grownup&&ms<=SPEED_SECONDS*1000){
-      var t=today();
-      if(d.days.indexOf(t)<0)d.days.push(t);
-      /* Saying a word he knew was coming proves little. Only confirmations
-         from a round holding other words count toward hatching. */
-      if(speedMixed&&d.mixedDays.indexOf(t)<0)d.mixedDays.push(t);
+    /* A decoy card records nothing whatever. He was never asked to know it,
+       so it can neither help nor hurt - it is only there to make the round a
+       real crowd rather than a single card. */
+    if(!bonus){
+      d.spokenOk++;d.missStreak=0;
+      if(!d.best||ms<d.best)d.best=ms;
+      if(grownup&&ms<=SPEED_SECONDS*1000){
+        var t=today();
+        if(d.days.indexOf(t)<0)d.days.push(t);
+        /* Saying a word he knew was coming proves little. Only confirmations
+           from a round holding other words count toward hatching. */
+        if(speedMixed){
+          d.conf=(d.conf||0)+1;
+          if(d.mixedDays.indexOf(t)<0)d.mixedDays.push(t);
+        }
+      }
     }
     sndGood();save();advance();
   }else{
-    d.spokenNo++;
-    d.missStreak=(d.missStreak||0)+1;
-    if(statusOf(w)===2&&d.missStreak>=2){        /* the dragon has a nap */
-      d.days=d.days.slice(0,2);
-      d.mixedDays=d.mixedDays.slice(0,1);
+    if(!bonus){
+      d.spokenNo++;
+      d.missStreak=(d.missStreak||0)+1;
+      if(statusOf(w)===2&&d.missStreak>=2){      /* the dragon has a nap */
+        d.conf=Math.min(d.conf||0,2);
+        d.days=d.days.slice(0,1);
+        d.mixedDays=d.mixedDays.slice(0,1);
+      }
     }
     save();
     lockSpeed(true);
@@ -1797,6 +1941,12 @@ $("btnSpeedNo").onclick=function(){judgeSpeed(false);};
 /* ---------- END ---------- */
 function endSession(){
   if(!Q.length)return;          /* the session was abandoned, not finished */
+  /* Finishing a session is itself worth something, and this is what makes the
+     egg move every single time he plays rather than once a day. Abandoned
+     sessions never reach here, so it cannot be farmed by quitting early. */
+  if(!fridayMode&&sessionFocus&&WD(sessionFocus)){
+    WD(sessionFocus).runs=(WD(sessionFocus).runs||0)+1;
+  }
   refreshStatuses();
   if(!fridayMode)CUR().sessions++;
   save();
@@ -1822,14 +1972,15 @@ function endSession(){
     $("endTitle").textContent=moved.length
       ? pick(["Your egg is changing!","Look at your egg!","Something is happening!"])
       : pick(["Great work!","Super reading!","Well done, you!"]);
+    /* Always name what happened and what comes next. "Well done" on its own
+       tells a five-year-old nothing about whether he is getting anywhere. */
+    var goal=f?nextGoal(f):"";
+    var line=f?("<b>"+f+"</b>: "+STAGE_WORDS[stageOf(f)].toLowerCase()+(moved.length?"!":".")):"";
     $("endMsg").innerHTML=fridayMode
       ? "Friday rehearsal finished.<br><b>"+done+" of "+W.length+"</b> dragons are free."
-      : (moved.length
-          ? "<b>"+moved[0]+"</b>: "+STAGE_WORDS[stageOf(moved[0])].toLowerCase()+
-            "!<br><b>"+done+" of "+W.length+"</b> dragons are free."
-          : (f?"<b>"+f+"</b>: "+STAGE_WORDS[stageOf(f)].toLowerCase()+
-               ".<br><b>"+done+" of "+W.length+"</b> dragons are free."
-             :"<b>"+done+" of "+W.length+"</b> dragons are free."));
+      : (line?line+(goal?'<br><span style="font-size:.8em;opacity:.85">'+goal+'</span>':"")+
+              "<br><b>"+done+" of "+W.length+"</b> dragons are free."
+             :"<b>"+done+" of "+W.length+"</b> dragons are free.");
     confetti(moved.length?32:18);tone(660,.2);setTimeout(function(){tone(880,.3);},160);
     speak(fridayMode?"All finished. Well done."
          :(moved.length?"Lovely work! Your egg is changing.":"Lovely work. Your egg is getting warmer."));
@@ -2027,18 +2178,19 @@ $("btnTestVoice").onclick=function(){sampleVoice();};
 function openPanel(){
   refreshStatuses();
   var W=WORDS(),names=["Egg","Cracking","Hatched"];
-  var rows='<tr><th>Word</th><th>Status</th><th>Egg</th><th>Seen</th><th>Taps</th><th>Said aloud</th><th>Speed</th><th>Days</th><th>Mixed</th></tr>';
+  var rows='<tr><th>Word</th><th>Status</th><th>Egg</th><th>Sessions</th><th>Seen</th><th>Taps</th><th>Said aloud</th><th>Speed</th><th>Confirmed</th><th>Days</th></tr>';
   W.forEach(function(w){
     var d=WD(w),tot=d.tapOk+d.tapNo;
     rows+='<tr><td class="w">'+w+'</td>'+
       '<td><span class="pill p'+d.status+'">'+names[d.status]+'</span></td>'+
       '<td style="font-size:12px">'+STAGE_WORDS[stageOf(w)]+'<br><b>'+Math.round(learnScore(w)*100)+'%</b></td>'+
+      '<td>'+(d.runs||0)+'</td>'+
       '<td>'+d.seen+'</td>'+
       '<td>'+(tot?Math.round(d.tapOk/tot*100)+"%":"—")+'</td>'+
       '<td>'+d.spokenOk+' &#10003; / '+d.spokenNo+' &#8634;</td>'+
       '<td>'+fmtMs(d.best)+'</td>'+
-      '<td>'+(d.days||[]).length+'/3</td>'+
-      '<td>'+(d.mixedDays||[]).length+'/2</td></tr>';
+      '<td>'+Math.min(3,d.conf||0)+'/3</td>'+
+      '<td>'+(d.days||[]).length+'/2</td></tr>';
   });
   $("statTable").innerHTML=rows;
 
