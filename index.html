@@ -370,6 +370,9 @@ td.w{word-break:break-word;}
     <div class="sub" id="homeSub"></div>
     <div id="focusStrip"></div>
     <div id="nestGrid"></div>
+    <div id="replayBar" style="display:none;margin:2px 0 8px">
+      <button class="btn small green" id="btnReplay"></button>
+    </div>
     <button class="btn big" id="btnPlay">&#9654; PLAY</button>
   </div>
 
@@ -727,7 +730,7 @@ try{localStorage.setItem("__t","1");localStorage.removeItem("__t");}catch(e){can
 var S=null;
 function blankWord(){return {seen:0,tapOk:0,tapNo:0,spokenOk:0,spokenNo:0,
   days:[],mixedDays:[],tapDays:[],best:0,status:0,active:true,lastRev:0,missStreak:0,
-  runs:0,conf:0,peak:0};}
+  runs:0,conf:0,peak:0,won:false,back:0};}
 function newSet(name,words){
   var s={name:name||"New set",words:words.slice(),w:{},sessions:0,created:today(),finished:null};
   words.forEach(function(x){s.w[x]=blankWord();});
@@ -790,6 +793,19 @@ function load(){
         q.conf=(q.days.length>=3&&q.mixedDays.length>=2)?3:q.mixedDays.length;
       }
       if(typeof q.peak!=="number")q.peak=0;
+      /* "won" means this dragon has hatched at least once. It is never taken
+         away, so a word he has earned always stays in the Grown-Up Time test
+         and in Friday rehearsal, even on a day he stumbles over it.
+         Saves made before this existed are read from the mastery rule itself,
+         so dragons already hatched on the iPad stay hatched. */
+      if(typeof q.won!=="boolean"){
+        q.won=((q.conf||0)>=3&&q.days.length>=2)||
+              (q.days.length>=3&&q.mixedDays.length>=2);
+      }
+      /* How many stages this dragon has slipped back. Only ever 0 or 1. */
+      if(typeof q.back!=="number")q.back=0;
+      if(q.back>1)q.back=1;
+      if(!q.won)q.back=0;
     });
   });
   document.body.classList.toggle("roundfont",!!S.settings.roundFont);
@@ -1013,6 +1029,9 @@ function refreshStatuses(){
   WORDS().forEach(function(w){
     var d=WD(w);
     d.status=statusOf(w);
+    /* The moment a dragon hatches he is won, and that is permanent. */
+    if(d.status===2)d.won=true;
+    if(!d.won)d.back=0;
     /* High-water mark of the egg, so it can never be made to start again. */
     var s=rawStage(w);
     if(typeof d.peak!=="number")d.peak=0;
@@ -1106,7 +1125,8 @@ function drawNest(){
     else el.onclick=(function(word,node){return function(){sayEgg(word,node);};})(w,el);
     g.appendChild(el);
   }
-  var done=W.filter(function(w){return WD(w).status===2;}).length;
+  hideReplay();
+  var done=W.filter(function(w){return stageOf(w)===5;}).length;
   $("homeSet").textContent=CUR().name;
   var nActive=activeWords().length;
   $("focusStrip").innerHTML = !nActive
@@ -1118,9 +1138,15 @@ function drawNest(){
     return;
   }
   var goal=foc?nextGoal(foc):"";
+  var wonN=wonWords().length;
   $("homeSub").innerHTML=(done===W.length
       ? "&#127942; All "+W.length+" dragons are free! Ask for the next set of words."
-      : (done===0 ? "One word at a time. Let's hatch a dragon!"
+      /* He may have earned dragons and had them all slip back at once. Telling
+         him to "hatch a dragon" then would be both wrong and disheartening. */
+      : (done===0 ? (wonN
+            ? "<b>"+wonN+"</b> dragon"+(wonN===1?" is":"s are")+" back in "+(wonN===1?"his shell":"their shells")+
+              " &mdash; tap "+(wonN===1?"him":"one")+" and play again!"
+            : "One word at a time. Let's hatch a dragon!")
                   : "<b>"+done+"</b> of "+W.length+" dragons free"))+
     (goal?'<div style="font-size:.78em;opacity:.9;margin-top:4px">'+goal+'</div>':"")+
     '<div style="font-size:.72em;opacity:.6;margin-top:4px">Tap an egg to hear its word</div>';
@@ -1137,7 +1163,32 @@ function sayEgg(w,node){
   WD(w).seen++;save();
   tone(660,.12);
   speakWord(w,"");
+  /* Tapping still just says the word - that free practice matters. But if it is
+     a dragon he has already won, he is also offered the chance to go and play
+     with him again, which is how a slipped dragon is won back. */
+  if(WD(w).won)showReplay(w); else hideReplay();
 }
+var replayPick=null;
+function showReplay(w){
+  replayPick=w;
+  var bar=$("replayBar"),b=$("btnReplay");
+  b.innerHTML="&#9654; Play with the <b>"+w+"</b> dragon";
+  b.setAttribute("aria-label","Play with the "+w+" dragon again");
+  bar.style.display="";
+}
+function hideReplay(){
+  replayPick=null;
+  $("replayBar").style.display="none";
+}
+$("btnReplay").onclick=function(){
+  if(!replayPick||!WD(replayPick)||!WD(replayPick).won)return;
+  if(playLock)return;playLock=true;
+  setTimeout(function(){playLock=false;},900);
+  unlockVoice();requestWakeLock();
+  var w=replayPick;
+  hideReplay();
+  buildReplay(w);
+};
 
 function confetti(n){
   var bits=["⭐","🌟","✨","🎉","💛"];
@@ -1160,20 +1211,16 @@ function confetti(n){
    ============================================================ */
 function focusWord(){
   var act=activeWords();
-  for(var i=0;i<act.length;i++) if(WD(act[i]).status<2) return act[i];
-  return null;                      /* every word hatched */
+  /* Only words he has never won. A dragon that has slipped back a stage is
+     recovered by playing with him again, not by rewinding the whole course -
+     otherwise one tired evening would park him on an old word for days. */
+  for(var i=0;i<act.length;i++) if(!WD(act[i]).won) return act[i];
+  return null;                      /* every word won */
 }
-/* Words he already knows, oldest-reviewed first, so revision spaces itself. */
-function reviewPool(){
-  return activeWords().filter(function(w){return WD(w).status===2;})
-    .sort(function(a,b){return (WD(a).lastRev||0)-(WD(b).lastRev||0);});
-}
-/* How many known words join him in Grown-Up Time. Capped so the round
-   stays about 40 seconds however many he has mastered. */
-function reviewSample(){
-  var pool=reviewPool();
-  if(pool.length<=2)return pool;
-  return pool.slice(0,pool.length<=5?3:4);
+/* Every dragon he has ever earned. This is the set the Grown-Up Time test and
+   Friday rehearsal are built from, and it only ever grows. */
+function wonWords(){
+  return activeWords().filter(function(w){return WD(w).won;});
 }
 /* Wrong answers come from the whole word set, nearest look-alikes first. */
 function foil(target){
@@ -1231,10 +1278,16 @@ function rawStage(w){
    punishment, and punishment is not in this game. */
 function stageOf(w){
   var d=WD(w); if(!d)return 0;
+  /* A dragon he has won shows as a dragon - unless he has just missed that
+     word in a test, in which case he slips back exactly one stage and sits in
+     a broken shell until he says it correctly again. Never further than one. */
+  if(d.won)return d.back?4:5;
   var s=rawStage(w);
   return Math.max(s,Math.min((d.peak||0)-1,4));
 }
 function learnScore(w){
+  var d=WD(w);
+  if(d&&d.won)return d.back?0.85:1;
   if(statusOf(w)===2)return 1;
   return Math.min(0.97,Math.max(rawScore(w),STAGE_FLOOR[stageOf(w)]));
 }
@@ -1266,6 +1319,10 @@ function art(w,i){
 var Q=[],qi=0,grownup=false,startStatuses={},startStages={},fridayMode=false,speedMixed=false;
 /* The word this session is teaching. Its egg advances when the session ends. */
 var sessionFocus=null;
+/* Set only when he chose to play with a dragon he has already won. */
+var replayWord=null;
+/* Which won words were asked in this session's test, and which he missed. */
+var testAsked=[],testWrong=[];
 
 /* Every round bumps this. Anything scheduled by an earlier round checks it and
    quietly gives up, so a fast tapper never hears the last screen's voice over
@@ -1299,7 +1356,8 @@ function resumeSession(){
 }
 /* Used whenever the word list itself changes underneath a running session. */
 function abortSession(){
-  Q=[];qi=0;runToken++;paused=false;advancing=false;sessionFocus=null;
+  Q=[];qi=0;runToken++;paused=false;advancing=false;sessionFocus=null;replayWord=null;
+  testAsked=[];testWrong=[];
   hushVoice();
   try{clearInterval(speedTick);}catch(e){}
   releaseWakeLock();
@@ -1321,7 +1379,7 @@ function takeSentences(w,n){
   return out;
 }
 function buildSession(){
-  simCache={};fridayMode=false;usedSent={};
+  simCache={};fridayMode=false;usedSent={};replayWord=null;
   var f=focusWord(),act=activeWords(),sp;
   Q=[];
   if(!f){                            /* nothing left to learn - pure revision */
@@ -1349,14 +1407,19 @@ function buildSession(){
   }
   Q.push({t:"call"});
   sessionFocus=f;
-  /* Grown-Up Time never shows a single card again.
-     A confirmation only counts if the word turned up among others - otherwise
-     he is reciting the only thing on screen rather than reading it. But the
-     round used to hold his focus word plus words he had ALREADY mastered, and
-     on word one there are none of those, so the very first word of a set could
-     never satisfy the rule and never hatch. It is padded with words he has not
-     met yet: decoys, not tests. "Not yet" on one of those records nothing. */
-  var scored=[f].concat(reviewSample().filter(function(w){return w!==f;}));
+  pushTest(f);
+  startSession();
+}
+
+/* ---------- THE GROWN-UP TIME TEST ----------
+   Every dragon he has won is asked, every time, plus the word he is currently
+   learning. He passes only if he says every WON word correctly; the word he is
+   still learning, and any decoy previews, cannot make him fail.
+   Decoys only appear at all while he has fewer than three cards - which in
+   practice means only the first two words of a set. */
+function pushTest(focus){
+  var won=wonWords(),scored=won.slice();
+  if(focus&&scored.indexOf(focus)<0)scored.push(focus);
   var extras=[];
   if(scored.length<3){
     extras=shuffle(activeWords().filter(function(w){return scored.indexOf(w)<0;}))
@@ -1364,19 +1427,39 @@ function buildSession(){
   }
   var all=scored.concat(extras);
   /* Either it is a genuine crowd, or the set has nothing else in it to build a
-     crowd from - in which case insisting on one would deadlock exactly the way
-     word one used to. */
+     crowd from - in which case insisting on one would deadlock the first word. */
   speedMixed=all.length>1||activeWords().length<2;
   shuffle(all).forEach(function(w){
     Q.push({t:"speed",w:w,bonus:extras.indexOf(w)>=0});
   });
+}
+
+/* ---------- PLAY WITH A DRAGON AGAIN ----------
+   Tapping a hatched dragon on the nest offers this. It is the same games he
+   knows, about a word he already owns, followed by the full test - so it is
+   both a treat and the way to win back a dragon who has slipped. */
+function buildReplay(w){
+  simCache={};fridayMode=false;usedSent={};replayWord=w;
+  Q=[];
+  Q.push({t:"meet",w:w,replay:true});
+  Q.push({t:"odd",w:w,n:4});
+  Q.push({t:"feed",w:w,n:3});
+  Q.push({t:"odd",w:w,n:4});
+  Q.push({t:"feed",w:w,n:4});
+  var sp=takeSentences(w,2);
+  if(sp[0])Q.push({t:"listen",w:w,s:sp[0]});
+  if(sp[1])Q.push({t:"pick",w:w,s:sp[1],n:3});
+  Q.push({t:"call"});
+  sessionFocus=w;
+  pushTest(null);          /* a replay tests his dragons, not his new word */
   startSession();
 }
 
-/* Friday: every word the school has given him, nothing else. */
+/* Friday: every dragon he has won, shuffled. It starts short and grows with
+   him, so it gets closer to the real test as he earns more. */
 function buildFriday(){
-  simCache={};fridayMode=true;grownup=true;sessionFocus=null;
-  var act=shuffle(activeWords());
+  simCache={};fridayMode=true;grownup=true;sessionFocus=null;replayWord=null;
+  var act=shuffle(wonWords());
   Q=[];
   speedMixed=act.length>1;
   act.forEach(function(w){Q.push({t:"speed",w:w});});
@@ -1385,6 +1468,7 @@ function buildFriday(){
 
 function startSession(){
   qi=0;paused=false;advancing=false;startStatuses={};startStages={};
+  testAsked=[];testWrong=[];
   WORDS().forEach(function(w){
     startStatuses[w]=statusOf(w);
     startStages[w]=stageOf(w);
@@ -1481,11 +1565,18 @@ function doMeet(it){
   meetLock=false;show("scMeet");
   $("meetWord").textContent=it.w;
   $("meetDragon").innerHTML=dragonFor(WORDS().indexOf(it.w));
-  $("meetPrompt").textContent=it.allDone?"Let's practise your words!":"Your magic word is";
+  $("meetPrompt").textContent=it.allDone?"Let's practise your words!"
+                             :(it.replay?"Your dragon's word is":"Your magic word is");
   WD(it.w).seen++;save();
   setTimeout(function(){
     if(!live(tk))return;
     if(it.allDone){speak("Let us practise your words!");return;}
+    if(it.replay){
+      speakSeq([{t:"Let us play with your dragon!",gap:340},
+                {t:"His word is",gap:380},
+                {t:it.w+".",o:{rateMul:0.9},gap:0}],tk,null);
+      return;
+    }
     speakSeq([{t:"Your magic word is",gap:380},
               {t:it.w+".",o:{rateMul:0.9},gap:260},
               {t:it.w+".",o:{rateMul:0.9},gap:0}],tk,null);
@@ -1887,6 +1978,12 @@ function judgeSpeed(ok){
   if(!bonus)d.lastRev=Date.now();
   if(!d.days)d.days=[];
   if(!d.mixedDays)d.mixedDays=[];
+  /* Only dragons he has already won decide whether the test is passed. */
+  if(!bonus&&d.won&&grownup){
+    if(testAsked.indexOf(w)<0)testAsked.push(w);
+    if(!ok&&testWrong.indexOf(w)<0)testWrong.push(w);
+    if(ok){var ti=testWrong.indexOf(w);if(ti>=0)testWrong.splice(ti,1);}
+  }
   if(ok){
     /* A decoy card records nothing whatever. He was never asked to know it,
        so it can neither help nor hurt - it is only there to make the round a
@@ -1910,11 +2007,9 @@ function judgeSpeed(ok){
     if(!bonus){
       d.spokenNo++;
       d.missStreak=(d.missStreak||0)+1;
-      if(statusOf(w)===2&&d.missStreak>=2){      /* the dragon has a nap */
-        d.conf=Math.min(d.conf||0,2);
-        d.days=d.days.slice(0,1);
-        d.mixedDays=d.mixedDays.slice(0,1);
-      }
+      /* A missed word no longer rewinds the mastery record. The dragon simply
+         slips back one stage at the end of the test, and is won straight back
+         the next time he says it. Handled in settleTest. */
     }
     save();
     lockSpeed(true);
@@ -1938,6 +2033,26 @@ function judgeSpeed(ok){
 $("btnSpeedYes").onclick=function(){judgeSpeed(true);};
 $("btnSpeedNo").onclick=function(){judgeSpeed(false);};
 
+/* ---------- SETTLING THE TEST ----------
+   Only dragons he has already won are judged here. Say one correctly and he
+   has it back, whatever else happened. Miss one and it slips back exactly one
+   stage - and a dragon already back one stage cannot slip further, however
+   many tests in a row go badly. */
+function settleTest(){
+  var lost=[],back=[];
+  testAsked.forEach(function(w){
+    var d=WD(w); if(!d||!d.won)return;
+    if(testWrong.indexOf(w)>=0){
+      if(!d.back){d.back=1;lost.push(w);}   /* the one and only step back */
+      else back.push(w);                    /* already back - left alone */
+    }else{
+      if(d.back){d.back=0;back.push(w);}    /* said it - he has it back */
+    }
+  });
+  return {asked:testAsked.length,passed:testAsked.length>0&&testWrong.length===0,
+          lost:lost,regained:back};
+}
+
 /* ---------- END ---------- */
 function endSession(){
   if(!Q.length)return;          /* the session was abandoned, not finished */
@@ -1947,6 +2062,8 @@ function endSession(){
   if(!fridayMode&&sessionFocus&&WD(sessionFocus)){
     WD(sessionFocus).runs=(WD(sessionFocus).runs||0)+1;
   }
+  refreshStatuses();
+  var res=settleTest();
   refreshStatuses();
   if(!fridayMode)CUR().sessions++;
   save();
@@ -1962,8 +2079,28 @@ function endSession(){
     sndHatch();confetti(50);
     speak("You did it! You set a dragon free!");
     offerColour(w0,idx);
+  }else if(res.lost.length){
+    /* Gently, and always with the way back. */
+    var lw=res.lost[0],li=W.indexOf(lw);
+    $("endDragon").innerHTML=art(lw,li);
+    $("endTitle").textContent="Back in his shell!";
+    $("endMsg").innerHTML="<b>"+res.lost.join("</b> and <b>")+"</b> popped back into "+
+      (res.lost.length>1?"their shells":"his shell")+".<br>"+
+      '<span style="font-size:.85em;opacity:.9">Tap that egg on the nest and play again to win '+
+      (res.lost.length>1?"them":"him")+' back!</span>';
+    tone(392,.22,"sine",.11);
+    speak("Oh! "+res.lost[0]+" popped back into his shell. Play with him again to win him back!");
+  }else if(replayWord&&res.passed){
+    var ri=W.indexOf(replayWord);
+    $("endDragon").innerHTML=art(replayWord,ri);
+    $("endTitle").textContent="Your dragon is safe!";
+    $("endMsg").innerHTML="You still know <b>"+replayWord+"</b>!"+
+      (res.regained.indexOf(replayWord)>=0?"<br>He is out of his shell again.":"");
+    sndHatch();confetti(40);
+    speak("Brilliant! You still know "+replayWord+".");
+    offerColour(replayWord,ri);
   }else{
-    var done=W.filter(function(w){return WD(w).status===2;}).length;
+    var done=W.filter(function(w){return stageOf(w)===5;}).length;
     /* Nothing hatched today, but something may still have visibly moved on.
        Saying so is the whole point of the five stages. */
     var moved=W.filter(function(w){return stageOf(w)>(startStages[w]||0);});
@@ -1976,11 +2113,12 @@ function endSession(){
        tells a five-year-old nothing about whether he is getting anywhere. */
     var goal=f?nextGoal(f):"";
     var line=f?("<b>"+f+"</b>: "+STAGE_WORDS[stageOf(f)].toLowerCase()+(moved.length?"!":".")):"";
+    var safe=res.passed?'<br><span style="font-size:.8em;opacity:.85">All your dragons are safe.</span>':"";
     $("endMsg").innerHTML=fridayMode
-      ? "Friday rehearsal finished.<br><b>"+done+" of "+W.length+"</b> dragons are free."
+      ? "Friday rehearsal finished.<br><b>"+done+" of "+W.length+"</b> dragons are free."+safe
       : (line?line+(goal?'<br><span style="font-size:.8em;opacity:.85">'+goal+'</span>':"")+
-              "<br><b>"+done+" of "+W.length+"</b> dragons are free."
-             :"<b>"+done+" of "+W.length+"</b> dragons are free.");
+              "<br><b>"+done+" of "+W.length+"</b> dragons are free."+safe
+             :"<b>"+done+" of "+W.length+"</b> dragons are free."+safe);
     confetti(moved.length?32:18);tone(660,.2);setTimeout(function(){tone(880,.3);},160);
     speak(fridayMode?"All finished. Well done."
          :(moved.length?"Lovely work! Your egg is changing.":"Lovely work. Your egg is getting warmer."));
@@ -2194,13 +2332,18 @@ function openPanel(){
   });
   $("statTable").innerHTML=rows;
 
-  var m=W.filter(function(w){return WD(w).status===2;});
-  var need=W.filter(function(w){return WD(w).active&&WD(w).status<2;})
+  var m=W.filter(function(w){return stageOf(w)===5;});
+  var slipped=W.filter(function(w){return WD(w).won&&WD(w).back;});
+  var need=W.filter(function(w){return WD(w).active&&!WD(w).won;})
     .sort(function(a,b){return WD(a).spokenOk-WD(b).spokenOk;});
   var foc=focusWord();
   $("panelSummary").innerHTML=
     "Set: <b>"+CUR().name+"</b> &mdash; <b>"+m.length+" of "+W.length+"</b> hatched after <b>"+
     CUR().sessions+"</b> sessions."+
+    (slipped.length?"<br><b>"+slipped.join(", ")+"</b> slipped back a stage in the last test &mdash; tap that egg on the nest and play again to win "+
+        (slipped.length>1?"them":"him")+" back.":"")+
+    "<br>Grown-Up Time now tests <b>"+wonWords().length+"</b> hatched word"+(wonWords().length===1?"":"s")+
+    (foc?" plus <b>"+foc+"</b>.":".")+
     (foc?"<br>Working on: <b style='font-size:20px'>"+foc+"</b> &mdash; a new word appears only once this one is hatched."
         :"<br>Every word hatched. Sessions are pure revision now.")+
     (need.length>1?"<br>Coming up next: <b>"+need.slice(1,4).join(", ")+"</b>.":"")+
@@ -2349,6 +2492,10 @@ $("panelClose").onclick=function(){
 };
 $("btnFriday").onclick=function(){
   if(!activeWords().length){alert("No words are switched on.");return;}
+  if(!wonWords().length){
+    alert("Friday rehearsal covers the dragons he has already hatched, and he has none yet. Play a few sessions first - it will grow week by week.");
+    return;
+  }
   S.lastFriday=today();save();
   $("panel").classList.remove("on");fitPanel();
   paused=false;
