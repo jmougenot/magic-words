@@ -112,6 +112,33 @@ h1{font-size:clamp(30px,7vw,58px);margin:0 0 4px;color:#ffd84d;text-shadow:0 4px
 .egg.m5 .pic{animation:breathe 3.4s ease-in-out infinite;}
 @keyframes breathe{0%,100%{transform:translateY(0) scale(1);}
   50%{transform:translateY(-4px) scale(1.045);}}
+/* Play, and the offer to replay a dragon, share one row. On a landscape iPad
+   there is plenty of width and no spare height, so this costs nothing
+   vertically. If the two ever do not fit side by side they wrap, and the nest
+   gives up a little height to pay for it. */
+#playRow{display:flex;align-items:center;justify-content:center;gap:16px;
+  flex-wrap:wrap;width:100%;}
+/* Safety net. The nest is the one screen whose height depends on how much
+   progress there is, and I cannot measure a real iPad from here. If it ever
+   overflows, it scrolls rather than hiding the Play button. The auto margins
+   keep it perfectly centred when it fits, and - unlike justify-content:center -
+   leave the top reachable when it does not. */
+#scHome{justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+#scHome::before{content:"";margin-top:auto;}
+#scHome::after{content:"";margin-bottom:auto;}
+#replayBar{max-width:46%;}
+#btnReplay{white-space:normal;line-height:1.15;}
+/* Guarantees the row fits at every size, including a narrow Split View where
+   the two buttons have to wrap: with the offer showing, the nest and the Play
+   button give up a little height rather than Play falling off the screen.
+   These are id-level selectors so they win over the orientation tiers. */
+/* min() of the two axes, so this always shrinks the egg - sizing purely off vh
+   would make it BIGGER on a tall narrow window such as Split View. */
+#scHome.hasreplay .egg .pic{width:clamp(32px,min(6vw,6vh),52px);height:clamp(32px,min(6vw,6vh),52px);}
+#scHome.hasreplay #nestGrid{gap:7px;margin:6px auto 10px;}
+#scHome.hasreplay #focusStrip{padding:4px 16px;margin-bottom:6px;}
+#scHome.hasreplay .btn.big{min-height:clamp(72px,12vh,96px);
+  font-size:clamp(22px,4vh,34px);padding:16px 40px;}
 /* If a grown-up has switched on Reduce Motion, the nest sits perfectly still. */
 @media (prefers-reduced-motion:reduce){
   .egg .pic{animation:none !important;}
@@ -370,10 +397,12 @@ td.w{word-break:break-word;}
     <div class="sub" id="homeSub"></div>
     <div id="focusStrip"></div>
     <div id="nestGrid"></div>
-    <div id="replayBar" style="display:none;margin:2px 0 8px">
-      <button class="btn small green" id="btnReplay"></button>
+    <!-- The replay offer sits BESIDE Play, not above it. Given its own row it
+         pushed Play off the bottom of a landscape iPad. -->
+    <div id="playRow">
+      <div id="replayBar" style="display:none"><button class="btn small green" id="btnReplay"></button></div>
+      <button class="btn big" id="btnPlay">&#9654; PLAY</button>
     </div>
-    <button class="btn big" id="btnPlay">&#9654; PLAY</button>
   </div>
 
   <div class="screen" id="scMeet">
@@ -759,6 +788,17 @@ function load(){
     if(!first)first=newSet(DEFAULT_SET_NAME,DEFAULT_WORDS);
     S={v:2,sets:[first],cur:0,custom:[],settings:{}};
   }
+  normalise();
+}
+/* Everything that turns a raw saved object into a state the game can safely
+   run on. This MUST be the only such code: restoring a backup used to apply a
+   hand-picked subset of it, which left the game running on a half-migrated
+   object - fields the rest of the code assumes were simply absent. */
+function normalise(){
+  if(!S||typeof S!=="object")S=null;
+  if(!S||!S.sets||!S.sets.length){
+    S={v:2,sets:[newSet(DEFAULT_SET_NAME,DEFAULT_WORDS)],cur:0,custom:[],settings:(S&&S.settings)||{}};
+  }
   if(!S.settings)S.settings={};
   if(typeof S.settings.voice!=="boolean")S.settings.voice=true;
   if(typeof S.settings.roundFont!=="boolean")S.settings.roundFont=false;
@@ -775,6 +815,9 @@ function load(){
   S.sets.forEach(function(st){
     if(!st.w)st.w={};
     if(!st.colour)st.colour={};
+    if(!st.words||!st.words.length)st.words=DEFAULT_WORDS.slice();
+    if(typeof st.name!=="string")st.name=DEFAULT_SET_NAME;
+    if(typeof st.sessions!=="number")st.sessions=0;
     st.words.forEach(function(x){
       if(!st.w[x])st.w[x]=blankWord();
       var q=st.w[x];                       /* bring older saves up to date */
@@ -810,7 +853,43 @@ function load(){
   });
   document.body.classList.toggle("roundfont",!!S.settings.roundFont);
 }
-function save(){if(canStore){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}}
+/* A save used to fail in total silence. If iPadOS refused the write - out of
+   space, storage blocked, anything - the game carried on looking perfectly
+   normal while nothing was being kept. These two remember what actually
+   happened so the dashboard can say so, and so a restore can prove itself. */
+var lastSaveOk=true,lastSaveAt=0,lastSaveErr="";
+function save(){
+  if(!canStore){lastSaveOk=false;lastSaveErr="storage unavailable";return false;}
+  var txt;
+  try{txt=JSON.stringify(S);}
+  catch(e){lastSaveOk=false;lastSaveErr="could not package progress";return false;}
+  try{
+    localStorage.setItem(KEY,txt);
+  }catch(e){
+    lastSaveOk=false;
+    lastSaveErr=(e&&e.name==="QuotaExceededError")?"the browser is out of space":"the browser refused to save";
+    return false;
+  }
+  /* Written is not the same as stored. Read it straight back. */
+  try{
+    if(localStorage.getItem(KEY)!==txt){
+      lastSaveOk=false;lastSaveErr="the browser did not keep what was written";return false;
+    }
+  }catch(e){
+    lastSaveOk=false;lastSaveErr="progress could not be read back";return false;
+  }
+  lastSaveOk=true;lastSaveErr="";lastSaveAt=Date.now();
+  return true;
+}
+/* iPadOS can discard a backgrounded web app without warning. Anything held
+   only in memory - the statuses refreshed on the nest, a colour just chosen -
+   is written out the moment the app goes away. */
+function saveOnLeave(){try{save();}catch(e){}}
+window.addEventListener("pagehide",saveOnLeave);
+window.addEventListener("beforeunload",saveOnLeave);
+document.addEventListener("visibilitychange",function(){
+  if(document.visibilityState!=="visible")saveOnLeave();
+});
 
 /* ---------- sound ---------- */
 var AC=null;
@@ -1172,13 +1251,15 @@ var replayPick=null;
 function showReplay(w){
   replayPick=w;
   var bar=$("replayBar"),b=$("btnReplay");
-  b.innerHTML="&#9654; Play with the <b>"+w+"</b> dragon";
+  b.innerHTML="&#9654; Play with <b>"+w+"</b>";
   b.setAttribute("aria-label","Play with the "+w+" dragon again");
   bar.style.display="";
+  $("scHome").classList.add("hasreplay");
 }
 function hideReplay(){
   replayPick=null;
   $("replayBar").style.display="none";
+  $("scHome").classList.remove("hasreplay");
 }
 $("btnReplay").onclick=function(){
   if(!replayPick||!WD(replayPick)||!WD(replayPick).won)return;
@@ -2526,13 +2607,37 @@ $("btnRestore").onclick=function(){
   if(!confirm("Replace everything currently saved with this backup?"))return;
   abortSession();
   S=obj;
-  if(!S.settings)S.settings={};
-  if(typeof S.settings.voice!=="boolean")S.settings.voice=true;
-  if(typeof S.settings.rate!=="number")S.settings.rate=0.85;
-  if(!S.custom)S.custom=[];
-  if(S.cur>=S.sets.length||S.cur<0)S.cur=0;
-  simCache={};save();openPanel();drawNest();
-  alert("Restored.");
+  /* The same migration a normal start-up runs. Restoring used to apply only a
+     few of these by hand, which left the game running on a half-migrated
+     object - the cause of a restore that looked fine and then came back wrong. */
+  normalise();
+  simCache={};
+  /* Bring every status and egg stage up to date BEFORE writing, so what lands
+     in storage is exactly what is on screen. */
+  refreshStatuses();
+  var okSave=save();
+  openPanel();drawNest();
+  if(!okSave){
+    alert("RESTORE NOT SAVED\n\nThe backup was loaded, but this iPad would not store it ("+
+          lastSaveErr+"). Do not close the game. Keep your backup text safe and see section 2 of the guide.");
+    return;
+  }
+  /* Prove it: read the key back and check the restored dragons are really in
+     there. Saying "Restored." without checking is how a silent failure looks
+     exactly like a success. */
+  var proof=false;
+  try{
+    var back=JSON.parse(localStorage.getItem(KEY));
+    proof=!!(back&&back.sets&&back.sets.length===S.sets.length&&
+             JSON.stringify(back)===JSON.stringify(S));
+  }catch(e){proof=false;}
+  if(!proof){
+    alert("RESTORE MAY NOT HAVE STUCK\n\nThe backup was loaded but could not be read back from this iPad's storage. Keep your backup text safe and check the grey line in this dashboard.");
+    return;
+  }
+  var dr=WORDS().filter(function(w){return stageOf(w)===5;}).length;
+  alert("Restored and saved.\n\n"+dr+" dragon"+(dr===1?"":"s")+" and "+
+        S.sets.length+" word set"+(S.sets.length===1?"":"s")+" are back, and this iPad has confirmed it kept them.");
 };
 $("btnReset").onclick=function(){
   if(confirm("Erase EVERY set, every dragon and all progress, and start completely fresh?")){
@@ -2584,7 +2689,7 @@ document.addEventListener("touchmove",function(e){
   var el=e.target;
   while(el&&el!==document.body){
     if(el.id==="panel"||el.id==="rateSlider"||el.id==="pitchSlider"||el.tagName==="TEXTAREA"||
-       el.tagName==="INPUT"||el.tagName==="SELECT"||el.id==="tableWrap")return;
+       el.tagName==="INPUT"||el.tagName==="SELECT"||el.id==="tableWrap"||el.id==="scHome")return;
     el=el.parentNode;
   }
   if(e.cancelable)e.preventDefault();
@@ -2645,7 +2750,12 @@ function deviceReport(){
   bits.push(IOS?"iPad or iPhone":"Desktop or other browser");
   bits.push(STANDALONE?"added to the Home Screen":"running in the browser");
   bits.push(location.protocol==="file:"?"opened as a local file":"opened from a web address");
-  bits.push(canStore?"saving progress":"NOT saving progress");
+  /* Not "can it save?" but "did the last save actually land?" - the question
+     that matters after a restore. */
+  if(!canStore)bits.push("NOT saving progress");
+  else if(!lastSaveOk)bits.push("LAST SAVE FAILED: "+lastSaveErr);
+  else if(lastSaveAt)bits.push("saved at "+new Date(lastSaveAt).toLocaleTimeString());
+  else bits.push("saving progress");
   bits.push(("speechSynthesis" in window)?"speech available":"no speech on this device");
   bits.push(navigator.wakeLock?"screen stays awake":"screen may dim");
   bits.push(Math.round(window.innerWidth)+"x"+Math.round(window.innerHeight));
