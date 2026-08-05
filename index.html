@@ -42,15 +42,28 @@ body.roundfont{font-family:"Chalkboard SE","Comic Sans MS","Marker Felt",Verdana
   padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);}
 .screen{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;
   padding:16px;text-align:center;overflow-y:auto;overscroll-behavior:contain;min-height:0;}
-.screen.on{display:flex;animation:fade .35s ease;}
-@keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+/* Opacity only, and brief. The old fade slid the whole screen up 10px over
+   350ms, so for a third of a second after every transition the buttons were
+   still moving under his finger. */
+.screen.on{display:flex;animation:fade .18s ease;}
+@keyframes fade{from{opacity:0;}to{opacity:1;}}
+@media (prefers-reduced-motion:reduce){.screen.on{animation:none;}}
 h1{font-size:clamp(30px,7vw,58px);margin:0 0 4px;color:#ffd84d;text-shadow:0 4px 0 #a3720b;letter-spacing:1px;}
 .sub{font-size:clamp(15px,2.6vw,22px);opacity:.85;margin:0 0 8px;}
 .setname{font-size:clamp(12px,2.2vw,17px);opacity:.55;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
 .btn{border:none;border-radius:24px;padding:20px 38px;font-size:clamp(20px,3.4vw,30px);
   font-weight:bold;font-family:inherit;background:#ffd84d;color:#4a2f00;cursor:pointer;
-  box-shadow:0 7px 0 #b8890a;margin:8px;min-height:72px;min-width:150px;transition:transform .08s,box-shadow .08s;}
-.btn:active{transform:translateY(5px);box-shadow:0 2px 0 #b8890a;}
+  box-shadow:0 7px 0 #b8890a;margin:8px;min-height:72px;min-width:150px;
+  touch-action:manipulation;position:relative;
+  transition:box-shadow .08s,filter .08s;}
+/* The press is shown by collapsing the shadow, NOT by moving the button. A
+   button that slides down under a finger can end up out from under it by the
+   time the finger lifts, and the tap is lost - which is exactly the sort of
+   thing a five-year-old cannot work around. */
+.btn:active{box-shadow:0 2px 0 #b8890a;filter:brightness(.94);}
+.btn.ghost:active{box-shadow:0 2px 0 rgba(0,0,0,.28);}
+.btn.green:active{box-shadow:0 2px 0 #2b9a55;}
+.btn.amber:active{box-shadow:0 2px 0 #c07c1d;}
 .btn.big{font-size:clamp(26px,5vw,42px);padding:26px 60px;min-height:96px;}
 .btn.ghost{background:rgba(255,255,255,.14);color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.28);}
 .btn.green{background:#5ee08a;color:#08341a;box-shadow:0 7px 0 #2b9a55;}
@@ -59,10 +72,11 @@ h1{font-size:clamp(30px,7vw,58px);margin:0 0 4px;color:#ffd84d;text-shadow:0 4px
 #nestGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;width:100%;max-width:820px;margin:10px auto 16px;}
 @media (orientation:portrait){#nestGrid{grid-template-columns:repeat(4,1fr);}}
 .egg{background:rgba(255,255,255,.09);border-radius:18px;padding:8px 4px 6px;
+  touch-action:manipulation;position:relative;
   display:flex;flex-direction:column;align-items:center;gap:2px;border:2px solid rgba(255,255,255,.12);
   font-family:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appearance:none;
   transition:transform .1s;min-height:74px;}
-.egg:active{transform:scale(.94);}
+.egg:active{background:rgba(255,255,255,.2);}
 .egg[disabled]{cursor:default;}
 .egg.tapped{animation:eggpop .45s ease;}
 @keyframes eggpop{0%{transform:scale(1);}35%{transform:scale(1.14) rotate(-5deg);}100%{transform:scale(1);}}
@@ -126,18 +140,25 @@ h1{font-size:clamp(30px,7vw,58px);margin:0 0 4px;color:#ffd84d;text-shadow:0 4px
 #scHome{justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 #scHome::before{content:"";margin-top:auto;}
 #scHome::after{content:"";margin-bottom:auto;}
-#replayBar{max-width:46%;}
-#btnReplay{white-space:normal;line-height:1.15;}
 /* Guarantees the row fits at every size, including a narrow Split View where
    the two buttons have to wrap: with the offer showing, the nest and the Play
    button give up a little height rather than Play falling off the screen.
    These are id-level selectors so they win over the orientation tiers. */
 /* min() of the two axes, so this always shrinks the egg - sizing purely off vh
    would make it BIGGER on a tall narrow window such as Split View. */
-#scHome.hasreplay .egg .pic{width:clamp(32px,min(6vw,6vh),52px);height:clamp(32px,min(6vw,6vh),52px);}
-#scHome.hasreplay #nestGrid{gap:7px;margin:6px auto 10px;}
-#scHome.hasreplay #focusStrip{padding:4px 16px;margin-bottom:6px;}
-#scHome.hasreplay .btn.big{min-height:clamp(72px,12vh,96px);
+/* Bigger groups hold up to 20 eggs. Rather than make the nest taller - which
+   would push Play off a landscape iPad - it gets wider and shorter: ten across
+   in landscape, five in portrait, so it is never more than two or four rows. */
+#scHome.big20 .egg .pic{width:clamp(30px,min(5.2vw,5.2vh),46px);height:clamp(30px,min(5.2vw,5.2vh),46px);}
+#scHome.big20 #nestGrid{gap:7px;margin:6px auto 10px;max-width:1000px;
+  grid-template-columns:repeat(10,1fr);}
+@media (orientation:portrait){
+  #scHome.big20 #nestGrid{grid-template-columns:repeat(5,1fr);}
+}
+#scHome.big20 .egg{padding:6px 3px 4px;}
+#scHome.big20 .egg .lbl{font-size:clamp(11px,2vh,17px);}
+#scHome.big20 #focusStrip{padding:4px 16px;margin-bottom:6px;}
+#scHome.big20 .btn.big{min-height:clamp(72px,12vh,96px);
   font-size:clamp(22px,4vh,34px);padding:16px 40px;}
 /* If a grown-up has switched on Reduce Motion, the nest sits perfectly still. */
 @media (prefers-reduced-motion:reduce){
@@ -156,9 +177,10 @@ h1{font-size:clamp(30px,7vw,58px);margin:0 0 4px;color:#ffd84d;text-shadow:0 4px
   margin:6px 0 14px;letter-spacing:1px;text-shadow:0 6px 22px rgba(0,0,0,.45);word-break:break-word;}
 .tiles{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;width:100%;max-width:920px;}
 .tile{background:#fff;color:#231246;border:none;border-radius:22px;font-family:inherit;
+  touch-action:manipulation;
   font-size:clamp(34px,7vw,76px);font-weight:bold;padding:18px 10px;min-width:150px;min-height:120px;
   flex:1 1 150px;max-width:290px;box-shadow:0 8px 0 #b7a9d6;cursor:pointer;transition:transform .1s;word-break:break-word;}
-.tile:active{transform:translateY(5px);box-shadow:0 3px 0 #b7a9d6;}
+.tile:active{box-shadow:0 3px 0 #b7a9d6;filter:brightness(.95);}
 .tile.wrong{animation:wob .5s ease;background:#ece7f6;color:#8c86a0;box-shadow:0 8px 0 #cdc5e0;}
 @keyframes wob{0%,100%{transform:translateX(0) rotate(0);}20%{transform:translateX(-11px) rotate(-4deg);}
   40%{transform:translateX(11px) rotate(4deg);}60%{transform:translateX(-7px) rotate(-2deg);}80%{transform:translateX(7px) rotate(2deg);}}
@@ -170,8 +192,9 @@ h1{font-size:clamp(30px,7vw,58px);margin:0 0 4px;color:#ffd84d;text-shadow:0 4px
   max-width:920px;width:100%;margin-bottom:16px;}
 .sentemoji{font-size:clamp(38px,7vw,68px);margin-bottom:6px;}
 .sentence{font-size:clamp(26px,5vw,48px);line-height:1.75;font-weight:bold;}
-.tok{display:inline-block;padding:2px 8px;margin:2px 1px;border-radius:10px;}
-.tok.tap{background:#f0ebff;cursor:pointer;box-shadow:0 3px 0 #cabff0;}
+.tok{display:inline-block;padding:2px 8px;margin:2px 1px;border-radius:10px;touch-action:manipulation;}
+.tok.tap{background:#f0ebff;cursor:pointer;box-shadow:0 3px 0 #cabff0;
+  padding:10px 14px;margin:4px 2px;min-height:48px;line-height:1.1;}
 .tok.right{background:#5ee08a;color:#08341a;}
 .tok.wrong{background:#ece7f6;color:#9a93ad;animation:wob .5s ease;}
 .tok.hint{animation:glowd 1s ease-in-out infinite;}
@@ -182,20 +205,35 @@ h1{font-size:clamp(30px,7vw,58px);margin:0 0 4px;color:#ffd84d;text-shadow:0 4px
 #barEgg svg{width:100%;height:100%;display:block;}
 #focusStrip{display:flex;align-items:center;justify-content:center;gap:12px;
   background:rgba(255,216,77,.14);border:2px solid rgba(255,216,77,.45);border-radius:18px;
-  padding:8px 20px;margin:2px auto 10px;max-width:520px;}
+  padding:8px 20px;margin:2px auto 10px;max-width:560px;}
 #focusStrip .fw{font-size:clamp(26px,4.5vh,44px);font-weight:bold;color:#ffd84d;}
 #focusStrip .fl{font-size:clamp(12px,2vh,16px);opacity:.7;letter-spacing:1px;text-transform:uppercase;}
+#focusStrip .fpic{width:clamp(34px,5.5vh,52px);height:clamp(34px,5.5vh,52px);flex:0 0 auto;}
+#focusStrip .fpic svg{width:100%;height:100%;display:block;}
+/* Revising an already-hatched dragon: green rather than gold, so the strip and
+   the chosen tile agree at a glance about what Play will do. */
+#focusStrip.revise{background:rgba(94,224,138,.16);border-color:rgba(94,224,138,.55);}
+#focusStrip.revise .fw{color:#7df0a4;}
+/* The chosen egg or dragon. Deliberately louder than anything else on screen.
+   It is NOT scaled up: growing the tile made it overlap its neighbours, so the
+   outer few pixels of the egg next door stopped being tappable. */
+.egg.chosen{border-color:#ffd84d;background:rgba(255,216,77,.28);
+  box-shadow:0 0 0 4px rgba(255,216,77,.55),0 0 26px rgba(255,216,77,.6);
+  z-index:2;}
+.egg.chosen.s2{border-color:#7df0a4;background:rgba(94,224,138,.26);
+  box-shadow:0 0 0 4px rgba(94,224,138,.45),0 0 22px rgba(94,224,138,.55);}
 /* Feed the Dragon */
 .berries{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;align-items:center;
   width:100%;max-width:900px;margin-bottom:6px;}
 .berry{border:none;border-radius:50%;font-family:inherit;font-weight:bold;cursor:pointer;
+  touch-action:manipulation;
   width:clamp(120px,20vh,190px);height:clamp(120px,20vh,190px);
   font-size:clamp(32px,7vh,64px);color:#4a1b0c;background:#F5C4B3;
   box-shadow:0 8px 0 #D85A30;transition:transform .12s;
   display:flex;align-items:center;justify-content:center;word-break:break-word;padding:6px;}
 .berry:nth-child(2n){background:#C0DD97;box-shadow:0 8px 0 #639922;color:#173404;}
 .berry:nth-child(3n){background:#B5D4F4;box-shadow:0 8px 0 #378ADD;color:#042C53;}
-.berry:active{transform:translateY(5px);box-shadow:0 3px 0 rgba(0,0,0,.3);}
+.berry:active{box-shadow:0 3px 0 rgba(0,0,0,.3);filter:brightness(.95);}
 .berry.eaten{animation:eat .5s ease forwards;}
 @keyframes eat{to{transform:translateY(120px) scale(.2) rotate(30deg);opacity:0;}}
 .berry.nope{animation:wob .5s ease;opacity:.55;}
@@ -248,12 +286,14 @@ h1{font-size:clamp(30px,7vw,58px);margin:0 0 4px;color:#ffd84d;text-shadow:0 4px
 /* Dragon colour swatches */
 .swatches{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:6px 0 10px;}
 .swatches button{width:74px;height:74px;border-radius:50%;border:4px solid rgba(255,255,255,.5);
+  touch-action:manipulation;
   cursor:pointer;padding:4px;background:rgba(255,255,255,.12);}
 .swatches button svg{width:100%;height:100%;display:block;}
 .swatches button.sel{border-color:#5ee08a;box-shadow:0 0 18px rgba(94,224,138,.6);}
 #progbar{flex:2;height:14px;background:rgba(255,255,255,.16);border-radius:8px;overflow:hidden;max-width:340px;}
 #progfill{height:100%;width:0;background:linear-gradient(90deg,#ffd84d,#5ee08a);transition:width .4s;}
-#gear{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.07);border:none;
+#gear{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.07);border:none;
+  touch-action:manipulation;
   color:rgba(255,255,255,.35);font-size:20px;cursor:pointer;}
 .dragon{width:clamp(110px,26vw,210px);height:clamp(110px,26vw,210px);animation:bob 2.4s ease-in-out infinite;}
 .dragon svg{width:100%;height:100%;display:block;}
@@ -278,6 +318,7 @@ td.w{font-weight:bold;font-size:20px;}
 .p0{background:#efeaff;color:#5a4a9e;} .p1{background:#ffe8c8;color:#8a5100;} .p2{background:#d3f7e0;color:#0d6b34;}
 .sw{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;}
 .sw button{border:2px solid #cfc4ef;background:#fff;color:#3a2a72;border-radius:14px;padding:11px 16px;
+  touch-action:manipulation;
   font-size:18px;font-weight:bold;font-family:inherit;min-width:74px;cursor:pointer;}
 .sw button.act{background:#5ee08a;border-color:#2b9a55;color:#07351a;}
 .note{background:#fff6dd;border-left:5px solid #ffc94d;padding:12px 14px;border-radius:0 12px 12px 0;
@@ -293,12 +334,14 @@ textarea{min-height:96px;line-height:1.6;resize:vertical;}
 .trophy .sm{font-size:13px;opacity:.75;margin-top:3px;}
 .trophy .row{display:flex;gap:6px;margin-top:8px;}
 .trophy .row button{flex:1;font-size:13px;padding:8px 6px;border-radius:10px;border:1px solid #cfc4ef;
+  touch-action:manipulation;
   background:#f4f0ff;color:#3a2a72;font-family:inherit;cursor:pointer;}
 .gatebox{position:fixed;inset:0;z-index:120;background:rgba(20,10,50,.96);display:none;
   flex-direction:column;align-items:center;justify-content:center;padding:20px;}
 .gatebox.on{display:flex;}
 .gatenums{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
 .gatenums button{font-size:38px;font-weight:bold;font-family:inherit;padding:20px 30px;border-radius:18px;
+  touch-action:manipulation;min-height:88px;
   border:none;background:#fff;color:#231246;min-width:110px;cursor:pointer;}
 .timerbar{height:16px;width:min(90%,520px);background:rgba(255,255,255,.16);border-radius:9px;overflow:hidden;margin:14px 0;}
 .timerfill{height:100%;width:100%;background:#5ee08a;transition:width .1s linear;}
@@ -397,10 +440,7 @@ td.w{word-break:break-word;}
     <div class="sub" id="homeSub"></div>
     <div id="focusStrip"></div>
     <div id="nestGrid"></div>
-    <!-- The replay offer sits BESIDE Play, not above it. Given its own row it
-         pushed Play off the bottom of a landscape iPad. -->
     <div id="playRow">
-      <div id="replayBar" style="display:none"><button class="btn small green" id="btnReplay"></button></div>
       <button class="btn big" id="btnPlay">&#9654; PLAY</button>
     </div>
   </div>
@@ -494,6 +534,15 @@ td.w{word-break:break-word;}
   <h3>Practise only some of these words</h3>
   <p style="font-size:14px;opacity:.8">Tap a word to switch it off if his teacher has not given it to him yet. Switched-off words vanish completely, including as wrong answers.</p>
   <div class="sw" id="activeSwitches"></div>
+
+  <h3>&#127912; Word group</h3>
+  <p style="font-size:14px;opacity:.85">The 17 groups from his school chart. The next group opens once every dragon in the current one is free. Each group keeps its own eggs, dragons and progress, so you can go back to an old one any time.</p>
+  <select id="groupSel"></select>
+  <div id="groupNote" style="font-size:14px;color:#40248c;margin:6px 0 8px"></div>
+  <label style="display:flex;align-items:center;gap:10px;font-size:14px;opacity:.85;margin-bottom:8px">
+    <input type="checkbox" id="groupAny" style="width:22px;height:22px">
+    Let me choose any group, even one that is not open yet
+  </label>
 
   <h3>&#128221; Change the words</h3>
   <p style="font-size:14px;opacity:.85">Type or paste the new words below. Spaces, commas or new lines all work.</p>
@@ -628,8 +677,40 @@ function dragonFor(i){return DRAGONS[i%DRAGONS.length];}
    Used only the very first time the game is ever opened.
    After that, change the words from the grown-up dashboard.
    ============================================================ */
-var DEFAULT_WORDS = ["a","is","and","be","in","it","of","that","to","was","I","the"];
-var DEFAULT_SET_NAME = "Golden Words";
+/* ============================================================
+   THE SCHOOL'S WORD GROUPS - all 17, in the order printed on his chart.
+   Three words appear in two groups each (come, for, say); that is how the
+   chart is, and Julien asked for it to stay that way.
+   ============================================================ */
+var GROUPS=[
+{id:"golden",name:"Golden",words:["a","and","be","I","in","is","it","of","that","the","to","was"]},
+{id:"red",name:"Red",words:["all","had","her","his","he","on","one","so","they","not","you","with","are","as","said","at","but","for","have","we"]},
+{id:"blue",name:"Blue",words:["an","by","do","go","if","me","my","no","or","up"]},
+{id:"green",name:"Green",words:["big","can","did","get","has","him","new","now","off","old","our","out","see","she","two","who"]},
+{id:"orange",name:"Orange",words:["back","been","come","down","from","into","just","like","made","much","over","them","this","well","went","when"]},
+{id:"indigo",name:"Indigo",words:["call","come","here","make","must","only","some","then","were","what","will","your"]},
+{id:"violet",name:"Violet",words:["about","before","could","first","little","look","more","other","right","their","there","want","where","which"]},
+{id:"pink",name:"Pink",words:["after","am","boy","day","eat","five","fly","girl","good","help","home","jump","play","ran","read","say","sing","sit","think","us"]},
+{id:"purple",name:"Purple",words:["again","ask","best","bring","for","find","give","how","kind","left","man","mother","own","room","say","stop","these","too","walk","wish"]},
+{id:"aqua",name:"Aqua",words:["always","away","bird","dog","fast","four","going","hand","keep","let","many","night","people","round","school","take","thing","tree","water","work"]},
+{id:"lime",name:"Lime",words:["another","found","may","tell","bad","got","once","three","name","head","put","under","ate","know","run","write","father","live","should","would"]},
+{id:"lemon",name:"Lemon",words:["any","gave","morning","than","because","each","open","time","small","house","use","very","every","last","cat","why","yes","long","soon","year"]},
+{id:"pearl",name:"Pearl",words:["black","brown","blue","dark","eight","green","hour","light","minute","month","nine","orange","red","second","seven","six","ten","week","white","yellow"]},
+{id:"ruby",name:"Ruby",words:["baby","body","brother","children","dad","eye","face","family","feet","friend","heart","kids","leg","love","men","mum","parent","person","sister","women"]},
+{id:"sapphire",name:"Sapphire",words:["book","class","draw","end","front","hold","learn","letter","line","list","page","paper","picture","sentence","sound","spell","start","story","study","word"]},
+{id:"jade",name:"Jade",words:["air","cold","earth","field","fire","flower","ground","grow","hot","land","moon","plant","rain","sea","sky","space","star","sun","wind","world"]},
+{id:"amber",name:"Amber",words:["autumn","ball","beautiful","bike","doll","fun","game","happy","music","party","race","ride","season","song","spring","summer","together","toy","watch","winter"]}];
+
+function groupById(id){
+  for(var i=0;i<GROUPS.length;i++)if(GROUPS[i].id===id)return GROUPS[i];
+  return null;
+}
+function groupIndex(id){
+  for(var i=0;i<GROUPS.length;i++)if(GROUPS[i].id===id)return i;
+  return -1;
+}
+var DEFAULT_WORDS = GROUPS[0].words.slice();
+var DEFAULT_SET_NAME = GROUPS[0].name;
 
 /* How long he gets to say a word in the grown-up speed round, in seconds. */
 var SPEED_SECONDS = 5;
@@ -719,6 +800,903 @@ var SENTENCES = [
 {t:"Down the hill we go!",e:"🛷"}
 ];
 
+var GEN_SENT=[
+{t:"I can run very fast.",e:"🏃"},
+{t:"I have a little dog.",e:"🐶"},
+{t:"I like to read books.",e:"📕"},
+{t:"A big dog ran past me.",e:"🐶"},
+{t:"I can see a red hat.",e:"🎩"},
+{t:"Mum gave me a little cake.",e:"🧁"},
+{t:"This book is about dogs.",e:"🐶"},
+{t:"Tell me about your day.",e:"🗣️"},
+{t:"We sang about the sea.",e:"🌊"},
+{t:"We play after school.",e:"🏫"},
+{t:"After lunch we can go out.",e:"🍽️"},
+{t:"She came home after me.",e:"🏠"},
+{t:"We can go there again.",e:"🚶"},
+{t:"Let us read the book again.",e:"📕"},
+{t:"Come and play with me again.",e:"🎈"},
+{t:"The air is cold today.",e:"❄️"},
+{t:"Birds fly in the air.",e:"🐦"},
+{t:"Take a big breath of air.",e:"😮‍💨"},
+{t:"All the cakes are gone!",e:"🧁"},
+{t:"We ate all of the cake.",e:"🍰"},
+{t:"All my friends came to play.",e:"🧑‍🤝‍🧑"},
+{t:"I always brush my teeth.",e:"🪥"},
+{t:"The cat is always asleep.",e:"😴"},
+{t:"We always read at bedtime.",e:"📕"},
+{t:"I am very happy today.",e:"😀"},
+{t:"I am going to the park.",e:"🌳"},
+{t:"I am not tired at all.",e:"💪"},
+{t:"I ate an apple for lunch.",e:"🍎"},
+{t:"An egg fell off the table.",e:"🥚"},
+{t:"We saw an old boat.",e:"⛵"},
+{t:"A cat and a dog sat here.",e:"🐱"},
+{t:"Do you want milk and water?",e:"🥛"},
+{t:"We can run and jump!",e:"🏃"},
+{t:"Another big dog ran past me.",e:"🐶"},
+{t:"I can see another red hat.",e:"🎩"},
+{t:"Mum gave me another little cake.",e:"🧁"},
+{t:"Have you got any milk?",e:"🥛"},
+{t:"I do not have any hats.",e:"🎩"},
+{t:"Take any book you like.",e:"📕"},
+{t:"The cakes are on the table.",e:"🧁"},
+{t:"My dogs are fast asleep.",e:"🐶"},
+{t:"We are going to the park.",e:"🌳"},
+{t:"She is as tall as me.",e:"📏"},
+{t:"Run as fast as you can!",e:"🏃"},
+{t:"It is as cold as snow.",e:"❄️"},
+{t:"I will ask my mum.",e:"👩"},
+{t:"Can I ask you something?",e:"❓"},
+{t:"We ask for help.",e:"🙋"},
+{t:"We are at the park.",e:"🌳"},
+{t:"Look at the big dog!",e:"🐶"},
+{t:"I am good at running.",e:"🏃"},
+{t:"I ate all of my lunch.",e:"🍽️"},
+{t:"The dog ate my cake!",e:"🍰"},
+{t:"We ate under the big tree.",e:"🌳"},
+{t:"It was a lovely autumn.",e:"🌞"},
+{t:"We play in the autumn.",e:"⏰"},
+{t:"Every autumn I read a book.",e:"📕"},
+{t:"The dog ran away fast.",e:"🐶"},
+{t:"Put your toys away, please.",e:"🧸"},
+{t:"We are going away today.",e:"✈️"},
+{t:"The baby is fast asleep.",e:"👶"},
+{t:"My baby sister is small.",e:"👧"},
+{t:"I can see a little baby.",e:"👀"},
+{t:"We came back from the park.",e:"🌳"},
+{t:"Put it back in the box.",e:"📦"},
+{t:"She looked back at me.",e:"👀"},
+{t:"That is a bad dog.",e:"🐶"},
+{t:"I have a bad hat.",e:"🎩"},
+{t:"Look at the bad car!",e:"🚗"},
+{t:"I can see a ball.",e:"👀"},
+{t:"The ball is very big.",e:"📏"},
+{t:"Look at that ball!",e:"👉"},
+{t:"I want to be very tall.",e:"📏"},
+{t:"You can be my friend.",e:"💛"},
+{t:"It will be cold today.",e:"❄️"},
+{t:"That is a beautiful dog.",e:"🐶"},
+{t:"I have a beautiful hat.",e:"🎩"},
+{t:"Look at the beautiful car!",e:"🚗"},
+{t:"We ran because it was cold.",e:"❄️"},
+{t:"I am happy because you came.",e:"😀"},
+{t:"She slept because she was tired.",e:"😴"},
+{t:"I have been to the park.",e:"🌳"},
+{t:"We have been very busy.",e:"🏃"},
+{t:"She has been here before.",e:"🏠"},
+{t:"We read a book before bed.",e:"📕"},
+{t:"Before lunch we can play.",e:"🎈"},
+{t:"She came home before school.",e:"🏫"},
+{t:"That is the best dog.",e:"🐶"},
+{t:"I like my best red hat.",e:"🎩"},
+{t:"You are my best friend!",e:"💛"},
+{t:"That is a big dog.",e:"🐶"},
+{t:"I have a big hat.",e:"🎩"},
+{t:"Look at the big car!",e:"🚗"},
+{t:"I can see a bike.",e:"👀"},
+{t:"The bike is very big.",e:"📏"},
+{t:"Look at that bike!",e:"👉"},
+{t:"I can see a bird.",e:"👀"},
+{t:"The bird is very big.",e:"📏"},
+{t:"Look at that bird!",e:"👉"},
+{t:"That is a black dog.",e:"🐶"},
+{t:"I have a black hat.",e:"🎩"},
+{t:"Look at the black car!",e:"🚗"},
+{t:"That is a blue dog.",e:"🐶"},
+{t:"I have a blue hat.",e:"🎩"},
+{t:"Look at the blue car!",e:"🚗"},
+{t:"My body needs food and sleep.",e:"💪"},
+{t:"I can move my body.",e:"🕺"},
+{t:"Wash your body in the bath.",e:"🛁"},
+{t:"I can see a book.",e:"👀"},
+{t:"The book is very big.",e:"📏"},
+{t:"Look at that book!",e:"👉"},
+{t:"I can see a boy.",e:"👀"},
+{t:"The boy is very big.",e:"📏"},
+{t:"Look at that boy!",e:"👉"},
+{t:"Please bring me a cup.",e:"☕"},
+{t:"I will bring my new book.",e:"📕"},
+{t:"Can you bring the ball?",e:"⚽"},
+{t:"My brother is very kind.",e:"💛"},
+{t:"I can see my brother.",e:"👀"},
+{t:"I play with my brother.",e:"🎈"},
+{t:"That is a brown dog.",e:"🐶"},
+{t:"I have a brown hat.",e:"🎩"},
+{t:"Look at the brown car!",e:"🚗"},
+{t:"I am small but very fast.",e:"🏃"},
+{t:"It is cold but sunny today.",e:"🌞"},
+{t:"She ran but I walked.",e:"🚶"},
+{t:"The cat sat by the box.",e:"🐱"},
+{t:"We ran by the garden.",e:"🏃"},
+{t:"My hat is by the bed.",e:"🎩"},
+{t:"I will call my friend.",e:"📞"},
+{t:"Mum will call us for tea.",e:"🍽️"},
+{t:"We call our dog Rex.",e:"🐶"},
+{t:"I can run very fast.",e:"🏃"},
+{t:"We can go to the park.",e:"🌳"},
+{t:"The dog can sleep here.",e:"🐶"},
+{t:"I can see a cat.",e:"👀"},
+{t:"The cat is very big.",e:"📏"},
+{t:"Look at that cat!",e:"👉"},
+{t:"The children are in the garden.",e:"🌳"},
+{t:"I can see lots of children.",e:"👀"},
+{t:"All the children were happy.",e:"😀"},
+{t:"My class went to the park.",e:"🏫"},
+{t:"I am in the red class.",e:"📕"},
+{t:"Our class is very big.",e:"🏫"},
+{t:"It is very cold today.",e:"❄️"},
+{t:"My hands are cold.",e:"🧤"},
+{t:"I like cold milk.",e:"🥛"},
+{t:"We can come together!",e:"🤝"},
+{t:"I like to come every day.",e:"📅"},
+{t:"Let us come now!",e:"🎉"},
+{t:"I could run very fast.",e:"🏃"},
+{t:"We could go to the park.",e:"🌳"},
+{t:"The dog could sleep here.",e:"🐶"},
+{t:"My dad is very kind.",e:"💛"},
+{t:"I can see my dad.",e:"👀"},
+{t:"I play with my dad.",e:"🎈"},
+{t:"It is very dark at night.",e:"🌙"},
+{t:"My room is dark.",e:"🛏️"},
+{t:"She has dark hair.",e:"💇"},
+{t:"It was a lovely day.",e:"🌞"},
+{t:"We play in the day.",e:"⏰"},
+{t:"Every day I read a book.",e:"📕"},
+{t:"I did it all by myself!",e:"🙌"},
+{t:"We did our work at school.",e:"🏫"},
+{t:"She did a funny dance.",e:"💃"},
+{t:"What do you like best?",e:"🤔"},
+{t:"I do like red hats.",e:"🎩"},
+{t:"Do you want to play?",e:"🎈"},
+{t:"I can see a dog.",e:"👀"},
+{t:"The dog is very big.",e:"📏"},
+{t:"Look at that dog!",e:"👉"},
+{t:"I can see a doll.",e:"👀"},
+{t:"The doll is very big.",e:"📏"},
+{t:"Look at that doll!",e:"👉"},
+{t:"Please sit down here.",e:"🪑"},
+{t:"The cat ran down the road.",e:"🐱"},
+{t:"We put it down on the bed.",e:"🛏️"},
+{t:"I like to draw big dogs.",e:"🐶"},
+{t:"Can you draw a cat?",e:"🐱"},
+{t:"We draw pictures at school.",e:"🎨"},
+{t:"Each child has a red hat.",e:"🎩"},
+{t:"We had one cake each.",e:"🧁"},
+{t:"Each day I read a book.",e:"📕"},
+{t:"The earth is round.",e:"🌍"},
+{t:"We live on the earth.",e:"🌎"},
+{t:"Plants grow in the earth.",e:"🌱"},
+{t:"We can eat together!",e:"🤝"},
+{t:"I like to eat every day.",e:"📅"},
+{t:"Let us eat now!",e:"🎉"},
+{t:"I can see eight little cats.",e:"🐱"},
+{t:"We have eight red balls.",e:"🔴"},
+{t:"Count to eight with me!",e:"🔢"},
+{t:"This is the end of the story.",e:"📕"},
+{t:"We ran to the end of the road.",e:"🛣️"},
+{t:"The end of the day is here.",e:"🌙"},
+{t:"Every child has a red hat.",e:"🎩"},
+{t:"I read a book every day.",e:"📕"},
+{t:"Every dog likes a walk.",e:"🐶"},
+{t:"I can see with my eye.",e:"👁️"},
+{t:"She has one blue eye.",e:"👁️"},
+{t:"Shut your eye and sleep.",e:"😴"},
+{t:"I can see a face.",e:"👀"},
+{t:"The face is very big.",e:"📏"},
+{t:"Look at that face!",e:"👉"},
+{t:"My family is very kind.",e:"💛"},
+{t:"We are a big family.",e:"🧑‍🤝‍🧑"},
+{t:"I love my family.",e:"❤️"},
+{t:"My dog can run very fast.",e:"🐶"},
+{t:"That is a fast red car!",e:"🚗"},
+{t:"Come here fast, please!",e:"🏃"},
+{t:"My father is very kind.",e:"💛"},
+{t:"I can see my father.",e:"👀"},
+{t:"I play with my father.",e:"🎈"},
+{t:"My feet are very cold.",e:"🦶"},
+{t:"I can see my feet.",e:"👀"},
+{t:"Put your feet up here.",e:"🪑"},
+{t:"I can see a field.",e:"👀"},
+{t:"The field is very big.",e:"📏"},
+{t:"Look at that field!",e:"👉"},
+{t:"I can find my red hat.",e:"🎩"},
+{t:"Help me find the ball.",e:"⚽"},
+{t:"We find shells by the sea.",e:"🐚"},
+{t:"The fire is very hot.",e:"🔥"},
+{t:"We sat by the fire.",e:"🪵"},
+{t:"I can see the fire.",e:"👀"},
+{t:"This is my first red hat.",e:"🎩"},
+{t:"The first cake was lovely.",e:"🧁"},
+{t:"She was the first one home.",e:"🏠"},
+{t:"I can see five little cats.",e:"🐱"},
+{t:"We have five red balls.",e:"🔴"},
+{t:"Count to five with me!",e:"🔢"},
+{t:"I can see a flower.",e:"👀"},
+{t:"The flower is very big.",e:"📏"},
+{t:"Look at that flower!",e:"👉"},
+{t:"Birds can fly very high.",e:"🐦"},
+{t:"I would like to fly.",e:"✈️"},
+{t:"We watch the birds fly.",e:"👀"},
+{t:"This cake is for you.",e:"🧁"},
+{t:"We waited for the bus.",e:"🚌"},
+{t:"A red hat for my dog!",e:"🎩"},
+{t:"I found my red hat!",e:"🎩"},
+{t:"We found a shell by the sea.",e:"🐚"},
+{t:"She found her dog at last.",e:"🐶"},
+{t:"I can see four little cats.",e:"🐱"},
+{t:"We have four red balls.",e:"🔴"},
+{t:"Count to four with me!",e:"🔢"},
+{t:"My friend is very kind.",e:"💛"},
+{t:"I can see my friend.",e:"👀"},
+{t:"I play with my friend.",e:"🎈"},
+{t:"We ran from the garden.",e:"🏃"},
+{t:"A letter from my friend!",e:"✉️"},
+{t:"She came from school.",e:"🏫"},
+{t:"I sat at the front of the bus.",e:"🚌"},
+{t:"The dog ran out the front door.",e:"🚪"},
+{t:"Look at the front of the book.",e:"📕"},
+{t:"We had lots of fun!",e:"🎉"},
+{t:"This game is such fun.",e:"🎮"},
+{t:"Playing is very fun.",e:"😀"},
+{t:"I can see a game.",e:"👀"},
+{t:"The game is very big.",e:"📏"},
+{t:"Look at that game!",e:"👉"},
+{t:"Mum gave me a red hat.",e:"🎩"},
+{t:"I gave the ball to my friend.",e:"⚽"},
+{t:"She gave her dog a bone.",e:"🦴"},
+{t:"I will get my red hat.",e:"🎩"},
+{t:"Can you get the ball?",e:"⚽"},
+{t:"We get home at six.",e:"🏠"},
+{t:"I can see a girl.",e:"👀"},
+{t:"The girl is very big.",e:"📏"},
+{t:"Look at that girl!",e:"👉"},
+{t:"Please give me the ball.",e:"⚽"},
+{t:"I will give her a hat.",e:"🎩"},
+{t:"We give food to the birds.",e:"🐦"},
+{t:"We can go together!",e:"🤝"},
+{t:"I like to go every day.",e:"📅"},
+{t:"Let us go now!",e:"🎉"},
+{t:"We are going to the park.",e:"🌳"},
+{t:"The dog is going to sleep.",e:"🐶"},
+{t:"I am going home now.",e:"🏠"},
+{t:"That is a good dog.",e:"🐶"},
+{t:"I have a good hat.",e:"🎩"},
+{t:"Look at the good car!",e:"🚗"},
+{t:"I got a new bike!",e:"🚲"},
+{t:"We got home at six.",e:"🏠"},
+{t:"She got a red hat.",e:"🎩"},
+{t:"That is a green dog.",e:"🐶"},
+{t:"I have a green hat.",e:"🎩"},
+{t:"Look at the green car!",e:"🚗"},
+{t:"The ground is very cold.",e:"❄️"},
+{t:"I sat on the ground.",e:"🪑"},
+{t:"Leaves fell on the ground.",e:"🍂"},
+{t:"Plants grow in the garden.",e:"🌱"},
+{t:"I will grow very tall.",e:"📏"},
+{t:"We watch the flowers grow.",e:"🌸"},
+{t:"I had a lovely day.",e:"🌞"},
+{t:"We had cake for tea.",e:"🍰"},
+{t:"She had a little dog.",e:"🐶"},
+{t:"Put your hand up, please.",e:"✋"},
+{t:"I hold mum's hand.",e:"🤝"},
+{t:"My hand is very cold.",e:"🧤"},
+{t:"That is a happy dog.",e:"🐶"},
+{t:"I have a happy hat.",e:"🎩"},
+{t:"Look at the happy car!",e:"🚗"},
+{t:"She has a little dog.",e:"🐶"},
+{t:"My mum has a red hat.",e:"🎩"},
+{t:"It has a big garden.",e:"🌳"},
+{t:"I have a little dog.",e:"🐶"},
+{t:"We have two red hats.",e:"🎩"},
+{t:"They have a big garden.",e:"🌳"},
+{t:"He can run very fast.",e:"🏃"},
+{t:"He is my best friend.",e:"🧒"},
+{t:"Look! He has a red hat.",e:"🎩"},
+{t:"Put the hat on your head.",e:"🎩"},
+{t:"My head is very sore.",e:"🤕"},
+{t:"She shook her head.",e:"🙅"},
+{t:"I can see a heart.",e:"👀"},
+{t:"The heart is very big.",e:"📏"},
+{t:"Look at that heart!",e:"👉"},
+{t:"We can help together!",e:"🤝"},
+{t:"I like to help every day.",e:"📅"},
+{t:"Let us help now!",e:"🎉"},
+{t:"Mum gave her a red hat.",e:"🎩"},
+{t:"Come and play with her.",e:"🎈"},
+{t:"The dog ran to her.",e:"🐶"},
+{t:"Come and sit here.",e:"🪑"},
+{t:"My red hat is here.",e:"🎩"},
+{t:"We can play here today.",e:"🎈"},
+{t:"Mum gave him a red hat.",e:"🎩"},
+{t:"Come and play with him.",e:"🎈"},
+{t:"The dog ran to him.",e:"🐶"},
+{t:"His dog can run fast.",e:"🐶"},
+{t:"I like his new hat.",e:"🎩"},
+{t:"Look at his big smile!",e:"😀"},
+{t:"I will hold your hand.",e:"✋"},
+{t:"Can you hold my bag?",e:"🎒"},
+{t:"She likes to hold the cat.",e:"🐱"},
+{t:"I am going home now.",e:"🏠"},
+{t:"My home is warm and cosy.",e:"🏠"},
+{t:"She ran home to her mum.",e:"🏃"},
+{t:"It is very hot today.",e:"☀️"},
+{t:"The fire is hot.",e:"🔥"},
+{t:"I like hot soup.",e:"🍲"},
+{t:"We played for an hour.",e:"⏰"},
+{t:"It takes an hour to get there.",e:"🚌"},
+{t:"One hour is sixty minutes.",e:"🕐"},
+{t:"My house is warm and cosy.",e:"🏠"},
+{t:"We live in a big house.",e:"🏠"},
+{t:"The house has a red door.",e:"🚪"},
+{t:"How are you today?",e:"😀"},
+{t:"How many cakes are there?",e:"🧁"},
+{t:"Tell me how you did it.",e:"🤔"},
+{t:"If it rains, we stay in.",e:"🌧️"},
+{t:"Tell me if you are cold.",e:"❄️"},
+{t:"If you are good, we play.",e:"🎈"},
+{t:"The cat sat in the box.",e:"🐱"},
+{t:"We ran in the garden.",e:"🏃"},
+{t:"My hat is in the bed.",e:"🎩"},
+{t:"The cat jumped into the box.",e:"🐱"},
+{t:"We ran into the garden.",e:"🏃"},
+{t:"Put it into the bag.",e:"🎒"},
+{t:"The sky is very blue today.",e:"☁️"},
+{t:"My dog is fast asleep.",e:"🐶"},
+{t:"This is my new book.",e:"📕"},
+{t:"It is very cold today.",e:"❄️"},
+{t:"I put it in my bag.",e:"🎒"},
+{t:"Look at it go!",e:"🚗"},
+{t:"We can jump together!",e:"🤝"},
+{t:"I like to jump every day.",e:"📅"},
+{t:"Let us jump now!",e:"🎉"},
+{t:"I just ate my lunch.",e:"🍽️"},
+{t:"It is just a little cat.",e:"🐱"},
+{t:"We just got home.",e:"🏠"},
+{t:"You can keep the red hat.",e:"🎩"},
+{t:"I will keep it in my bag.",e:"🎒"},
+{t:"We keep our books here.",e:"📕"},
+{t:"The kids are in the garden.",e:"🌳"},
+{t:"I can see lots of kids.",e:"👀"},
+{t:"All the kids were happy.",e:"😀"},
+{t:"That is a kind dog.",e:"🐶"},
+{t:"I have a kind hat.",e:"🎩"},
+{t:"Look at the kind car!",e:"🚗"},
+{t:"I know the dog is happy.",e:"🐶"},
+{t:"We know it is very cold.",e:"❄️"},
+{t:"Do you know she is here?",e:"🤔"},
+{t:"We saw land from the boat.",e:"⛵"},
+{t:"The land is green and flat.",e:"🌾"},
+{t:"Birds fly over the land.",e:"🐦"},
+{t:"This is my last red hat.",e:"🎩"},
+{t:"The last cake was lovely.",e:"🧁"},
+{t:"She was the last one home.",e:"🏠"},
+{t:"We can learn together!",e:"🤝"},
+{t:"I like to learn every day.",e:"📅"},
+{t:"Let us learn now!",e:"🎉"},
+{t:"She left her hat at home.",e:"🎩"},
+{t:"We left the park at six.",e:"🌳"},
+{t:"Put your left hand up.",e:"✋"},
+{t:"I can see a leg.",e:"👀"},
+{t:"The leg is very big.",e:"📏"},
+{t:"Look at that leg!",e:"👉"},
+{t:"Please let me play too.",e:"🎈"},
+{t:"Let us go to the park!",e:"🌳"},
+{t:"Mum will let us stay up.",e:"🌙"},
+{t:"I can see a letter.",e:"👀"},
+{t:"The letter is very big.",e:"📏"},
+{t:"Look at that letter!",e:"👉"},
+{t:"Please turn on the light.",e:"💡"},
+{t:"The light is very bright.",e:"☀️"},
+{t:"My room has a big light.",e:"🛏️"},
+{t:"I like my little dog.",e:"🐶"},
+{t:"We like to read books.",e:"📕"},
+{t:"Do you like red hats?",e:"🎩"},
+{t:"I can see a line.",e:"👀"},
+{t:"The line is very big.",e:"📏"},
+{t:"Look at that line!",e:"👉"},
+{t:"I can see a list.",e:"👀"},
+{t:"The list is very big.",e:"📏"},
+{t:"Look at that list!",e:"👉"},
+{t:"That is a little dog.",e:"🐶"},
+{t:"I have a little hat.",e:"🎩"},
+{t:"Look at the little car!",e:"🚗"},
+{t:"We live in a big house.",e:"🏠"},
+{t:"Fish live in the sea.",e:"🐟"},
+{t:"I live near the park.",e:"🌳"},
+{t:"This is a very long road.",e:"🛣️"},
+{t:"My hair is getting long.",e:"💇"},
+{t:"We waited a long time.",e:"⏰"},
+{t:"Look at the big dog!",e:"🐶"},
+{t:"I look for my red hat.",e:"🎩"},
+{t:"Come and look with me.",e:"👀"},
+{t:"I love my little dog.",e:"🐶"},
+{t:"We love to read books.",e:"📕"},
+{t:"She sends her love to you.",e:"💛"},
+{t:"I made a big cake.",e:"🎂"},
+{t:"We made a paper boat.",e:"⛵"},
+{t:"She made her bed.",e:"🛏️"},
+{t:"I will make a big cake.",e:"🎂"},
+{t:"Can you make a paper boat?",e:"⛵"},
+{t:"We make things at school.",e:"🏫"},
+{t:"The man has a red hat.",e:"🎩"},
+{t:"I can see a man.",e:"👀"},
+{t:"A kind man helped us.",e:"💛"},
+{t:"There are many little cats.",e:"🐱"},
+{t:"How many cakes are there?",e:"🧁"},
+{t:"Many people came to the party.",e:"🎉"},
+{t:"I may run very fast.",e:"🏃"},
+{t:"We may go to the park.",e:"🌳"},
+{t:"The dog may sleep here.",e:"🐶"},
+{t:"Mum gave me a red hat.",e:"🎩"},
+{t:"Come and play with me.",e:"🎈"},
+{t:"The dog ran to me.",e:"🐶"},
+{t:"The men are in the garden.",e:"🌳"},
+{t:"I can see lots of men.",e:"👀"},
+{t:"All the men were happy.",e:"😀"},
+{t:"Wait one minute, please.",e:"⏰"},
+{t:"It takes a minute to run.",e:"🏃"},
+{t:"I will be there in a minute.",e:"⏱️"},
+{t:"It was a lovely month.",e:"🌞"},
+{t:"We play in the month.",e:"⏰"},
+{t:"Every month I read a book.",e:"📕"},
+{t:"The moon is very bright.",e:"🌙"},
+{t:"I can see the moon tonight.",e:"🌜"},
+{t:"We look at the moon.",e:"🔭"},
+{t:"May I have more milk?",e:"🥛"},
+{t:"I want more red hats.",e:"🎩"},
+{t:"We need more time to play.",e:"⏰"},
+{t:"It was a lovely morning.",e:"🌞"},
+{t:"We play in the morning.",e:"⏰"},
+{t:"Every morning I read a book.",e:"📕"},
+{t:"My mother is very kind.",e:"💛"},
+{t:"I can see my mother.",e:"👀"},
+{t:"I play with my mother.",e:"🎈"},
+{t:"How much milk is left?",e:"🥛"},
+{t:"That is too much cake!",e:"🍰"},
+{t:"We do not have much time.",e:"⏰"},
+{t:"My mum is very kind.",e:"💛"},
+{t:"I can see my mum.",e:"👀"},
+{t:"I play with my mum.",e:"🎈"},
+{t:"I like this music.",e:"🎵"},
+{t:"The music is very loud.",e:"🔊"},
+{t:"We dance to the music.",e:"💃"},
+{t:"I must run very fast.",e:"🏃"},
+{t:"We must go to the park.",e:"🌳"},
+{t:"The dog must sleep here.",e:"🐶"},
+{t:"My dog can run fast.",e:"🐶"},
+{t:"I like my new hat.",e:"🎩"},
+{t:"Look at my big smile!",e:"😀"},
+{t:"My name is on the book.",e:"📕"},
+{t:"What is your name?",e:"❓"},
+{t:"She wrote her name.",e:"✏️"},
+{t:"That is a new dog.",e:"🐶"},
+{t:"I have a new hat.",e:"🎩"},
+{t:"Look at the new car!",e:"🚗"},
+{t:"It was a lovely night.",e:"🌞"},
+{t:"We play in the night.",e:"⏰"},
+{t:"Every night I read a book.",e:"📕"},
+{t:"I can see nine little cats.",e:"🐱"},
+{t:"We have nine red balls.",e:"🔴"},
+{t:"Count to nine with me!",e:"🔢"},
+{t:"There is no milk left.",e:"🥛"},
+{t:"No dogs are allowed here.",e:"🐶"},
+{t:"I have no red hat.",e:"🎩"},
+{t:"The dog is not asleep.",e:"🐶"},
+{t:"I am not very tall.",e:"📏"},
+{t:"It is not cold today.",e:"🌞"},
+{t:"We can go there now.",e:"🚶"},
+{t:"Let us read the book now.",e:"📕"},
+{t:"Come and play with me now.",e:"🎈"},
+{t:"I have a box of toys.",e:"🧸"},
+{t:"The top of the hill is cold.",e:"⛰️"},
+{t:"A cup of milk, please.",e:"🥛"},
+{t:"Take your hat off, please.",e:"🎩"},
+{t:"The cat jumped off the bed.",e:"🐱"},
+{t:"We ran off to the park.",e:"🌳"},
+{t:"That is an old dog.",e:"🐶"},
+{t:"I have an old hat.",e:"🎩"},
+{t:"Look at the old car!",e:"🚗"},
+{t:"The cat sat on the box.",e:"🐱"},
+{t:"We ran on the garden.",e:"🏃"},
+{t:"My hat is on the bed.",e:"🎩"},
+{t:"Once upon a time...",e:"📖"},
+{t:"I have been there once.",e:"1️⃣"},
+{t:"We go swimming once a week.",e:"🏊"},
+{t:"I can see one little cat.",e:"🐱"},
+{t:"We have one red ball.",e:"🔴"},
+{t:"One dog is asleep.",e:"🐶"},
+{t:"I have only one hat.",e:"🎩"},
+{t:"Only the dog is asleep.",e:"🐶"},
+{t:"We only play on Sundays.",e:"📅"},
+{t:"Please open the door.",e:"🚪"},
+{t:"I will open my book.",e:"📕"},
+{t:"Can you open the box?",e:"📦"},
+{t:"A cat or a dog sat here.",e:"🐱"},
+{t:"Do you want milk or water?",e:"🥛"},
+{t:"We can run or jump!",e:"🏃"},
+{t:"That is an orange dog.",e:"🐶"},
+{t:"I have an orange hat.",e:"🎩"},
+{t:"Look at the orange car!",e:"🚗"},
+{t:"The other dog is bigger.",e:"🐶"},
+{t:"I like the other red hat.",e:"🎩"},
+{t:"Look at the other cat!",e:"🐱"},
+{t:"Our dog is very small.",e:"🐶"},
+{t:"We ride our bikes to school.",e:"🚲"},
+{t:"Look at our big garden!",e:"🌳"},
+{t:"We went out to play.",e:"🎈"},
+{t:"The cat ran out the door.",e:"🚪"},
+{t:"Take it out of the box.",e:"📦"},
+{t:"The bird flew over the tree.",e:"🐦"},
+{t:"We climbed over the wall.",e:"🧗"},
+{t:"Come over to my house.",e:"🏠"},
+{t:"I have my own red bike.",e:"🚲"},
+{t:"She made her own little cake.",e:"🧁"},
+{t:"He has his own warm bed.",e:"🛏️"},
+{t:"I can see a page.",e:"👀"},
+{t:"The page is very big.",e:"📏"},
+{t:"Look at that page!",e:"👉"},
+{t:"I can see a paper.",e:"👀"},
+{t:"The paper is very big.",e:"📏"},
+{t:"Look at that paper!",e:"👉"},
+{t:"My parent came to school.",e:"🏫"},
+{t:"A parent looks after you.",e:"💛"},
+{t:"Every child has a parent.",e:"🧑"},
+{t:"I can see a party.",e:"👀"},
+{t:"The party is very big.",e:"📏"},
+{t:"Look at that party!",e:"👉"},
+{t:"The people are in the garden.",e:"🌳"},
+{t:"I can see lots of people.",e:"👀"},
+{t:"All the people were happy.",e:"😀"},
+{t:"She is a kind person.",e:"💛"},
+{t:"One person is here.",e:"1️⃣"},
+{t:"Every person needs a friend.",e:"🧑‍🤝‍🧑"},
+{t:"I can see a picture.",e:"👀"},
+{t:"The picture is very big.",e:"📏"},
+{t:"Look at that picture!",e:"👉"},
+{t:"I can see a little plant.",e:"🌱"},
+{t:"We plant seeds in the garden.",e:"🌳"},
+{t:"My plant is growing fast.",e:"🌿"},
+{t:"We can play together!",e:"🤝"},
+{t:"I like to play every day.",e:"📅"},
+{t:"Let us play now!",e:"🎉"},
+{t:"Put the ball in the bag.",e:"⚽"},
+{t:"I will put it on the bed.",e:"🛏️"},
+{t:"She put her hat on.",e:"🎩"},
+{t:"We had a running race.",e:"🏃"},
+{t:"I can race you to the tree!",e:"🌳"},
+{t:"The race was very fast.",e:"💨"},
+{t:"The rain is very cold.",e:"🌧️"},
+{t:"I can hear the rain.",e:"👂"},
+{t:"We play in the rain.",e:"☔"},
+{t:"The dog ran very fast.",e:"🐶"},
+{t:"We ran all the way home.",e:"🏠"},
+{t:"She ran to her mum.",e:"🏃"},
+{t:"We can read together!",e:"🤝"},
+{t:"I like to read every day.",e:"📅"},
+{t:"Let us read now!",e:"🎉"},
+{t:"That is a red dog.",e:"🐶"},
+{t:"I have a red hat.",e:"🎩"},
+{t:"Look at the red car!",e:"🚗"},
+{t:"I like to ride my bike.",e:"🚲"},
+{t:"We can ride to school.",e:"🏫"},
+{t:"Come for a ride with me!",e:"🎠"},
+{t:"Put your right hand up.",e:"✋"},
+{t:"You got it right!",e:"✅"},
+{t:"Turn right at the tree.",e:"🌳"},
+{t:"My room is very tidy.",e:"🛏️"},
+{t:"We play in this room.",e:"🎈"},
+{t:"The room is very big.",e:"📏"},
+{t:"The ball is round.",e:"⚽"},
+{t:"We sat round the table.",e:"🪑"},
+{t:"A round red balloon!",e:"🎈"},
+{t:"We can run together!",e:"🤝"},
+{t:"I like to run every day.",e:"📅"},
+{t:"Let us run now!",e:"🎉"},
+{t:"\"Hello,\" said my friend.",e:"👋"},
+{t:"Mum said we can play.",e:"🎈"},
+{t:"I said it very loudly.",e:"🗣️"},
+{t:"What did you say?",e:"🗣️"},
+{t:"I say hello to my friend.",e:"👋"},
+{t:"Can you say it again?",e:"🔁"},
+{t:"I go to school every day.",e:"🏫"},
+{t:"My school is very big.",e:"🏫"},
+{t:"We read at school.",e:"📕"},
+{t:"The sea is very blue.",e:"🌊"},
+{t:"We swim in the sea.",e:"🏊"},
+{t:"I can hear the sea.",e:"👂"},
+{t:"Autumn is my best season.",e:"🍂"},
+{t:"Winter is a cold season.",e:"❄️"},
+{t:"What season is it now?",e:"❓"},
+{t:"This is my second red hat.",e:"🎩"},
+{t:"The second cake was lovely.",e:"🧁"},
+{t:"She was the second one home.",e:"🏠"},
+{t:"I can see a big dog.",e:"🐶"},
+{t:"Come and see my new bike!",e:"🚲"},
+{t:"Can you see the moon?",e:"🌙"},
+{t:"I can see a sentence.",e:"👀"},
+{t:"The sentence is very big.",e:"📏"},
+{t:"Look at that sentence!",e:"👉"},
+{t:"I can see seven little cats.",e:"🐱"},
+{t:"We have seven red balls.",e:"🔴"},
+{t:"Count to seven with me!",e:"🔢"},
+{t:"She can run very fast.",e:"🏃"},
+{t:"She is my best friend.",e:"🧒"},
+{t:"Look! She has a red hat.",e:"🎩"},
+{t:"I should run very fast.",e:"🏃"},
+{t:"We should go to the park.",e:"🌳"},
+{t:"The dog should sleep here.",e:"🐶"},
+{t:"We can sing together!",e:"🤝"},
+{t:"I like to sing every day.",e:"📅"},
+{t:"Let us sing now!",e:"🎉"},
+{t:"My sister is very kind.",e:"💛"},
+{t:"I can see my sister.",e:"👀"},
+{t:"I play with my sister.",e:"🎈"},
+{t:"Come and sit with me.",e:"🪑"},
+{t:"We sit on the mat.",e:"🧘"},
+{t:"Please sit down here.",e:"🪑"},
+{t:"I can see six little cats.",e:"🐱"},
+{t:"We have six red balls.",e:"🔴"},
+{t:"Count to six with me!",e:"🔢"},
+{t:"The sky is very blue.",e:"☁️"},
+{t:"Look up at the sky!",e:"👆"},
+{t:"Stars are in the sky.",e:"⭐"},
+{t:"That is a small dog.",e:"🐶"},
+{t:"I have a small hat.",e:"🎩"},
+{t:"Look at the small car!",e:"🚗"},
+{t:"It was cold, so we ran.",e:"🏃"},
+{t:"I was tired, so I slept.",e:"😴"},
+{t:"She is so very kind.",e:"💛"},
+{t:"I have some red hats.",e:"🎩"},
+{t:"Would you like some milk?",e:"🥛"},
+{t:"Some dogs are very big.",e:"🐶"},
+{t:"I can see a song.",e:"👀"},
+{t:"The song is very big.",e:"📏"},
+{t:"Look at that song!",e:"👉"},
+{t:"We can go there soon.",e:"🚶"},
+{t:"Let us read the book soon.",e:"📕"},
+{t:"Come and play with me soon.",e:"🎈"},
+{t:"I can hear a funny sound.",e:"👂"},
+{t:"The sound of the sea is lovely.",e:"🌊"},
+{t:"What is that sound?",e:"❓"},
+{t:"Rockets fly in space.",e:"🚀"},
+{t:"I need more space to play.",e:"📦"},
+{t:"Space is very big and dark.",e:"🌌"},
+{t:"Can you spell your name?",e:"✏️"},
+{t:"I can spell it for you.",e:"🔤"},
+{t:"We spell words at school.",e:"🏫"},
+{t:"It was a lovely spring.",e:"🌞"},
+{t:"We play in the spring.",e:"⏰"},
+{t:"Every spring I read a book.",e:"📕"},
+{t:"I can see a star.",e:"👀"},
+{t:"The star is very big.",e:"📏"},
+{t:"Look at that star!",e:"👉"},
+{t:"We will start at six.",e:"🕕"},
+{t:"I can start the game.",e:"🎮"},
+{t:"Let us start again!",e:"🔁"},
+{t:"Please stop at the road.",e:"🛑"},
+{t:"We stop to look both ways.",e:"👀"},
+{t:"Stop! That is my hat.",e:"🎩"},
+{t:"I can see a story.",e:"👀"},
+{t:"The story is very big.",e:"📏"},
+{t:"Look at that story!",e:"👉"},
+{t:"We study at school every day.",e:"🏫"},
+{t:"I like to study with mum.",e:"👩"},
+{t:"She will study her book.",e:"📕"},
+{t:"It was a lovely summer.",e:"🌞"},
+{t:"We play in the summer.",e:"⏰"},
+{t:"Every summer I read a book.",e:"📕"},
+{t:"The sun is very hot.",e:"☀️"},
+{t:"I can see the sun.",e:"👀"},
+{t:"We play in the sun.",e:"🌞"},
+{t:"I will take my bag.",e:"🎒"},
+{t:"Please take one cake.",e:"🧁"},
+{t:"We take the bus to school.",e:"🚌"},
+{t:"Please tell me a story.",e:"📕"},
+{t:"I will tell my mum.",e:"👩"},
+{t:"Can you tell me why?",e:"❓"},
+{t:"I can see ten little cats.",e:"🐱"},
+{t:"We have ten red balls.",e:"🔴"},
+{t:"Count to ten with me!",e:"🔢"},
+{t:"My dog is bigger than yours.",e:"🐶"},
+{t:"This hat is redder than that.",e:"🎩"},
+{t:"She is taller than me.",e:"📏"},
+{t:"That dog is very friendly.",e:"🐶"},
+{t:"I like that red hat.",e:"🎩"},
+{t:"Look at that little cat!",e:"🐱"},
+{t:"The cat is on my bed.",e:"🐱"},
+{t:"Look at the big red bus!",e:"🚌"},
+{t:"I put the ball in my bag.",e:"⚽"},
+{t:"Their dog is very small.",e:"🐶"},
+{t:"We ride their bikes to school.",e:"🚲"},
+{t:"Look at their big garden!",e:"🌳"},
+{t:"Mum gave them a red ball.",e:"⚽"},
+{t:"Come and play with them.",e:"🎈"},
+{t:"The dog ran to them.",e:"🐶"},
+{t:"We can go there then.",e:"🚶"},
+{t:"Let us read the book then.",e:"📕"},
+{t:"Come and play with me then.",e:"🎈"},
+{t:"Look over there!",e:"👉"},
+{t:"The dog is over there.",e:"🐶"},
+{t:"We can play there today.",e:"🎈"},
+{t:"These cakes are for you.",e:"🧁"},
+{t:"I like these red shoes.",e:"👟"},
+{t:"Look at these little cats!",e:"🐱"},
+{t:"They can run very fast.",e:"🏃"},
+{t:"They are my best friends.",e:"🧑‍🤝‍🧑"},
+{t:"They have a little dog.",e:"🐶"},
+{t:"What is that thing?",e:"❓"},
+{t:"I have one more thing.",e:"📦"},
+{t:"The best thing is cake!",e:"🍰"},
+{t:"I think the dog is happy.",e:"🐶"},
+{t:"We think it is very cold.",e:"❄️"},
+{t:"Do you think she is here?",e:"🤔"},
+{t:"This dog is very friendly.",e:"🐶"},
+{t:"I like this red hat.",e:"🎩"},
+{t:"Look at this little cat!",e:"🐱"},
+{t:"I can see three little cats.",e:"🐱"},
+{t:"We have three red balls.",e:"🔴"},
+{t:"Count to three with me!",e:"🔢"},
+{t:"What time is it?",e:"🕐"},
+{t:"We had a lovely time.",e:"😀"},
+{t:"It is time for bed.",e:"🌙"},
+{t:"We went to the park.",e:"🌳"},
+{t:"Give the ball to me.",e:"⚽"},
+{t:"She ran to her mum.",e:"🏃"},
+{t:"We play together every day.",e:"🤝"},
+{t:"Let us sing together!",e:"🎤"},
+{t:"They live together in a house.",e:"🏠"},
+{t:"The dog can come too!",e:"🐶"},
+{t:"That is too much cake!",e:"🍰"},
+{t:"I want to play too.",e:"🎈"},
+{t:"I can see a toy.",e:"👀"},
+{t:"The toy is very big.",e:"📏"},
+{t:"Look at that toy!",e:"👉"},
+{t:"I can see a tree.",e:"👀"},
+{t:"The tree is very big.",e:"📏"},
+{t:"Look at that tree!",e:"👉"},
+{t:"I can see two little cats.",e:"🐱"},
+{t:"We have two red balls.",e:"🔴"},
+{t:"Count to two with me!",e:"🔢"},
+{t:"The cat sat under the box.",e:"🐱"},
+{t:"We ran under the garden.",e:"🏃"},
+{t:"My hat is under the bed.",e:"🎩"},
+{t:"I put my hand up.",e:"✋"},
+{t:"The bird flew up high.",e:"🐦"},
+{t:"Come up to my room.",e:"🛏️"},
+{t:"Mum gave us a red ball.",e:"⚽"},
+{t:"Come and play with us.",e:"🎈"},
+{t:"The dog ran to us.",e:"🐶"},
+{t:"I use a pen to write.",e:"✏️"},
+{t:"We can use this box.",e:"📦"},
+{t:"May I use your pen?",e:"✏️"},
+{t:"The dog is very big.",e:"🐶"},
+{t:"I am very happy today.",e:"😀"},
+{t:"It is very cold outside.",e:"❄️"},
+{t:"We can walk together!",e:"🤝"},
+{t:"I like to walk every day.",e:"📅"},
+{t:"Let us walk now!",e:"🎉"},
+{t:"I want a red hat.",e:"🎩"},
+{t:"Do you want to play?",e:"🎈"},
+{t:"We want to go home.",e:"🏠"},
+{t:"The sky was very blue.",e:"☁️"},
+{t:"My dog was fast asleep.",e:"🐶"},
+{t:"It was a lovely day.",e:"🌞"},
+{t:"I like to watch the birds.",e:"🐦"},
+{t:"My watch says three o'clock.",e:"⌚"},
+{t:"Come and watch with me!",e:"👀"},
+{t:"The water is very cold.",e:"💧"},
+{t:"I drink water every day.",e:"🥤"},
+{t:"Fish live in the water.",e:"🐟"},
+{t:"We can run very fast.",e:"🏃"},
+{t:"We are my best friends.",e:"🧑‍🤝‍🧑"},
+{t:"We have a little dog.",e:"🐶"},
+{t:"It was a lovely week.",e:"🌞"},
+{t:"We play in the week.",e:"⏰"},
+{t:"Every week I read a book.",e:"📕"},
+{t:"I can read very well.",e:"📕"},
+{t:"She sings very well.",e:"🎤"},
+{t:"Are you well today?",e:"😀"},
+{t:"We went to the park.",e:"🌳"},
+{t:"She went home with mum.",e:"🏠"},
+{t:"The dog went to sleep.",e:"🐶"},
+{t:"The cakes were on the table.",e:"🧁"},
+{t:"We were going to the park.",e:"🌳"},
+{t:"They were fast asleep.",e:"😴"},
+{t:"What is in the box?",e:"📦"},
+{t:"What do you like best?",e:"💛"},
+{t:"What a lovely day!",e:"🌞"},
+{t:"When can we go home?",e:"🏠"},
+{t:"When is your birthday?",e:"🎂"},
+{t:"Tell me when you are ready.",e:"✅"},
+{t:"Where is my red hat?",e:"🎩"},
+{t:"Where do you live?",e:"🏠"},
+{t:"Tell me where you are.",e:"📍"},
+{t:"Which hat is yours?",e:"🎩"},
+{t:"Which way do we go?",e:"➡️"},
+{t:"Tell me which one you like.",e:"👉"},
+{t:"That is a white dog.",e:"🐶"},
+{t:"I have a white hat.",e:"🎩"},
+{t:"Look at the white car!",e:"🚗"},
+{t:"Who is at the door?",e:"🚪"},
+{t:"Who has my red hat?",e:"🎩"},
+{t:"Who wants to play?",e:"🎈"},
+{t:"Why is the dog sad?",e:"🐶"},
+{t:"Why do we go to bed?",e:"🌙"},
+{t:"Tell me why you are happy.",e:"😀"},
+{t:"I will run very fast.",e:"🏃"},
+{t:"We will go to the park.",e:"🌳"},
+{t:"The dog will sleep here.",e:"🐶"},
+{t:"The wind is very cold.",e:"💨"},
+{t:"I can hear the wind.",e:"👂"},
+{t:"The wind blew my hat off.",e:"🎩"},
+{t:"It was a lovely winter.",e:"🌞"},
+{t:"We play in the winter.",e:"⏰"},
+{t:"Every winter I read a book.",e:"📕"},
+{t:"I wish for a new bike.",e:"🚲"},
+{t:"Make a wish and blow!",e:"🎂"},
+{t:"She had a secret wish.",e:"⭐"},
+{t:"Come and play with me.",e:"🎈"},
+{t:"She went with her mum.",e:"👩"},
+{t:"A dog with a red hat.",e:"🐶"},
+{t:"The women are in the garden.",e:"🌳"},
+{t:"I can see lots of women.",e:"👀"},
+{t:"All the women were happy.",e:"😀"},
+{t:"I can see a word.",e:"👀"},
+{t:"The word is very big.",e:"📏"},
+{t:"Look at that word!",e:"👉"},
+{t:"I like my new work.",e:"💼"},
+{t:"We work very hard at school.",e:"🏫"},
+{t:"Dad went to work today.",e:"👨"},
+{t:"The world is very big.",e:"🌍"},
+{t:"We live in a lovely world.",e:"🌎"},
+{t:"I want to see the world.",e:"✈️"},
+{t:"I would run very fast.",e:"🏃"},
+{t:"We would go to the park.",e:"🌳"},
+{t:"The dog would sleep here.",e:"🐶"},
+{t:"We can write together!",e:"🤝"},
+{t:"I like to write every day.",e:"📅"},
+{t:"Let us write now!",e:"🎉"},
+{t:"It was a lovely year.",e:"🌞"},
+{t:"We play in the year.",e:"⏰"},
+{t:"Every year I read a book.",e:"📕"},
+{t:"That is a yellow dog.",e:"🐶"},
+{t:"I have a yellow hat.",e:"🎩"},
+{t:"Look at the yellow car!",e:"🚗"},
+{t:"\"Yes!\" said my little sister.",e:"🧒"},
+{t:"I said yes to the cake.",e:"🧁"},
+{t:"\"Yes, please,\" said mum.",e:"👩"},
+{t:"Can you see the big dog?",e:"🐶"},
+{t:"You have a lovely hat.",e:"🎩"},
+{t:"I will play with you.",e:"🎈"},
+{t:"Your dog can run fast.",e:"🐶"},
+{t:"I like your new hat.",e:"🎩"},
+{t:"Look at your big smile!",e:"😀"}];
+/* The hand-written Golden sentences come first, then one generated set of
+   three for every word in every group, so no activity is ever skipped for
+   want of a sentence. */
+SENTENCES = SENTENCES.concat(GEN_SENT);
+
 var CHEER=["Lovely!","Well done, you!","You got it!","That is the one!","Super!","Clever you!","Yes, that is it!","Beautiful reading!","Brilliant!","Oh, nice one!"];
 var KIND=["So close! It is this one.","Good try. Here it is.","Nearly there. Look.","Not quite. This one.","Have a look at this one."];
 /* Nothing here says he got it wrong. The dragon is simply still hungry. */
@@ -761,7 +1739,10 @@ function blankWord(){return {seen:0,tapOk:0,tapNo:0,spokenOk:0,spokenNo:0,
   days:[],mixedDays:[],tapDays:[],best:0,status:0,active:true,lastRev:0,missStreak:0,
   runs:0,conf:0,peak:0,won:false,back:0};}
 function newSet(name,words){
-  var s={name:name||"New set",words:words.slice(),w:{},sessions:0,created:today(),finished:null};
+  /* Shaped exactly as normalise() would leave it, so a set made at runtime and
+     a set read back from storage are identical. */
+  var s={name:name||"New set",words:words.slice(),w:{},colour:{},gid:"",
+         sessions:0,created:today(),finished:null};
   words.forEach(function(x){s.w[x]=blankWord();});
   return s;
 }
@@ -818,6 +1799,20 @@ function normalise(){
     if(!st.words||!st.words.length)st.words=DEFAULT_WORDS.slice();
     if(typeof st.name!=="string")st.name=DEFAULT_SET_NAME;
     if(typeof st.sessions!=="number")st.sessions=0;
+    /* Tie an existing set to its group on the school chart. His current set is
+       the Golden Words, so it is recognised by its word list and keeps every
+       dragon it has already earned. */
+    if(typeof st.gid!=="string")st.gid="";
+    if(!st.gid){
+      for(var gi=0;gi<GROUPS.length;gi++){
+        var G=GROUPS[gi];
+        if(G.name===st.name||G.name+" Words"===st.name||
+           (G.words.length===st.words.length&&
+            G.words.slice().sort().join()===st.words.slice().sort().join())){
+          st.gid=G.id;st.name=G.name;break;
+        }
+      }
+    }
     st.words.forEach(function(x){
       if(!st.w[x])st.w[x]=blankWord();
       var q=st.w[x];                       /* bring older saves up to date */
@@ -842,7 +1837,7 @@ function normalise(){
          Saves made before this existed are read from the mastery rule itself,
          so dragons already hatched on the iPad stay hatched. */
       if(typeof q.won!=="boolean"){
-        q.won=((q.conf||0)>=3&&q.days.length>=2)||
+        q.won=((q.conf||0)>=3)||
               (q.days.length>=3&&q.mixedDays.length>=2);
       }
       /* How many stages this dragon has slipped back. Only ever 0 or 1. */
@@ -1096,11 +2091,12 @@ function statusOf(w){
   if(!d.days)d.days=[];
   if(!d.mixedDays)d.mixedDays=[];
   if(!d.tapDays)d.tapDays=[];
-  /* Three grown-up confirmations, from rounds holding other words, falling on
-     at least two different days. Several in one day all count - what may not
-     be skipped is the night in between. Sight words are held or lost across a
-     sleep, and Friday's test is never on the day he practised. */
-  if((d.conf||0)>=3&&d.days.length>=2)return 2;
+  /* Three grown-up confirmations from rounds holding other words. There is no
+     longer any wait for a new day: the school expects a group inside about a
+     week, so a child who is going well can free several dragons in one
+     afternoon. The correction rule still applies - miss a word in the test and
+     that dragon slips back a stage. */
+  if((d.conf||0)>=3)return 2;
   if((d.runs||0)>=1||(d.tapOk||0)>=6)return 1;
   return 0;
 }
@@ -1188,6 +2184,9 @@ function drawNest(){
   refreshStatuses();
   var W=WORDS(),g=$("nestGrid"),foc=focusWord();
   g.innerHTML="";
+  var sel=selectedWord();
+  /* A twenty-word group needs a tighter nest than a twelve-word one. */
+  $("scHome").classList.toggle("big20",W.length>12);
   for(var i=0;i<W.length;i++){
     var w=W[i],st=WD(w).status,sg=stageOf(w),on=WD(w).active;
     var el=document.createElement("button");
@@ -1195,8 +2194,8 @@ function drawNest(){
        different point in its cycle, so twelve eggs ripple instead of twitching
        in unison - which would be noise, and would fight the gold glow on the
        word he is actually learning. */
-    el.className="egg s"+st+(w===foc?" focus":"")+(on?" m"+sg:"");
-    el.setAttribute("aria-label",on?("Hear the word "+w+". "+STAGE_WORDS[sg]):"Switched off");
+    el.className="egg s"+st+(w===foc?" focus":"")+(w===sel?" chosen":"")+(on?" m"+sg:"");
+    el.setAttribute("aria-label",on?((w===sel?"Chosen: ":"")+"the word "+w+". "+STAGE_WORDS[sg]):"Switched off");
     el.innerHTML='<div class="pic" style="animation-delay:'+(-(i*0.37).toFixed(2))+'s">'+art(w,i)+'</div>'+
       '<div class="lbl">'+(on?w:"&mdash;")+'</div>'+
       (on?'<div class="meter"><i style="width:'+Math.round(learnScore(w)*100)+'%"></i></div>':'');
@@ -1204,18 +2203,16 @@ function drawNest(){
     else el.onclick=(function(word,node){return function(){sayEgg(word,node);};})(w,el);
     g.appendChild(el);
   }
-  hideReplay();
   var done=W.filter(function(w){return stageOf(w)===5;}).length;
   $("homeSet").textContent=CUR().name;
   var nActive=activeWords().length;
-  $("focusStrip").innerHTML = !nActive
-    ? '<span class="fl">No words switched on</span>'
-    : (foc ? '<span class="fl">Learning now</span><span class="fw">'+foc+'</span>'
-           : '<span class="fl">All done &mdash; revising</span>');
   if(!nActive){
+    $("focusStrip").className="";
+    $("focusStrip").innerHTML='<span class="fl">No words switched on</span>';
     $("homeSub").innerHTML='<b>No words are switched on.</b>';
     return;
   }
+  drawSelectionStrip();
   var goal=foc?nextGoal(foc):"";
   var wonN=wonWords().length;
   $("homeSub").innerHTML=(done===W.length
@@ -1242,34 +2239,40 @@ function sayEgg(w,node){
   WD(w).seen++;save();
   tone(660,.12);
   speakWord(w,"");
-  /* Tapping still just says the word - that free practice matters. But if it is
-     a dragon he has already won, he is also offered the chance to go and play
-     with him again, which is how a slipped dragon is won back. */
-  if(WD(w).won)showReplay(w); else hideReplay();
+  /* Tapping says the word AND chooses it. One Play button then does the right
+     thing for whatever is chosen, so there is never a second button to find. */
+  selectWord(w);
+  drawNest();
 }
-var replayPick=null;
-function showReplay(w){
-  replayPick=w;
-  var bar=$("replayBar"),b=$("btnReplay");
-  b.innerHTML="&#9654; Play with <b>"+w+"</b>";
-  b.setAttribute("aria-label","Play with the "+w+" dragon again");
-  bar.style.display="";
-  $("scHome").classList.add("hasreplay");
+
+/* ============================================================
+   WHAT PLAY WILL DO
+   Exactly one egg or dragon is chosen at any moment. It defaults to the word
+   he is learning, so Play does the expected thing without any tapping at all.
+   ============================================================ */
+var picked=null;
+function selectedWord(){
+  var act=activeWords();
+  if(picked&&act.indexOf(picked)>=0&&WD(picked))return picked;
+  var f=focusWord();
+  if(f)return f;
+  return act.length?act[0]:null;
 }
-function hideReplay(){
-  replayPick=null;
-  $("replayBar").style.display="none";
-  $("scHome").classList.remove("hasreplay");
+function selectWord(w){
+  picked=(w&&WD(w)&&WD(w).active)?w:null;
 }
-$("btnReplay").onclick=function(){
-  if(!replayPick||!WD(replayPick)||!WD(replayPick).won)return;
-  if(playLock)return;playLock=true;
-  setTimeout(function(){playLock=false;},900);
-  unlockVoice();requestWakeLock();
-  var w=replayPick;
-  hideReplay();
-  buildReplay(w);
-};
+function drawSelectionStrip(){
+  var sel=selectedWord(),strip=$("focusStrip");
+  if(!sel){strip.className="";strip.innerHTML='<span class="fl">Nothing to play yet</span>';return;}
+  var revise=!!WD(sel).won;
+  strip.className=revise?"revise":"";
+  strip.innerHTML='<span class="fpic">'+art(sel,WORDS().indexOf(sel))+'</span>'+
+    '<span class="fl">'+(revise?"Playing with":"Learning now")+'</span>'+
+    '<span class="fw">'+sel+'</span>';
+  $("btnPlay").innerHTML="&#9654; PLAY <span style='font-size:.62em;opacity:.85'>"+sel+"</span>";
+  $("btnPlay").setAttribute("aria-label",
+    (revise?"Play again with the ":"Learn the ")+sel+" dragon");
+}
 
 function confetti(n){
   var bits=["⭐","🌟","✨","🎉","💛"];
@@ -1303,6 +2306,61 @@ function focusWord(){
 function wonWords(){
   return activeWords().filter(function(w){return WD(w).won;});
 }
+
+/* ============================================================
+   WORD GROUPS
+   Each group on the school chart is one set: its own eggs, dragons,
+   confirmations and session count, kept entirely separately.
+   ============================================================ */
+function setForGroup(gid){
+  for(var i=0;i<S.sets.length;i++)if(S.sets[i].gid===gid)return i;
+  return -1;
+}
+function groupFinished(gid){
+  var i=setForGroup(gid); if(i<0)return false;
+  var st=S.sets[i];
+  return st.words.length>0&&st.words.every(function(w){
+    return st.w[w]&&st.w[w].won&&st.w[w].active!==false;
+  });
+}
+/* A group is open if he has started it, or if it is the next one along and the
+   group before it is finished. The very first group is always open. */
+function groupOpen(gid){
+  var idx=groupIndex(gid);
+  if(idx<0)return false;
+  if(setForGroup(gid)>=0)return true;
+  if(idx===0)return true;
+  return groupFinished(GROUPS[idx-1].id);
+}
+/* Switch to a group, creating its nest the first time. Any running session is
+   dropped first, because its words are about to change underneath it. */
+function useGroup(gid){
+  var G=groupById(gid); if(!G)return false;
+  abortSession();
+  var i=setForGroup(gid);
+  if(i<0){
+    var st=newSet(G.name,G.words);
+    st.gid=G.id;
+    S.sets.push(st);
+    i=S.sets.length-1;
+  }
+  S.cur=i;
+  simCache={};
+  refreshStatuses();
+  save();
+  selectWord(null);
+  drawNest();
+  return true;
+}
+/* Each group's dragons wear that group's colour from the chart, so a Red
+   dragon is plainly not a Golden one. */
+var GROUP_HUE={golden:0,red:340,blue:210,green:120,orange:25,indigo:250,violet:275,
+  pink:320,purple:285,aqua:180,lime:95,lemon:55,pearl:200,ruby:355,sapphire:225,
+  jade:150,amber:35};
+function groupHue(){
+  var g=CUR().gid||"golden";
+  return GROUP_HUE.hasOwnProperty(g)?GROUP_HUE[g]:0;
+}
 /* Wrong answers come from the whole word set, nearest look-alikes first. */
 function foil(target){
   var others=activeWords().filter(function(w){return w!==target;});
@@ -1314,7 +2372,9 @@ function foil(target){
 var HUES=[0,150,265];
 function hueOf(w){
   var c=CUR().colour||{};
-  return HUES[c[w]||0]||0;
+  /* His own colour choice if he has made one, otherwise the group's colour. */
+  if(c[w])return HUES[c[w]]||0;
+  return groupHue();
 }
 /* ============================================================
    HOW CLOSE IS THIS EGG?
@@ -1377,12 +2437,10 @@ function learnScore(w){
 function nextGoal(w){
   var d=WD(w); if(!d)return "";
   if(statusOf(w)===2)return "";
-  var need=3-(d.conf||0),sleep=d.days.length<2;
-  if(need<=0)return sleep?"Come back tomorrow and he will hatch!":"";
-  if(need===1)return sleep?"One more sleep, then one more Grown-Up Time!"
-                          :"One more Grown-Up Time and he is out!";
-  return sleep?(need+" more Grown-Up Times, and one more sleep!")
-              :(need+" more Grown-Up Times and he is out!");
+  var need=3-(d.conf||0);
+  if(need<=0)return "";
+  return need===1?"One more Grown-Up Time and he is out!"
+                 :(need+" more Grown-Up Times and he is out!");
 }
 /* Read out by a screen reader, and used in the dashboard. */
 var STAGE_WORDS=["A quiet egg","The egg is wobbling","A first crack",
@@ -1391,6 +2449,7 @@ function art(w,i){
   var s=stageOf(w),h=hueOf(w);
   var svg=(s<5)?EGG_STAGE[s]:dragonFor(i);
   if(!h||s<2)return svg;      /* no point tinting a plain white egg */
+  h=h%360;
   return '<span style="display:block;width:100%;height:100%;filter:hue-rotate('+h+'deg)">'+svg+'</span>';
 }
 
@@ -1438,7 +2497,7 @@ function resumeSession(){
 /* Used whenever the word list itself changes underneath a running session. */
 function abortSession(){
   Q=[];qi=0;runToken++;paused=false;advancing=false;sessionFocus=null;replayWord=null;
-  testAsked=[];testWrong=[];
+  testAsked=[];testWrong=[];picked=null;
   hushVoice();
   try{clearInterval(speedTick);}catch(e){}
   releaseWakeLock();
@@ -2227,6 +3286,7 @@ function offerColour(w,idx){
   });
 }
 $("btnHome").onclick=function(){
+  selectWord(null);            /* back to the word he is learning */
   drawNest();show("scHome");
   $("progfill").style.width="0";$("barEgg").innerHTML="";
 };
@@ -2240,7 +3300,12 @@ $("btnPlay").onclick=function(){
     $("homeSub").innerHTML='<b>No words are switched on.</b><div style="font-size:.72em;opacity:.7;margin-top:4px">A grown-up can turn them back on with the &#9881; button.</div>';
     sndOops();return;
   }
-  requestWakeLock();buildSession();
+  requestWakeLock();
+  /* One button, two jobs. A dragon he has already won gets a revision session;
+     anything else gets the normal lesson for the word he is learning. */
+  var sel=selectedWord();
+  if(sel&&WD(sel)&&WD(sel).won)buildReplay(sel);
+  else buildSession();
 };
 
 /* ============================================================
@@ -2394,8 +3459,46 @@ $("btnVoiceReset").onclick=function(){
 };
 $("btnTestVoice").onclick=function(){sampleVoice();};
 
+/* ---------- the group picker ---------- */
+function drawGroupPicker(){
+  var sel=$("groupSel"),any=$("groupAny").checked,cur=CUR().gid||"";
+  sel.innerHTML="";
+  GROUPS.forEach(function(G){
+    var started=setForGroup(G.id)>=0,open=groupOpen(G.id),done=groupFinished(G.id);
+    if(!open&&!any)return;
+    var o=document.createElement("option");
+    o.value=G.id;
+    var n=0,tot=G.words.length;
+    if(started){
+      var st=S.sets[setForGroup(G.id)];
+      n=G.words.filter(function(w){return st.w[w]&&st.w[w].won;}).length;
+    }
+    o.textContent=G.name+" ("+tot+" words)"+
+      (done?"  ✓ all free":(started?"  — "+n+" of "+tot:(open?"  — not started":"  — locked")));
+    sel.appendChild(o);
+  });
+  if(sel.value!==cur)sel.value=cur;
+  var idx=groupIndex(cur),nxt=(idx>=0&&idx+1<GROUPS.length)?GROUPS[idx+1]:null;
+  $("groupNote").innerHTML="Now playing: <b>"+CUR().name+"</b>."+
+    (nxt?(groupOpen(nxt.id)?" <b>"+nxt.name+"</b> is open and ready.":
+          " <b>"+nxt.name+"</b> opens when every "+CUR().name+" dragon is free.")
+        :" This is the last group on the chart.");
+}
+$("groupSel").addEventListener("change",function(){
+  var gid=this.value;
+  if(gid===(CUR().gid||"")){return;}
+  var G=groupById(gid); if(!G)return;
+  if(!groupOpen(gid)&&!confirm("The "+G.name+" group is not open yet. Switch to it anyway?")){
+    drawGroupPicker();return;
+  }
+  useGroup(gid);
+  openPanel();
+});
+$("groupAny").addEventListener("change",drawGroupPicker);
+
 function openPanel(){
   refreshStatuses();
+  drawGroupPicker();
   var W=WORDS(),names=["Egg","Cracking","Hatched"];
   var rows='<tr><th>Word</th><th>Status</th><th>Egg</th><th>Sessions</th><th>Seen</th><th>Taps</th><th>Said aloud</th><th>Speed</th><th>Confirmed</th><th>Days</th></tr>';
   W.forEach(function(w){
@@ -2675,12 +3778,29 @@ if("speechSynthesis" in window){
 ["gesturestart","gesturechange","gestureend"].forEach(function(ev){
   document.addEventListener(ev,function(e){e.preventDefault();},{passive:false});
 });
-/* Block double-tap-to-zoom that slips past touch-action on older WebKit. */
-var lastTouchEnd=0;
+/* Block double-tap-to-zoom that slips past touch-action on older WebKit.
+   This used to cancel EVERY tap that landed within 350ms of the previous one,
+   anywhere on the page - which quietly swallowed the second of any two quick
+   taps, such as choosing an egg and then pressing Play. It now fires only for
+   a real double-tap-to-zoom: two taps in almost the same SPOT, and never on
+   something the child is meant to be pressing. */
+var lastTouchEnd=0,lastTouchX=-999,lastTouchY=-999;
+function isControl(el){
+  while(el&&el!==document.body){
+    if(el.tagName==="BUTTON"||el.tagName==="INPUT"||el.tagName==="SELECT"||
+       el.tagName==="TEXTAREA"||el.tagName==="LABEL"||
+       (el.classList&&(el.classList.contains("tok")||el.classList.contains("egg"))))return true;
+    el=el.parentNode;
+  }
+  return false;
+}
 document.addEventListener("touchend",function(e){
-  var now=Date.now();
-  if(now-lastTouchEnd<=350&&e.cancelable)e.preventDefault();
-  lastTouchEnd=now;
+  var now=Date.now(),t=(e.changedTouches&&e.changedTouches[0])||null;
+  var x=t?t.clientX:-999,y=t?t.clientY:-999;
+  var quick=now-lastTouchEnd<=300;
+  var samePlace=Math.abs(x-lastTouchX)<28&&Math.abs(y-lastTouchY)<28;
+  if(quick&&samePlace&&!isControl(e.target)&&e.cancelable)e.preventDefault();
+  lastTouchEnd=now;lastTouchX=x;lastTouchY=y;
 },{passive:false});
 
 /* Stop the whole page rubber-banding while he plays, but let the dashboard and
